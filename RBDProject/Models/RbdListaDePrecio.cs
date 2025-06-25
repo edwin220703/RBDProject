@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RBDProject.Models;
 
@@ -13,6 +14,7 @@ public partial class RbdListaDePrecio
 
     public int? CodEst { get; set; }
 
+    [JsonIgnore]
     public virtual RbdArticulo CodArtNavigation { get; set; } = null!;
 
     public virtual RbdEstado? CodEstNavigation { get; set; }

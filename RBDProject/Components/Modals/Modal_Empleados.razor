@@ -1,0 +1,205 @@
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Grupo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @* FORMULARIO *@
+            <div class="modal-body">
+                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+
+                    @* ID *@
+                    <div class="mb-3 row">
+                        <label class="form-label">ID</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdEm></InputText>
+                    </div>
+
+                    @* NOMBRE *@
+                    <div class="mb-3 row">
+                        <label class="form-label">Nombre</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
+                    </div>
+                    
+                    @* DNI *@
+                    <div class="mb-3 row">
+                        <label class="form-label">DNI (CEDULA)</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
+                    </div>
+
+                    @* USUARIO *@
+                    <div class="mb-3 row">
+                        <label class="form-label">USUARIO</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
+                    </div>
+
+                    @* CLAVE *@
+                    <div class="mb-3 row">
+                        <label class="form-label">CONTRASEÑA</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
+                    </div>
+
+                    @* FECHA DE CREACION *@
+                    <div class="mb-3 row">
+                        <label class="form-label">FECHA CREACION</label>
+                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.NumPer></InputDate>
+                    </div>
+
+                    @* GENERO *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodGen">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                    </div>
+
+                    @* CIUDAD *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCiudad">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                        </select>
+                    </div>
+
+                    @* CALLE *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCalle">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                        </select>
+                    </div>
+
+                    @* Detalle direccion *@
+                    <div class="mb-3 row">
+                        <label class="form-label">DETALLES DE LA DIRECCION</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputText>
+                    </div>
+
+                    @* CARGO *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">CARGO</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodCar">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                        </select>
+                    </div>
+
+                    @* SUELDO *@
+                    <div class="mb-3 row">
+                        <label class="form-label">SUELDO</label>
+                        <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
+                    </div>
+
+                    @* ESTADO *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodEst">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1">ACTIVO</option>
+                            <option value="2">INACTIVO</option>
+                        </select>
+                    </div>
+                </EditForm>
+            </div>
+            @* BOTONES *@
+            <div class="modal-footer">
+                @if (utility == "Crear")
+                {
+                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
+                }
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                @if (utility == "Actualizar")
+                {
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
+                }
+                else if (utility == "Crear")
+                {
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
+                }
+                else
+                {
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL ELIMINAR *@
+@* MODAL ELIMINAR *@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Estas seguro de que deseas eliminar a @modelo.NomEm?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _disabled { get; set; } = false;
+
+    [Parameter]
+    public RbdEmpleado modelo { get; set; } = new RbdEmpleado();
+
+    [Parameter]
+    public string utility { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<RbdEmpleado> UpdateModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdEmpleado> AddModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdEmpleado> DeleteModel { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _disabled = false;
+
+        switch (utility)
+        {
+            case "add": utility = "Crear"; break;
+            case "update": utility = "Actualizar"; break;
+            case "delete": utility = "Eliminar"; break;
+
+            case "info":
+                {
+                    utility = "Informacion";
+                    _disabled = true;
+                }
+                ; break;
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task Clean()
+    {
+        modelo = new RbdEmpleado();
+        StateHasChanged();
+    }
+}

@@ -44,6 +44,7 @@ wwwroot\lib\bootstrap\css\bootstrap-grid.min.css.map
 wwwroot\lib\bootstrap\css\bootstrap-grid.min.css
 wwwroot\lib\bootstrap\css\bootstrap-grid.css.map
 wwwroot\lib\bootstrap\css\bootstrap-grid.css
+Components\NavBars\TopNavBarSearch.razor.js
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\app.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js.map
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js
@@ -89,3 +90,4 @@ C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\css\boot
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\css\bootstrap-grid.min.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\css\bootstrap-grid.css.map
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\css\bootstrap-grid.css
+C:\Users\edwin\source\repos\RBDProject\RBDProject\Components\NavBars\TopNavBarSearch.razor.js

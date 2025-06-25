@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using RBDProject.Components;
 using RBDProject.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +13,22 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<BdrbdContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 builder.Services.AddHttpClient();
 
+//SERVIDOR LOCAL HOST
+builder.Services.AddHttpClient("Servidor", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:44359/");
+});
+
 builder.Services.AddControllers();
+
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
@@ -38,6 +50,9 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+app.MapControllers();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

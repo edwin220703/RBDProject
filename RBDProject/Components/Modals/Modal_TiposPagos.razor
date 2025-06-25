@@ -1,0 +1,127 @@
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Calles</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @* FORMULARIO *@
+            @* FORMULARIO *@
+            <div class="modal-body">
+                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                    <div class="mb-3 row">
+                        <label class="form-label">Nombre</label>
+                        <InputNumber class="form-control" disabled="true" @bind-Value=modelo.CodTipago></InputNumber>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="form-label">Descripcion</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomPago></InputText>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="form-label">Descripcion</label>
+                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FecCreacion></InputDate>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodEst">
+                            <option value="0" selected>Selecciona</option>
+                            <option value="1">Opcion 1</option>
+                        </select>
+                    </div>
+                </EditForm>
+            </div>
+            @* BOTONES *@
+            <div class="modal-footer">
+                @if (utility == "Crear")
+                {
+                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
+                }
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                @if (utility == "Actualizar")
+                {
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
+                }
+                else if (utility == "Crear")
+                {
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
+                }
+                else
+                {
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL ELIMINAR *@
+@* MODAL ELIMINAR *@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Estas seguro de que deseas eliminar a @modelo.NomPago?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _disabled { get; set; } = false;
+
+    [Parameter]
+    public RbdTipoPago modelo { get; set; } = new RbdTipoPago();
+
+    [Parameter]
+    public string utility { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<RbdTipoPago> UpdateModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdTipoPago> AddModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdTipoPago> DeleteModel { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _disabled = false;
+
+        switch (utility)
+        {
+            case "add": utility = "Crear"; break;
+            case "update": utility = "Actualizar"; break;
+            case "delete": utility = "Eliminar"; break;
+
+            case "info":
+                {
+                    utility = "Informacion";
+                    _disabled = true;
+                }
+                ; break;
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task Clean()
+    {
+        modelo = new RbdTipoPago();
+        StateHasChanged();
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RBDProject.Models;
 
@@ -23,7 +24,9 @@ public partial class RbdArticulo
 
     public virtual RbdGrupo CodGrupNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<RbdDetalleFactura> RbdDetalleFacturas { get; set; } = new List<RbdDetalleFactura>();
 
+    [JsonIgnore]
     public virtual ICollection<RbdListaDePrecio> RbdListaDePrecios { get; set; } = new List<RbdListaDePrecio>();
 }

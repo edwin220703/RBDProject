@@ -317,5 +317,10 @@ C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\3g
 C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\scopedcss\projectbundle\RBDProject.bundle.scp.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
-C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\24c3n8n8lj-wite7a8fhl.gz
-C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\spwuttm0lx-welyt1jivu.gz
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\24c3n8n8lj-yg9klsq4kd.gz
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\spwuttm0lx-dnyp0axcgh.gz
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\edwin\source\repos\RBDProject\RBDProject\obj\Debug\net9.0\compressed\ks0mm7q2v8-3r8b2a0bt1.gz
