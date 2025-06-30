@@ -6,7 +6,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Calles</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Pagos</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             @* FORMULARIO *@
@@ -15,23 +15,26 @@
                 <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
                     <div class="mb-3 row">
                         <label class="form-label">Nombre</label>
-                        <InputNumber class="form-control" disabled="true" @bind-Value=modelo.CodTipago></InputNumber>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Descripcion</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomPago></InputText>
                     </div>
                     <div class="mb-3 row">
                         <label class="form-label">Descripcion</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FecCreacion></InputDate>
+                        <InputDate class="form-control" disabled="true" @bind-Value=modelo.FecCreacion></InputDate>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodEst">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Opcion 1</option>
-                        </select>
-                    </div>
+
+                    @if (listEstados != null)
+                    {
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                            <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodEst">
+                                @foreach (var e in listEstados)
+                                {
+                                    <option value="@e.CodEst">@e.NomEst</option>
+
+                                }
+                            </InputSelect>
+                        </div>
+                    }
                 </EditForm>
             </div>
             @* BOTONES *@
@@ -85,6 +88,9 @@
 
     [Parameter]
     public RbdTipoPago modelo { get; set; } = new RbdTipoPago();
+
+    [Parameter]
+    public List<RbdEstado> listEstados { get; set; } = new List<RbdEstado>();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;

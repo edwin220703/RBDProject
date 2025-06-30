@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace RBDProject.Models;
 
@@ -7,16 +8,18 @@ public partial class RbdComprobanteFiscal
 {
     public int CodNcf { get; set; }
 
+    [RegularExpression("^[ABEP][0-9]{3}[0-9]{7}$\r\n", ErrorMessage ="Coloque un NCF correctamente")]
     public string SecCom { get; set; } = null!;
 
     public string? DesCom { get; set; }
 
     public double? ImpCom { get; set; }
 
-    public DateTime DocFec { get; set; }
+    public DateTime DocFec { get; set; } = DateTime.Now;
 
     public DateTime? FechaVec { get; set; }
 
+    [Required(ErrorMessage = "El tipo de comprobante no debe estar vacio")]
     public int CodTipocom { get; set; }
 
     public virtual RbdTipoComprobante CodTipocomNavigation { get; set; } = null!;

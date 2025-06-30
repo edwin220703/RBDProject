@@ -24,7 +24,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdComprobanteFiscals.ToListAsync();
+                var content = await _context.RbdComprobanteFiscals.Include(t=>t.CodTipocomNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 

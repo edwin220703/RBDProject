@@ -24,7 +24,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdTipoPagos.ToListAsync();
+                var content = await _context.RbdTipoPagos.Include(e=>e.CodEstNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -86,7 +86,7 @@ namespace RBDProject.Controllers
 
         // PUT api/<RBDTipoPagoController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody]string value)
         {
             try
             {
@@ -97,11 +97,13 @@ namespace RBDProject.Controllers
                 if (content is null || result is null) 
                     return BadRequest();
 
+                content.NomPago = result.NomPago;
+                content.CodEst = result.CodEst;
 
-                _context.RbdTipoPagos.Update(result);
+                _context.RbdTipoPagos.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(result);
+                return NoContent();
             }
             catch (Exception ex)
             {

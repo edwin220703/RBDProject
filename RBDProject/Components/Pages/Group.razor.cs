@@ -11,8 +11,9 @@ namespace RBDProject.Components.Pages
     partial class Group
     {
         //LISTAS PRINCIPALES
-        List<RbdGrupo> grupos { get; set; } = null;
-        List<RbdEstado> estados { get; set; } = new List<RbdEstado>();
+        private List<RbdGrupo> grupos { get; set; } = null;
+        IList<RbdGrupo> _selectedgrupo { get;set; }= new List<RbdGrupo>();
+        private List<RbdEstado> estados { get; set; } = new List<RbdEstado>();
 
         //MODAL
         private RbdGrupo model { get; set; } = new RbdGrupo();

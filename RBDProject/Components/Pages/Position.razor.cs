@@ -10,6 +10,8 @@ namespace RBDProject.Components.Pages
     partial class Position
     {
         List<RbdCargo> cargos { get; set; } = null;
+        IList<RbdCargo> _selectedCargos { get; set; } = new List<RbdCargo>();
+        List<RbdEstado> _listEstados { get; set; }
 
         //MODAL
         private RbdCargo model { get; set; } = new RbdCargo();
@@ -22,9 +24,11 @@ namespace RBDProject.Components.Pages
         //API
         private string httpServidor = "Servidor";
         private string httpApi = "api/RBDCargos";
+        private string httpApiEstado = "api/RBDEstados";
 
         protected override async Task OnInitializedAsync()
         {
+            GetStatus();
             Get();
         }
 
@@ -57,6 +61,29 @@ namespace RBDProject.Components.Pages
             }
         }
 
+        public async Task GetStatus()
+        {
+            using (HttpClient client = _http.CreateClient(httpServidor))
+            {
+                using (var content = await client.GetAsync(httpApiEstado))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var result = await content.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<List<RbdEstado>>(result);
+
+                        if (result2 == null)
+                            _listEstados = new List<RbdEstado>();
+                        else
+                            _listEstados = result2;
+
+                        StateHasChanged();
+                    }
+                }
+            }
+        }
+
         public async Task Add(RbdCargo cargo)
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
@@ -65,7 +92,7 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        await Get();
                     }
                 }
             }
@@ -79,7 +106,7 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        await Get();
                     }
                 }
             }
@@ -93,7 +120,7 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        await Get();
                     }
                 }
             }

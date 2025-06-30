@@ -89,12 +89,14 @@ namespace RBDProject.Controllers
                 var result = JsonSerializer.Deserialize<RbdGrupo>(value);
 
                 if (content is null || result is null)
+                {
                     return BadRequest(id);
+                }
 
                 _context.RbdGrupos.Update(result);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
-                return Ok(value);
+                return Ok();
             }
             catch (Exception ex)
             {

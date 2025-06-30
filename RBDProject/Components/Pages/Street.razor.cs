@@ -7,6 +7,7 @@ namespace RBDProject.Components.Pages
     partial class Street
     {
         private List<RbdCalle> _listCalle { get; set; } = null;
+        private IList<RbdCalle> _selectedCalle { get; set; } = new List<RbdCalle>();
         private RbdCalle model { get; set; } = new RbdCalle();
         private string utilitymodal { get; set; } = string.Empty;
 
@@ -16,7 +17,7 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
+             Get();
         }
 
         public void SendTypeModal(RbdCalle rbdCalle, string e)

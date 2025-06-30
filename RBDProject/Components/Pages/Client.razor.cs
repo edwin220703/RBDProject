@@ -10,7 +10,8 @@ namespace RBDProject.Components.Pages
     partial class Client
     {
         List<RbdCliente> clientes { get; set; } = null;
-
+        IList<RbdCliente> _selectedCliente { get; set; } = new List<RbdCliente>();
+ 
         //MODAL
         private RbdCliente model { get; set; } = new RbdCliente();
         private string utilitymodal { get; set; } = string.Empty;
@@ -25,7 +26,7 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
+             Get();
         }
 
         public void SendTypeModal(RbdCliente cliente, string e)

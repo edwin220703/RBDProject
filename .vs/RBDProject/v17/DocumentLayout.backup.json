@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\edwin\\source\\repos\\RBDProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\modals\\modal_articulos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\modals\\modal_articulos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\article.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\article.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\article.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\article.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\controllers\\rbdarticuloscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\controllers\\rbdarticuloscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -14,8 +26,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Article.razor",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Article.razor",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\Article.razor",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACIAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-30T02:12:59.014Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Article.razor.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Article.razor.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor.cs",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\Article.razor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T02:13:00.172Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RBDArticulosController.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Controllers\\RBDArticulosController.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
+              "RelativeToolTip": "RBDProject\\Controllers\\RBDArticulosController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T02:13:26.66Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -27,14 +81,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "RBDArticulosController.cs",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
-              "RelativeDocumentMoniker": "RBDProject\\Controllers\\RBDArticulosController.cs",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
-              "RelativeToolTip": "RBDProject\\Controllers\\RBDArticulosController.cs",
-              "ViewState": "AgIAANIAAAAAAAAAAAAAALUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-25T12:27:44.581Z",
+              "Title": "Modal_Articulos.razor",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Modals\\Modal_Articulos.razor",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Modals\\Modal_Articulos.razor",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Modals\\Modal_Articulos.razor",
+              "RelativeToolTip": "RBDProject\\Components\\Modals\\Modal_Articulos.razor",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAgwE0AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-30T02:17:47.929Z",
               "EditorCaption": ""
             }
           ]

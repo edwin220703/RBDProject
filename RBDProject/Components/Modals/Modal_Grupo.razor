@@ -20,20 +20,19 @@
                         <label class="form-label">Descripcion</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DesGrup></InputText>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                    @if (estados != null)
+                    {
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
 
-                        <select class="form-select" aria-label="Default select example" @bind="@modelo.CodEst">
-                            <option value=""></option>
-                            @if (estados != null)
-                            {
+                            <InputSelect class="form-select" aria-label="Default select example" @bind-Value="@modelo.CodEst">
                                 @foreach (RbdEstado e in estados)
                                 {
-                                    <option value="@e.CodEst">@e.NomEst</option>
+                                    <option value=@e.CodEst>@e.NomEst</option>
                                 }
-                            }
-                        </select>
-                    </div>
+                            </InputSelect>
+                        </div>
+                    }
                 </EditForm>
             </div>
             @* BOTONES *@

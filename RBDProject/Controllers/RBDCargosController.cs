@@ -90,12 +90,12 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdCargos.FindAsync(id);
 
-                if (content == null || value == null)
-                    return NoContent();
-
                 var result = JsonSerializer.Deserialize<RbdCargo>(value);
 
-                _context.RbdCargos.Update(content);
+                if (content == null || result == null)
+                    return NoContent();
+
+                _context.RbdCargos.Update(result);
                 await _context.SaveChangesAsync();
 
                 return Ok(value);

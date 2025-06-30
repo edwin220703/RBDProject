@@ -24,7 +24,8 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.ToListAsync();
+                var content = await _context.RbdArticulos.Include(e=>e.CodEstNavigation).Include(l=>l.RbdListaDePrecios).
+                     Include(g=>g.CodGrupNavigation).ToListAsync();
 
                 return Ok(JsonSerializer.Serialize(content));
             }
@@ -107,7 +108,9 @@ namespace RBDProject.Controllers
                 _context.RbdArticulos.Add(content);
                 await _context.SaveChangesAsync();
 
-                return StatusCode(201,content);
+                var id = _context.RbdArticulos.LastAsync().Id;
+
+                return StatusCode(201,id);
             }
             catch (Exception ex)
             {

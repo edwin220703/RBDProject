@@ -6,31 +6,42 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Grupo</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Cargo</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             @* FORMULARIO *@
             <div class="modal-body">
                 <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                    <DataAnnotationsValidator />
                     <div class="mb-3 row">
                         <label class="form-label">Nombre</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCar></InputText>
+                        <ValidationMessage For="(() => modelo.NomCar)"></ValidationMessage>
                     </div>
                     <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
+                        <label class="form-label">Descripcion</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DesCar></InputText>
+                        <ValidationMessage For="(() => modelo.DesCar)"></ValidationMessage>
                     </div>
                     <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FecCreacion></InputDate>
+                        <label class="form-label">Fecha de creacion</label>
+                        <InputDate class="form-control" disabled="true" @bind-Value=modelo.FecCreacion></InputDate>
+                        <ValidationMessage For="(() => modelo.FecCreacion)"></ValidationMessage>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodEst">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Opcion 1</option>
-                        </select>
-                    </div>
+
+                    @if (_listEstados != null)
+                    {
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                            <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodEst">
+                                @foreach (var e in _listEstados)
+                                {
+                                    <option value="@e.CodEst">@e.NomEst</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="(() => modelo.CodEst)"></ValidationMessage>
+                        </div>
+                    }
                 </EditForm>
             </div>
             @* BOTONES *@
@@ -81,6 +92,9 @@
 
 @code {
     private bool _disabled { get; set; } = false;
+
+    [Parameter]
+    public List<RbdEstado> _listEstados { get; set; } = new List<RbdEstado>();
 
     [Parameter]
     public RbdCargo modelo { get; set; } = new RbdCargo();

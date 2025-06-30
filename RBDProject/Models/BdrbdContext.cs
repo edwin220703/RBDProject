@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,9 +53,9 @@ public partial class BdrbdContext : DbContext
 
     public virtual DbSet<RbdTipoPago> RbdTipoPagos { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=Edwin; Database=BDRBD; Trusted_Connection=true; TrustServerCertificate=True;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Server=Edwin; Database=BDRBD; Trusted_Connection=true; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,6 +86,11 @@ public partial class BdrbdContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("Nom_art");
+
+            entity.HasOne(d => d.CodEstNavigation).WithMany(p => p.RbdArticulos)
+                .HasForeignKey(d => d.CodEst)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RBD_Articulo_RBD_Estado");
 
             entity.HasOne(d => d.CodGrupNavigation).WithMany(p => p.RbdArticulos)
                 .HasForeignKey(d => d.CodGrup)
@@ -550,6 +555,10 @@ public partial class BdrbdContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Nom_pago");
+
+            entity.HasOne(d => d.CodEstNavigation).WithMany(p => p.RbdTipoPagos)
+                .HasForeignKey(d => d.CodEst)
+                .HasConstraintName("FK_RBD_Tipo_Pago_RBD_Estado");
         });
 
         OnModelCreatingPartial(modelBuilder);

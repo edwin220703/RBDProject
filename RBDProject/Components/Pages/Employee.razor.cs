@@ -10,7 +10,7 @@ namespace RBDProject.Components.Pages
     partial class Employee
     {
         List<RbdEmpleado> empleados  { get; set; } = null;
-
+        IList<RbdEmpleado> _selectedEmpleados { get; set; } = new List<RbdEmpleado>();
         //MODAL
         private RbdEmpleado model { get; set; } = new RbdEmpleado();
         private string utilitymodal { get; set; } = string.Empty;

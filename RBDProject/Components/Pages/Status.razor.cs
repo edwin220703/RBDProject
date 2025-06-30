@@ -10,6 +10,7 @@ namespace RBDProject.Components.Pages
     partial class Status
     {
         List<RbdEstado> estados { get; set; } = null;
+        IList<RbdEstado> _selectedEstados { get; set; } = new List<RbdEstado>();
 
         //MODAL
         private RbdEstado model { get; set; } = new RbdEstado();
@@ -25,7 +26,7 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
+             Get();
         }
 
         public void SendTypeModal(RbdEstado rbdEstado, string e)

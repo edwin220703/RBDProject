@@ -16,17 +16,18 @@ public partial class RbdArticulo
 
     public int ExistArt { get; set; }
 
-    public DateTime FecArt { get; set; }
+    public DateTime FecArt { get; set; } = DateTime.Now;
 
     public int CodGrup { get; set; }
 
     public int CodEst { get; set; }
+
+    public virtual RbdEstado CodEstNavigation { get; set; } = null!;
 
     public virtual RbdGrupo CodGrupNavigation { get; set; } = null!;
 
     [JsonIgnore]
     public virtual ICollection<RbdDetalleFactura> RbdDetalleFacturas { get; set; } = new List<RbdDetalleFactura>();
 
-    [JsonIgnore]
     public virtual ICollection<RbdListaDePrecio> RbdListaDePrecios { get; set; } = new List<RbdListaDePrecio>();
 }

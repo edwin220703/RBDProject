@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Radzen;
 using RBDProject.Components;
 using RBDProject.Models;
 using System.Text.Json.Serialization;
@@ -23,6 +24,9 @@ builder.Services.AddHttpClient("Servidor", client =>
 {
     client.BaseAddress = new Uri("https://localhost:44359/");
 });
+
+builder.Services.AddRadzenComponents();
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddControllers();
 

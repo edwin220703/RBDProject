@@ -19,7 +19,7 @@ public partial class RbdFactura
 
     public double TotalNeto { get; set; }
 
-    public DateTime? FechaReg { get; set; }
+    public DateTime FechaReg { get; set; }
 
     public int CodEst { get; set; }
 

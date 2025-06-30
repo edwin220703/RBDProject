@@ -6,6 +6,7 @@ namespace RBDProject.Components.Pages
     partial class City
     {
         private List<RbdCiudade> _lisciudades { get; set; } = null;
+        private IList<RbdCiudade> _selectedCiudades { get; set; } = new List<RbdCiudade>();
         private RbdCiudade model { get; set; } = new RbdCiudade();
         private string utilitymodal { get; set; } = string.Empty;
 
@@ -15,7 +16,7 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
+             Get();
         }
 
         public void SendTypeModal(RbdCiudade cliente, string e)

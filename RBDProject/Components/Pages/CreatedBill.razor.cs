@@ -19,6 +19,9 @@ namespace RBDProject.Components.Pages
         //TIPO DE PAGO
         private List<RbdTipoPago> _tipoDePago { get; set; } = null;
 
+        //TIPO  DE COMPROBANTE
+        private List<RbdTipoComprobante> _tipoComprobante { get; set; } = null;
+
         //BUSCAR PRODUCTO
         private string CodArt { get; set; }
         private string NomArt { get; set; }
@@ -93,6 +96,7 @@ namespace RBDProject.Components.Pages
                         {
                             r.CodArtNavigation.IdArt = result2.IdArt;
                             r.CodArt = result2.CodArt;
+                            r.CodArtNavigation.NomArt = result2.NomArt;
                             StateHasChanged();
                         }
 

@@ -6,6 +6,7 @@ namespace RBDProject.Components.Pages
     partial class Bill
     {
         private List<RbdFactura> _listFacturas { get; set; } = null;
+        private IList<RbdFactura> _selectedFactura { get; set; } = new List<RbdFactura>();
         private RbdFactura model { get; set; } = new RbdFactura();
         private string utilitymodal { get; set; } = string.Empty;
 
