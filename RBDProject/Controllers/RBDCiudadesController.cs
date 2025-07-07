@@ -78,18 +78,19 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdCiudades.FindAsync(id);
 
-                if (content == null || value == null)
-                    return NotFound();
-
                 var result = JsonSerializer.Deserialize<RbdCiudade>(value);
 
-                if (result != null)
-                {
-                    _context.RbdCiudades.Update(result);
-                    await _context.SaveChangesAsync();
+                if (content == null || result == null)
+                    return NotFound();
 
-                    return Ok(value);
-                }
+                content.NomCiudad = result.NomCiudad;
+                content.CodPostal = result.CodPostal;
+
+                _context.RbdCiudades.Entry(content).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(value);
+
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdCiudades.FindAsync(id);
 
-                if(content is null)
+                if (content is null)
                 {
                     return NotFound();
                 }

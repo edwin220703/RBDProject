@@ -6,20 +6,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Calles</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Comprobante Fiscal</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             @* FORMULARIO *@
             @* FORMULARIO *@
             <div class="modal-body">
                 <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
-                        <InputNumber class="form-control" disabled="true" @bind-Value=modelo.CodNcf></InputNumber>
-                    </div>
+                    <DataAnnotationsValidator/>
                     <div class="mb-3 row">
                         <label class="form-label">Secuencia</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.SecCom></InputText>
+                        <ValidationMessage For="(()=>modelo.SecCom)"/>
                     </div>
                     <div class="mb-3 row">
                         <label class="form-label">Descripcion</label>
@@ -31,7 +29,7 @@
                     </div>
                     <div class="mb-3 row">
                         <label class="form-label">Emision</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.DocFec></InputDate>
+                        <InputDate class="form-control" disabled="true" @bind-Value=modelo.DocFec></InputDate>
                     </div>
                     <div class="mb-3 row">
                         <label class="form-label">Vencimiento</label>

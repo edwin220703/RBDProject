@@ -95,7 +95,13 @@ namespace RBDProject.Controllers
                 if (content == null || result == null) 
                     return BadRequest();
 
-                _context.RbdComprobanteFiscals.Update(result);
+                content.SecCom = result.SecCom;
+                content.DesCom = result.DesCom;
+                content.ImpCom = result.ImpCom;
+                content.FechaVec = result.FechaVec;
+                content.CodTipocom = result.CodTipocom;
+
+                _context.RbdComprobanteFiscals.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(result);

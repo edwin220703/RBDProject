@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,6 +24,10 @@ namespace RBDProject.Components.Pages
             Get();
             StateHasChanged();
         }
+
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
+
 
         public async Task Get()
         {

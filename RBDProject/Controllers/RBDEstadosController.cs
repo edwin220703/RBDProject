@@ -94,8 +94,10 @@ namespace RBDProject.Controllers
                 if(content == null || result is null)
                     return BadRequest();
 
+                content.NomEst= result.NomEst;
+                content.Descripcion = result.Descripcion;
 
-                _context.RbdEstados.Update(result);
+                _context.RbdEstados.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(result);

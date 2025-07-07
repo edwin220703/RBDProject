@@ -95,7 +95,11 @@ namespace RBDProject.Controllers
                 if (content == null || result == null)
                     return NoContent();
 
-                _context.RbdCargos.Update(result);
+                content.NomCar = result.NomCar;
+                content.DesCar = result.DesCar;
+                content.CodEst = result.CodEst;
+
+                _context.RbdCargos.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(value);

@@ -1,47 +1,171 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Radzen;
+using RBDProject.Components.Helpers;
 using RBDProject.Models;
+using System.Net.NetworkInformation;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace RBDProject.Components.Pages
 {
     partial class CreatedBill
     {
+        //API PRINCIPAL
         private string _httpServidor = "Servidor";
-        private string _httpFactura = "api/RBDFactura";
-        private string _httpDetalleFactura = "api/RBDFactura/DetalleFactura";
-        private string _httpPago = "api/RBDTipoPago";
+        private string _httpFactura = "api/RBDFacturas";
+        private string _httpDetalleFactura = "api/RBDFacturas/DetalleFactura";
+
+        //API NECESARIA
         private string _httpArticulo = "api/RBDArticulos";
+        private string _httpClientes = "api/RBDClientes";
+        private string _httpPago = "api/RBDTipoPago";
+        private string _httpComprobante = "api/RBDTipoComprobante";
 
-        //MODELOS DE FACTURA Y DETALLE
-        private RbdFactura _factura { get; set; } = new RbdFactura();
-        private List<RbdDetalleFactura> _detalleFactura { get; set; } = new List<RbdDetalleFactura>();
+        //SECCION DE LISTAS
+        private List<RbdCliente> _listCliente { get; set; } = new List<RbdCliente>();
+        private List<RbdArticulo> _listArticulo { get; set; } = new List<RbdArticulo>();
 
-        //TIPO DE PAGO
-        private List<RbdTipoPago> _tipoDePago { get; set; } = null;
+        private List<RbdTipoPago> _tipoDePago { get; set; } = new List<RbdTipoPago>();
+        private List<RbdTipoComprobante> _tipoComprobante { get; set; } = new List<RbdTipoComprobante>();
 
-        //TIPO  DE COMPROBANTE
-        private List<RbdTipoComprobante> _tipoComprobante { get; set; } = null;
+        private List<DetalleFac> _listDetalleFac { get; set; } = new List<DetalleFac>();
 
-        //BUSCAR PRODUCTO
-        private string CodArt { get; set; }
-        private string NomArt { get; set; }
+        //SECCION DE MODELOS
+        private DetalleFac _modeloDetalle { get; set; } = new DetalleFac();
+
+        private RbdArticulo _modeloArticulo { get; set; } = new RbdArticulo();
+        private RbdCliente _modeloCliente { get; set; } = new RbdCliente();
+        private RbdTipoPago _modeloPago { get; set; } = new RbdTipoPago();
+        private RbdTipoComprobante _modeloComprobante { get; set; } = new RbdTipoComprobante();
+
+
+        //SECCION DE BUSQUEDAS PRODUCTO
+        private string IDCLI
+        {
+            get { return _modeloCliente.IdCli; }
+
+            set { VerifiqueClientes(value, 1); }
+        }
+
+        private string NAMECLI
+        {
+            get { return _modeloArticulo.NomArt; }
+
+            set { VerifiqueClientes(value, 2); }
+        }
+
+        //SECCION DE BUSQUEDA PRODUCTO
+        private string IDPRO
+        {
+            get { return _modeloArticulo.IdArt; }
+
+            set { VerifiqueProduct(value, 1); }
+        }
+
+        private string NAMEPRO
+        {
+            get { return _modeloArticulo.NomArt; }
+
+            set { VerifiqueProduct(value, 2); }
+        }
+
+        private double Descuento { get; set; } = 0;
+        private double DescuentoPorciento { get; set; } = 0;
+
+        private double ImpuestoPorciento { get; set; } = 0;
+        private double Impuesto { get; set; } = 0;
+
+        private double Sub_Total { get; set; } = 0;
+        private double Total { get; set; } = 0;
+
+        [Parameter]
+        public long NumFac { get; set; } = 0;
 
         protected override async Task OnInitializedAsync()
         {
-            _factura.CodCliNavigation = new RbdCliente();
-            _factura.CodEmNavigation = new RbdEmpleado();
-            _factura.FechaReg = DateTime.Now;
+            await base.OnInitializedAsync();
+            GetArticleAndClients();
+            GetByOther();
 
-            await GetTipoPagos();
+            if (NumFac != 0)
+            {
+                using(var client = _http.CreateClient(_httpServidor))
+                {
+                    using(var content = await client.GetAsync(_httpFactura + $"/{NumFac}"))
+                    {
+                        if (content.IsSuccessStatusCode)
+                        {
+                            var result = await content.Content.ReadAsStringAsync();
+
+                            var result2 = JsonSerializer.Deserialize<RbdFactura>(result);
+
+                            if (result2 != null)
+                                return;
+                            
+                            IDCLI = result2.CodCliNavigation.IdCli;
+                            _modeloPago.CodTipago = result2.CodTipago;
+                            _modeloComprobante.CodTipocom = result2.CodNCfNavigation.CodTipocom;
+                            _modeloArticulo.FecArt = result2.FechaReg;
+
+                            foreach(var item in result2.RbdDetalleFacturas)
+                            {
+                                _listDetalleFac.Add(new DetalleFac()
+                                {
+                                    articulo = item.CodArtNavigation,
+                                    Cantidad =(int) item.CantArt,
+                                    Precio =(double) item.Precio,
+                                    DescuentoUnit =(double) item.DescuentoArt
+                                });
+                            }
+
+                        }
+                    }
+                }
+            }
+
             StateHasChanged();
         }
 
-
-        public async Task GetTipoPagos()
+        public async Task GetArticleAndClients()
         {
             using (HttpClient client = _http.CreateClient(_httpServidor))
             {
-                using(var content = await client.GetAsync(_httpPago))
+                using (var content = await client.GetAsync(_httpArticulo))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var result = await content.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<List<RbdArticulo>>(result);
+
+                        if (result2 != null)
+                            _listArticulo = result2;
+                    }
+                }
+
+                using (var content = await client.GetAsync(_httpClientes))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var result = await content.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<List<RbdCliente>>(result);
+
+                        if (result2 != null)
+                            _listCliente = result2;
+                    }
+                }
+            }
+
+            StateHasChanged();
+        }
+
+        public async Task GetByOther()
+        {
+            using (HttpClient client = _http.CreateClient(_httpServidor))
+            {
+                using (var content = await client.GetAsync(_httpPago))
                 {
                     if (content.IsSuccessStatusCode)
                     {
@@ -49,84 +173,266 @@ namespace RBDProject.Components.Pages
 
                         var result2 = JsonSerializer.Deserialize<List<RbdTipoPago>>(result);
 
-                        if(result2 != null)
+                        if (result2 != null)
                             _tipoDePago = result2;
                     }
                 }
-            }
-        }
 
-        public async Task VerifiqueProductById(RbdDetalleFactura r)
-        {
-            using (HttpClient client = _http.CreateClient(_httpServidor))
-            {
-                using (var content = await client.GetAsync($"api/RBDArticulos/Cod={r.CodArtNavigation.IdArt}"))
+                using (var content = await client.GetAsync(_httpComprobante))
                 {
                     if (content.IsSuccessStatusCode)
                     {
                         var result = await content.Content.ReadAsStringAsync();
 
-                        var result2 = JsonSerializer.Deserialize<RbdArticulo>(result);
-
-                        if(result2 != null)
-                        {
-                            r.CodArtNavigation.NomArt = result2.NomArt;
-                            r.CodArt = result2.CodArt;
-                            StateHasChanged();
-                        }
-
-                    }
-                }
-            }
-        }
-
-        public async Task VerifiqueProductByName(RbdDetalleFactura r)
-        {
-            using (HttpClient client = _http.CreateClient(_httpServidor))
-            {
-                using (var content = await client.GetAsync($"api/RBDArticulos/Name={r.CodArtNavigation.NomArt}"))
-                {
-                    if (content.IsSuccessStatusCode)
-                    {
-                        var result = await content.Content.ReadAsStringAsync();
-
-                        var result2 = JsonSerializer.Deserialize<RbdArticulo>(result);
+                        var result2 = JsonSerializer.Deserialize<List<RbdTipoComprobante>>(result);
 
                         if (result2 != null)
-                        {
-                            r.CodArtNavigation.IdArt = result2.IdArt;
-                            r.CodArt = result2.CodArt;
-                            r.CodArtNavigation.NomArt = result2.NomArt;
-                            StateHasChanged();
-                        }
-
+                            _tipoComprobante = result2;
                     }
                 }
             }
+            StateHasChanged();
         }
 
-        public async Task Enter(KeyboardEventArgs e, RbdDetalleFactura r, string focus)
+        //BUSQUEDA CLIENTES
+        private async Task VerifiqueClientes(string arti, int search)
         {
-            if(e.Key == "Enter")
+            using (HttpClient client = _http.CreateClient(_httpServidor))
             {
-                switch (focus)
+                switch (search)
                 {
-                    case "id": await VerifiqueProductById(r);break;
-                    case "name":await VerifiqueProductByName(r);break;
+                    case 1:
+                        {
+
+                            using (var content = await client.GetAsync(_httpClientes + $"/Id={arti}"))
+                            {
+                                if (content.IsSuccessStatusCode)
+                                {
+                                    var result = await content.Content.ReadAsStringAsync();
+
+                                    var result2 = JsonSerializer.Deserialize<RbdCliente>(result);
+
+                                    if (result2 != null)
+                                    {
+                                        _modeloCliente = result2;
+                                    }
+
+                                }
+                            }
+                        }
+                        ; break;
+
+                    case 2:
+                        {
+                            using (var content = await client.GetAsync(_httpClientes + $"/Name={arti}"))
+                            {
+                                if (content.IsSuccessStatusCode)
+                                {
+                                    var result = await content.Content.ReadAsStringAsync();
+
+                                    var result2 = JsonSerializer.Deserialize<RbdCliente>(result);
+
+                                    if (result2 != null)
+                                    {
+                                        _modeloCliente = result2;
+                                    }
+
+                                }
+                            }
+                        }
+                        ; break;
                 }
-                
             }
+            StateHasChanged();
         }
 
-        public async Task AddProduct()
+        //BUSQUEDA Articulos
+        private async Task VerifiqueProduct(string arti, int Search)
         {
-            _detalleFactura.Add(new RbdDetalleFactura()
+            using (HttpClient client = _http.CreateClient(_httpServidor))
             {
-                CodArtNavigation = new RbdArticulo(),
-                NumFacNavigation = new RbdFactura()
+                switch (Search)
+                {
+                    case 1:
+                        {
+                            using (var content = await client.GetAsync(_httpArticulo + $"/Name={arti}"))
+                            {
+                                if (content.IsSuccessStatusCode)
+                                {
+                                    var result = await content.Content.ReadAsStringAsync();
+
+                                    var result2 = JsonSerializer.Deserialize<RbdArticulo>(result);
+
+                                    if (result2 != null)
+                                    {
+                                        _modeloArticulo = result2;
+                                        _modeloDetalle.articulo = result2;
+                                    }
+
+                                }
+                            }
+                        }
+                        ; break;
+                    case 2:
+                        {
+                            using (var content = await client.GetAsync(_httpArticulo + $"/Name={arti}"))
+                            {
+                                if (content.IsSuccessStatusCode)
+                                {
+                                    var result = await content.Content.ReadAsStringAsync();
+
+                                    var result2 = JsonSerializer.Deserialize<RbdArticulo>(result);
+
+                                    if (result2 != null)
+                                    {
+                                        _modeloArticulo = result2;
+                                        _modeloDetalle.articulo = result2;
+                                    }
+
+                                }
+                            }
+                        }
+                        ; break;
+                }
+            }
+            StateHasChanged();
+        }
+
+        //PROCESO PARA CRUD PARA EL PRODUCTO
+        public void AddProduct()
+        {
+            _listDetalleFac.Add(new DetalleFac()
+            {
+                articulo = _modeloDetalle.articulo,
+                Cantidad = _modeloDetalle.Cantidad,
+                Precio = _modeloDetalle.Precio,
+                DescuentoUnit = _modeloDetalle.DescuentoUnit,
             });
+
+
+            Contabilidad();
 
             StateHasChanged();
         }
+
+        public void Contabilidad()
+        {
+            Sub_Total = _listDetalleFac.Sum(x => x.Sub_Total);
+
+
+            if (Impuesto != 0)
+            {
+                var verdaderoImpuesto = ImpuestoPorciento / 100;
+                Impuesto = Sub_Total * verdaderoImpuesto;
+            }
+
+            if (DescuentoPorciento != 0)
+            {
+                var verdaderoPorciento = DescuentoPorciento / 100;
+                Descuento = Sub_Total * verdaderoPorciento;
+            }
+
+            Total = (Sub_Total + Impuesto) - Descuento;
+        }
+
+        public void DeleteProduct(DetalleFac art)
+        {
+            Contabilidad();
+
+            _listDetalleFac.Remove(art);
+        }
+
+        public void EditProduct(DetalleFac art)
+        {
+
+
+        }
+
+        //AGREGAR FACTURA
+        //AGREGAR FACTURA
+        //AGREGAR FACTURA
+        //AGREGAR FACTURA
+        //AGREGAR FACTURA
+        public async Task CREAR()
+        {
+            try
+            {
+                Contabilidad();
+
+                //CREANDO LA FACTURA BASE
+                var codCli = _modeloCliente.IdCli;
+                var codEm = 8;
+                var codTipago = _modeloPago.CodTipago;
+                var FacDate = DateTime.Now;
+                var totalBalance = Total;
+                var totalNeto = Sub_Total;
+                int codEst;
+
+                if (_modeloPago.CodTipago == 5)
+                {
+                    codEst = 6;
+                }
+                else
+                {
+                    codEst = 3;
+                }
+
+                using (HttpClient client = _http.CreateClient(_httpServidor))
+                {
+                    using (var content = await client.PostAsJsonAsync(_httpFactura, JsonSerializer.Serialize(new RbdFactura()
+                    {
+                        CodCli = _modeloCliente.CodCli,
+                        CodEm = 8,
+                        CodTipago = _modeloPago.CodTipago,
+                        TotalBalance = Total,
+                        TotalNeto = Sub_Total,
+                        CodEst = codEst,
+                    })))
+                    {
+                        if (content.IsSuccessStatusCode)
+                        {
+                            var id = await content.Content.ReadAsStringAsync();
+
+                            var id2 = JsonSerializer.Deserialize<int>(id);
+
+                            foreach (var d in _listDetalleFac)
+                            {
+                                using (var contentDetalle = await client.PostAsJsonAsync(_httpDetalleFactura, JsonSerializer.Serialize(new RbdDetalleFactura()
+                                {
+                                    NumFac = id2,
+                                    CodArt = d.articulo.CodArt,
+                                    CantArt = d.Cantidad,
+                                    Precio = d.Precio,
+                                    DescuentoArt = d.DescuentoUnit
+                                })))
+                                {
+                                    if (contentDetalle.IsSuccessStatusCode)
+                                    {
+
+                                    }
+                                }
+                            }
+
+                            _notificationService.Notify(NotificationSeverity.Success, "FACTURA AGREGADA", "SE AGREGO LA FACTURA", 10000);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+
+
+
+
+
+
+        }
+
+
     }
 }

@@ -24,15 +24,17 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.Include(e=>e.CodEstNavigation).Include(l=>l.RbdListaDePrecios).
-                     Include(g=>g.CodGrupNavigation).ToListAsync();
+                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).Include(l => l.RbdListaDePrecios).
+                     Include(g => g.CodGrupNavigation).ToListAsync();
 
-                return Ok(JsonSerializer.Serialize(content));
+                var result = JsonSerializer.Serialize(content);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return StatusCode(500,ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -42,9 +44,10 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.FindAsync(id);
+                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).Include(l => l.RbdListaDePrecios).
+                     Include(g => g.CodGrupNavigation).Where(x => x.CodArt == id).FirstAsync();
 
-                if(content == null)
+                if (content == null)
                     return NoContent();
 
                 return Ok(JsonSerializer.Serialize(content));
@@ -61,7 +64,8 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.Where(x=>x.IdArt.Contains(id)).ToListAsync();
+                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).Include(l => l.RbdListaDePrecios).
+                     Include(g => g.CodGrupNavigation).Where(x => x.IdArt.Contains(id)).ToListAsync();
 
                 if (content == null)
                     return NoContent();
@@ -80,7 +84,8 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.Where(x => x.NomArt.Contains(name)).ToListAsync();
+                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).Include(l => l.RbdListaDePrecios).
+                     Include(g => g.CodGrupNavigation).Where(x => x.NomArt.Contains(name)).ToListAsync();
 
                 if (content == null)
                     return NoContent();
@@ -102,15 +107,15 @@ namespace RBDProject.Controllers
             {
                 var content = JsonSerializer.Deserialize<RbdArticulo>(value);
 
-                if( content == null )
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdArticulos.Add(content);
                 await _context.SaveChangesAsync();
 
-                var id = _context.RbdArticulos.LastAsync().Id;
+                var id = _context.RbdArticulos.Max(c => c.CodArt);
 
-                return StatusCode(201,id);
+                return StatusCode(201, id);
             }
             catch (Exception ex)
             {
@@ -132,7 +137,14 @@ namespace RBDProject.Controllers
                 if (result == null || content == null)
                     return BadRequest();
 
-                _context.RbdArticulos.Update(result);
+                content.IdArt = result.IdArt;
+                content.NomArt = result.NomArt;
+                content.DesArt = result.DesArt;
+                content.ExistArt = result.ExistArt;
+                content.CodGrup = result.CodGrup;
+                content.CodEst = result.CodEst;
+
+                _context.RbdArticulos.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(value);
@@ -152,7 +164,7 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdArticulos.FindAsync(id);
 
-                if(content == null)
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdArticulos.Remove(content);
@@ -178,7 +190,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdListaDePrecios.Where(x=>x.CodArt==id).ToListAsync();
+                var content = await _context.RbdListaDePrecios.Where(x => x.CodArt == id).ToListAsync();
 
                 if (content == null)
                     return NoContent();
@@ -221,17 +233,33 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdListaDePrecios.Where(x=>x.CodArt == id).FirstOrDefaultAsync();
+                var content = await _context.RbdListaDePrecios.Where(x => x.CodArt == id).ToListAsync();
 
-                var result = JsonSerializer.Deserialize<RbdListaDePrecio>(value);
+                var result = JsonSerializer.Deserialize<List<RbdListaDePrecio>>(value);
 
-                if (result == null || content == null)
+
+                if (content == null || result == null)
                     return BadRequest();
 
-                _context.RbdListaDePrecios.Update(result);
+                for (int i = 0; i < result.Count; i++)
+                {
+                    if (i <= content.Count)
+                    {
+                        content[i].CodArt = result[i].CodArt;
+                        content[i].Precio = result[i].Precio;
+
+                        _context.RbdListaDePrecios.Entry(content[i]).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        _context.RbdListaDePrecios.Add(result[i]);
+                    }
+
+                }
+
                 await _context.SaveChangesAsync();
 
-                return Ok(value);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -242,7 +270,7 @@ namespace RBDProject.Controllers
 
         // DELETE api/<RBDArticulosController>/ListaPrecios/5
         [HttpDelete("ListaPrecios/{id}")]
-        public async Task<IActionResult> DeleteListaPrecios(int id, [FromBody]string value)
+        public async Task<IActionResult> DeleteListaPrecios(int id, [FromBody] string value)
         {
             try
             {

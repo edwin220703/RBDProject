@@ -24,6 +24,8 @@ namespace RBDProject.Controllers
         {
             try
             {
+                //var content = await _context.RbdClientes.Include(g=>g.CodGenNavigation).
+                //    Include(ciu=>ciu.IdCiudadNavigation).Include(c=>c.IdCalleNavigation).ToListAsync();
                 var content = await _context.RbdClientes.ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
@@ -43,10 +45,49 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdClientes.FindAsync(id);
+                var content = await _context.RbdClientes.Include(g => g.CodGenNavigation).
+                    Include(ciu => ciu.IdCiudadNavigation).Include(c => c.IdCalleNavigation).Where(x => x.CodCli == id).FirstAsync();
 
                 if (content == null)
                     return BadRequest();
+
+                var result = JsonSerializer.Serialize(content);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("Id={id}")]
+        public async Task<IActionResult> GetbyId(string id)
+        {
+            try
+            {
+                var content = await _context.RbdClientes.Include(g => g.CodGenNavigation).
+                    Include(ciu => ciu.IdCiudadNavigation).Include(c => c.IdCalleNavigation).Where(x => x.IdCli == id).FirstOrDefaultAsync();
+
+                var result = JsonSerializer.Serialize(content);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("Name={name}")]
+        public async Task<IActionResult> GetbyName(string Name)
+        {
+            try
+            {
+                var content = await _context.RbdClientes.Include(g => g.CodGenNavigation).
+                    Include(ciu => ciu.IdCiudadNavigation).Include(c => c.IdCalleNavigation).Where(x=>x.NomCli == Name).FirstOrDefaultAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -96,7 +137,17 @@ namespace RBDProject.Controllers
                 if (content == null || result == null)
                     return BadRequest();
 
-                _context.RbdClientes.Update(content);
+                content.IdCli = result.IdCli;
+                content.NomCli = result.NomCli;
+                content.DniCli = result.DniCli;
+                content.CorrCli = result.CorrCli;
+                content.CodGen = result.CodGen;
+                content.IdCiudad = result.IdCiudad;
+                content.IdCalle = result.IdCalle;
+                content.DetallDirec=result.DetallDirec;
+                content.TipRnc = result.TipRnc;
+
+                _context.RbdClientes.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok();

@@ -9,18 +9,18 @@ public partial class RbdCliente
 {
     public int CodCli { get; set; }
 
-    [Required(ErrorMessage = "El ID del cliente no  debe estar vacio")]
+    //[Required(ErrorMessage = "El ID del cliente no  debe estar vacio")]
     public string IdCli { get; set; } = null!;
 
-    [Required(ErrorMessage = "El Nombre del cliente no  debe estar vacio")]
+    //[Required(ErrorMessage = "El Nombre del cliente no  debe estar vacio")]
     public string NomCli { get; set; } = null!;
 
-    [MinLength(13, ErrorMessage = "El DNI/Cedula debe contener minimo 11 numeros")]
-    [MaxLength(11, ErrorMessage = "El DNI/Cedula debe contener maximo 11 numeros")]
-    [Required(ErrorMessage = "El DNI/Cedula debe estar completo. Coloque solo numeros")]
+    //[MinLength(13, ErrorMessage = "El DNI/Cedula debe contener minimo 11 numeros")]
+    //[MaxLength(11, ErrorMessage = "El DNI/Cedula debe contener maximo 11 numeros")]
+    //[Required(ErrorMessage = "El DNI/Cedula debe estar completo. Coloque solo numeros")]
     public string? DniCli { get; set; } 
 
-    [EmailAddress(ErrorMessage = "Coloque un correo valido")]
+    //[EmailAddress(ErrorMessage = "Coloque un correo valido")]
     public string? CorrCli { get; set; }
 
     public int? CodGen { get; set; }

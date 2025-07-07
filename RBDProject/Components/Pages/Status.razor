@@ -2,6 +2,8 @@
 @page "/Estados"
 @rendermode InteractiveServer
 @inject IHttpClientFactory _http
+@inject NotificationService _notificationService
+@inject TooltipService _tooltipService
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -24,17 +26,17 @@
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@estados" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedEstados>
         <Columns>
-            <RadzenDataGridColumn Property="@nameof(RbdEstado.CodEst)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdEstado.NomEst)" Title="Nombre" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(RbdEstado.Descripcion)" Title="Descripcion" />
-            <RadzenDataGridColumn Title="Opciones" Filterable="false" Sortable="false">
+            <RadzenDataGridColumn Title="Opciones" Width="200px"  Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal"></RadzenButton>
+                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
                     <RadzenButton Icon="Print" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(RbdEstado.CodEst)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Property="@nameof(RbdEstado.NomEst)" Title="Nombre" Width="160px" />
+            <RadzenDataGridColumn Property="@nameof(RbdEstado.Descripcion)" Title="Descripcion" />
         </Columns>
     </RadzenDataGrid>
 </section>

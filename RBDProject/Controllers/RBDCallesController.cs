@@ -71,16 +71,18 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var result = await _context.RbdCalles.FindAsync(id);
+                var content = await _context.RbdCalles.FindAsync(id);
 
-                var content = JsonSerializer.Deserialize<RbdCalle>(value);
+                var result = JsonSerializer.Deserialize<RbdCalle>(value);
 
                 if (content is null || result is null)
                 {
                     return BadRequest();
                 }
 
-                _context.RbdCalles.Update(content);
+                content.NomCalle = result.NomCalle;
+
+                _context.RbdCalles.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(value);

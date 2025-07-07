@@ -1,209 +1,189 @@
-﻿@using RBDProject.Components.Layout
+﻿@using RBDProject.Components.Helpers
+@using RBDProject.Components.Layout
 @using RBDProject.Models
+@inject IHttpClientFactory _http
+@inject NavigationManager _navigation
+@inject NotificationService _notificationService
+@inject TooltipService _tooltipService
 @rendermode InteractiveServer
 @layout EmptyLayout
 @page "/CrearFactura"
-@inject IHttpClientFactory _http
-@inject NavigationManager _navigation
+@page "/CrearFactura/NumFac={NumFac:long}"
 
-<section class="d-flex flex-column gap-2 p-3" style="height:100vh;background-color:#f2f3f4 ">
+<nav class="navbar" style="background-color:#000435">
+    <button class="btn btn-outline-success me-2" type="button">Volver a Factura</button>
+</nav>
 
-    @* SECCION DE Datos *@
-    <EditForm Model=_factura class="d-flex flex-row gap-2">
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Cliente</label>
-            <InputText class="form-control-sm" id="exampleFormControlInput1" @bind-Value=@_factura.CodCliNavigation.IdCli style="width:90px"></InputText>
-            <InputText class="form-control-sm" id="exampleFormControlInput1" disabled="true" @bind-Value=@_factura.CodCliNavigation.NomCli></InputText>
-        </div>
+<section class="d-flex flex-column flex-nowrap p-2 gap-2" style="background-color: #efefef">
+    <section>
+        @* INFORMACION DE FACTURA *@
+        @* EMPLEADOS *@
+        @* CLIENTES *@
+        @* FECHA *@
+        <section class="d-flex flex-row gap-2">
+            <div>
+                <RadzenFieldset Text="Clientes" Style="background-color:white;">
+                    <RadzenStack Orientation=Orientation.Horizontal>
+                        <RadzenAutoComplete @bind-Value=@IDCLI Data=@_listCliente TextProperty="@nameof(RbdCliente.IdCli)"
+                                            Style="width: 9rem" Placeholder="ID" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Vendedor</label>
-            <InputText class="form-control-sm" disabled="true" id="exampleFormControlInput1" @bind-Value=@_factura.CodEmNavigation.IdEm></InputText>
-        </div>
+                        <RadzenDropDownDataGrid AllowClear="true" @bind-Value=NAMECLI AllowVirtualization="true"
+                                                AllowFiltering="true" Data=@_listCliente
+                                                TextProperty="@nameof(RbdCliente.NomCli)"
+                                                ValueProperty="@nameof(RbdCliente.NomCli)"
+                                                Placeholder="Nombre" />
+                    </RadzenStack>
+                </RadzenFieldset>
 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Pago</label>
+                <RadzenFieldset Text="Comprobante" Style="background-color:white;">
+                    <RadzenLabel Text="Tipo De Comprobante" Component="DropDownBindValue" />
+                    <RadzenDropDown @bind-Value=@_modeloComprobante.CodTipocom Data=@_tipoComprobante TextProperty="@nameof(RbdTipoComprobante.NomTipocom)" ValueProperty="@nameof(RbdTipoComprobante.CodTipocom)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
+                </RadzenFieldset>
+            </div>
+            <div>
+                <RadzenFieldset Text="Imp. y Des." Style="background-color:white;">
+                    <RadzenStack>
+                        <RadzenLabel Text="Impuesto(%)" Component="DropDownBindValue" />
+                        <RadzenNumeric Min="0" Max="10" ReadOnly=true @bind-Value=@ImpuestoPorciento InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenLabel Text="Descuento(%)" Component="DropDownBindValue" />
+                        <RadzenNumeric Min="0" Max="100" @bind-Value=@DescuentoPorciento InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                </RadzenFieldset>
+            </div>
+            <div>
+                <RadzenFieldset Text="Informaciones" Style="background-color:white;">
+                    <RadzenStack>
+                        <RadzenLabel Text="Fecha" Component="DropDownBindValue" />
+                        <RadzenDatePicker @bind-Value=@_modeloArticulo.FecArt ReadOnly=true ShowCalendarWeek />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Vertical">
+                        <RadzenLabel Text="Tipos De Pagos" Component="DropDownBindValue" />
 
-            <InputSelect class="form-select-sm" aria-label="Default select example" @bind-Value=@_factura.CodTipago>
-                @if (_tipoDePago != null)
-                {
-                    @foreach (RbdTipoPago tipoPago in _tipoDePago)
-                    {
-                        <option value="@tipoPago.CodTipago">@tipoPago.NomPago</option>
-                    }
-                }
-            </InputSelect>
-        </div>
+                        <RadzenDropDown @bind-Value=@_modeloPago.CodTipago Data=@_tipoDePago TextProperty="@nameof(RbdTipoPago.NomPago)" ValueProperty="@nameof(RbdTipoPago.CodTipago)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
 
-        @* 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Descuento</label>
-            <InputNumber type="text" class="form-contro-sm" id="exampleFormControlInput1"></InputNumber>
-        </div> *@
-
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Fecha</label>
-            <InputDate @bind-Value=_factura.FechaReg class="form-control-sm" disabled="true" id="exampleFormControlInput1"></InputDate>
-        </div>
-    </EditForm>
-
-
-    @* SECCION DE OPCIONES *@
-    <section class="d-flex flex-row gap-2">
-        <button class="btn btn-primary btn-sm" type="button" @onclick=@(() => { _navigation.NavigateTo("Facturas"); })>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
-            </svg>
-            <span role="status">Volver a Factura</span>
-        </button>
-        <button class="btn btn-primary btn-sm" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
-                <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-            </svg>
-            <span role="status">Clientes</span>
-        </button>
-        <button class="btn btn-primary btn-sm" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
-                <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
-            </svg>
-            <span role="status">Producto</span>
-        </button>
+                    </RadzenStack>
+                </RadzenFieldset>
+            </div>
+            <div>
+                <RadzenFieldset Text="MISCELANEOS" Style="background-color:white;">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </RadzenFieldset>
+            </div>
+        </section>
     </section>
 
-    @* TABLA DE PRODUCTOS *@
-    <section class="overflow-scroll overflow-x-auto" style="height:800px">
-        <table class="table table-bordered">
+    @* FORMULARIO ARTICULO *@
+    <section>
+        <section>
+            <RadzenFieldset Text="Producto" Style="background-color:white;">
+                <RadzenStack Orientation=Orientation.Horizontal AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="2px">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenStack Orientation="Orientation.Vertical">
+                            <RadzenLabel Text="ID" Component="DropDownBindValue" />
+                            <RadzenAutoComplete @bind-Value=@IDPRO Data=@_listArticulo TextProperty="@nameof(RbdArticulo.IdArt)"
+                                                Style="width: 9rem" Placeholder="ID" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
+                        </RadzenStack>
+                        <RadzenStack Orientation="Orientation.Vertical">
+                            <RadzenLabel Text="Productos" Component="DropDownBindValue" />
+                            <RadzenDropDownDataGrid AllowClear="true" @bind-Value=NAMEPRO AllowVirtualization="true"
+                                                    AllowFiltering="true" Data=@_listArticulo
+                                                    TextProperty="@nameof(RbdArticulo.NomArt)"
+                                                    ValueProperty="@nameof(RbdArticulo.NomArt)"
+                                                    Placeholder="Nombre" />
+                        </RadzenStack>
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenLabel Text="Cantidad" Component="DropDownBindValue" />
+                        <RadzenNumeric Min=1 TValue="int" @bind-Value=@_modeloDetalle.Cantidad InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenLabel Text="Precios" Component="DropDownBindValue" />
+                        <RadzenDropDown @bind-Value=@_modeloDetalle.Precio Data=@_modeloArticulo.RbdListaDePrecios TextProperty="@nameof(RbdListaDePrecio.Precio)" ValueProperty="@nameof(RbdListaDePrecio.Precio)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenLabel Text="Descuento" Component="DropDownBindValue" />
+                        <RadzenNumeric Min="0" @bind-Value=@_modeloDetalle.DescuentoUnit InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenLabel Text="Añadir" Component="DropDownBindValue" />
+                        <RadzenButton Text="Añadir" Click=@AddProduct ButtonStyle="ButtonStyle.Primary" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenFieldset>
+        </section>
+    </section>
+
+    @* SECCION DE REGISTRO DE ARTICULO *@
+    <section class="overflow-y-auto" style="height:60vh; background-color:white;">
+
+        <table class="table table-light table-striped table-hover">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Prec.Unit.</th>
-                    <th scope="col">Desc.Unit.</th>
-                    <th scope="col">Sub-Total</th>
-                    <th scope="col"></th>
+                    <th scope="col">NOMBRE</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">PRECIO</th>
+                    <th scope="col">SUB-TOTAL</th>
+                    <th scope="col">Opciones</th>
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
-
-                @if (_detalleFactura.Count >= 1)
+            <tbody>
+                @foreach(var d in _listDetalleFac)
                 {
-                    @foreach (var articulo in _detalleFactura)
-                    {
-                        <tr>
-                            <td>
-                                <InputText class="form-control" id="exampleFormControlInput1" @onkeypress="@((e)=>Enter(e,articulo,"id"))"  @bind-Value=articulo.CodArtNavigation.IdArt></InputText>
-                            </td>
-                            <td>
-                                <InputText class="form-control" id="exampleFormControlInput1" @onkeypress="@((e)=>Enter(e,articulo,"name"))"  @bind-Value=articulo.CodArtNavigation.NomArt></InputText>
-                            </td>
-                            <td>
-                                <InputNumber class="form-control" id="exampleFormControlInput1" @bind-Value=articulo.CantArt></InputNumber>
-                            </td>
-                            <td>
-                                <InputNumber disabled="true" class="form-control" id="exampleFormControlInput1" @bind-Value=articulo.Precio></InputNumber>
-                            </td>
-                            <td>
-                                <InputNumber class="form-control" id="exampleFormControlInput1" @bind-Value=articulo.DescuentoArt></InputNumber>
-                            </td>
-                            <td>
-                                <input type="number" disabled="true" class="form-control" id="exampleFormControlInput1" />
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    }
+                    <tr>
+                        <td>@d.Id</td>
+                        <td>@d.Name</td>
+                        <td>@d.Cantidad</td>
+                        <td>@d.Precio</td>
+                        <td>@d.Sub_Total</td>
+                        <td>
+                            <RadzenButton Icon="Edit" Click="@(()=>EditProduct(d))" ButtonStyle="ButtonStyle.Success"></RadzenButton>
+                            <RadzenButton Icon="delete" Click=@(() => DeleteProduct(d)) ButtonStyle="ButtonStyle.Danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
+                        </td>
+                    </tr>
                 }
-
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal" @onclick=AddProduct>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-                            </svg>
-                            Producto
-                        </button>
-                    </td>
-                </tr>
-
             </tbody>
         </table>
+
     </section>
 
-    <section class="d-flex flex-row gap-2 justify-content-center align-items-start">
-        @* Comentario *@
-        <section>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Comentarios</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" cols="2" style="width:300px"></textarea>
+    @* BALANCE Y CREACION *@
+    @* SUB TOTAL *@
+    @* DESCUENTO *@
+    @* TOTAL *@
+    @* CREAR *@
+    @* CREAR Y IMPRIMIR *@
+    @* TIPO DE COMPROBANTE *@
+    <section class="d-flex flex-row nowrap gap-2 justify-content-center align-items-center">
+        <RadzenFieldset Text="Sub-Totales" Style="background-color:white;">
+            <div class="d-flex flex-row gap-2">
+                <RadzenStack>
+                    <RadzenLabel Text="Sub-Total" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true @bind-Value=@Sub_Total InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                </RadzenStack>
+                <RadzenStack>
+                    <RadzenLabel Text="Descuentos" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true @bind-Value=@Descuento InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                </RadzenStack>
+                <RadzenStack>
+                    <RadzenLabel Text="Impuestos" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true @bind-Value=@Impuesto InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                </RadzenStack>
+                <RadzenStack>
+                    <RadzenLabel Text="Total" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true @bind-Value=@Total InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                </RadzenStack>
             </div>
-        </section>
+        </RadzenFieldset>
 
-        @* SUBTOTALES Y TOTALES *@
-        <section class="d-flex flex-column flex-nowrap">
-            <div class="mb-3 row">
-                <label for="inputPassword" class="col-sm-5 col-form-label-sm">Subtotal</label>
-                <div class="col-sm-10">
-                    <input type="number" disabled="true" class="form-control-sm" id="inputPassword">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="inputPassword" class="col-sm-5 col-form-label-sm">Descuento</label>
-                <div class="col-sm-10">
-                    <input type="number" disabled="true" class="form-control-sm" id="inputPassword">
-                </div>
-            </div>
-        </section>
-        <section class="d-flex flex-column flex-nowrap">
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-5 col-form-label-sm">Comprobante</label>
-                <div class="col-sm-10">
-                    <select class="form-select-sm" aria-label="Default select example">
-                        <option value="1">Consumidor Final</option>
-                        <option value="2">Credito Fiscal</option>
-                        <option value="3">Gubernamental</option>
-                        <option value="3">Especial</option>
-                    </select>
-
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="inputPassword" class="col-sm-5 col-form-label-sm">Total</label>
-                <div class="col-sm-10">
-                    <input type="number" disabled="true" class="form-control-sm" id="inputPassword">
-                </div>
-            </div>
-        </section>
-
-        @* BOTONES PARA FACTURAR *@
-        <section class="d-flex flex-column flex-nowrap justify-content-end justify-content-center">
-            <div class="mb-3 row">
-                <label for="inputPassword" class="col col-form-label-sm">Finalizacion</label>
-                <button class="btn btn-danger">Crear</button>
-            </div>
-            <div class="mb-3 row">
-                <label for="inputPassword" class="colcol-form-label-sm"></label>
-                <button class="btn btn-danger">Crear e imprimir</button>
-            </div>
-        </section>
+        @* BOTONES DE CREACION *@
+        <RadzenFieldset Text="Finalizacion" Style="background-color:white;">
+            <RadzenStack>
+                <RadzenButton Text="Crear" Click=@CREAR ButtonStyle="ButtonStyle.Primary" />
+            </RadzenStack>
+        </RadzenFieldset>
     </section>
 
 

@@ -15,9 +15,9 @@ public partial class RbdEmpleado
     [Required(ErrorMessage = "El nombre del empleado no debe estar vacio")]
     public string NomEm { get; set; } = null!;
 
-    [MinLength(11,ErrorMessage ="El DNI/Cedula debe contener minimo 11 numeros")]
-    [MaxLength(11,ErrorMessage ="El DNI/Cedula debe contener maximo 11 numeros")]
-    [Required(ErrorMessage ="El DNI/Cedula debe estar completo")]
+    [MinLength(11, ErrorMessage = "Solo puede obtener 11 numeros")]
+    [RegularExpression("\\d{11}",ErrorMessage = "(Solo puedes poner 11 numeros)")]
+    [Required(ErrorMessage = "El DNI/Cedula debe estar completo")]
     public string DniEm { get; set; } = null!;
 
     [Required(ErrorMessage = "El nombre de usuario no debe estar vacio")]
@@ -31,8 +31,10 @@ public partial class RbdEmpleado
     [Required(ErrorMessage = "El genero no debe estar vacio")]
     public int CodGen { get; set; }
 
+    [Required(ErrorMessage = "El ciudad no debe estar vacio")]
     public int? IdCiudad { get; set; }
 
+    [Required(ErrorMessage = "El calle no debe estar vacio")]
     public int? IdCalle { get; set; }
 
     public string? DetallDirec { get; set; }
@@ -40,8 +42,7 @@ public partial class RbdEmpleado
     [Required(ErrorMessage = "El cargo no debe estar vacio")]
     public int? CodCar { get; set; }
 
-    [Required(ErrorMessage = "El sueldo del empleado no debe estar vacio")]
-    [RegularExpression(@"^\$?\d+(\.(\d{2}))?$",ErrorMessage ="El sueldo debe contener un formato '00.00'")]
+    [Required(ErrorMessage = "El sueldo no debe estar vacio")]
     public double Suedms { get; set; }
 
     [Required(ErrorMessage = "El estado de empleado no debe estar vacio")]

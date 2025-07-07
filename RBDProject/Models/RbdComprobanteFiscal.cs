@@ -8,7 +8,7 @@ public partial class RbdComprobanteFiscal
 {
     public int CodNcf { get; set; }
 
-    [RegularExpression("^[ABEP][0-9]{3}[0-9]{7}$\r\n", ErrorMessage ="Coloque un NCF correctamente")]
+    [RegularExpression("^[ABEP]{1}[0-9]{2}[0-9]{8}$", ErrorMessage ="Coloque un NCF correctamente")]
     public string SecCom { get; set; } = null!;
 
     public string? DesCom { get; set; }

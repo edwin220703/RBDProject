@@ -1,4 +1,5 @@
-﻿using Radzen;
+﻿using Microsoft.AspNetCore.Components;
+using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
 
@@ -19,8 +20,8 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
-            GetByEstados();
+            await GetByEstados();
+            await Get();
         }
 
         public void SendTypeModal(RbdTipoPago tp, string e)
@@ -39,6 +40,9 @@ namespace RBDProject.Components.Pages
 
         }
 
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text , new TooltipOptions() { Position=TooltipPosition.Top});
+        
         public async Task Get()
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
@@ -123,5 +127,6 @@ namespace RBDProject.Components.Pages
                 }
             }
         }
+
     }
 }

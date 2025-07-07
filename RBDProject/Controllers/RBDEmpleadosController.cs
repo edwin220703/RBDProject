@@ -24,7 +24,9 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdEmpleados.ToListAsync();
+                var content = await _context.RbdEmpleados.Include(G=>G.CodGenNavigation).
+                    Include(ci=>ci.IdCiudadNavigation).Include(ca=>ca.IdCalleNavigation).
+                    Include(c=>c.CodCarNavigation).Include(e=>e.CodEstNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -73,8 +75,9 @@ namespace RBDProject.Controllers
                 _context.RbdEmpleados.Add(content);
                 await _context.SaveChangesAsync();
 
-                return Ok();
+                var id = _context.RbdEmpleados.Max(x => x.CodEm);
 
+                return StatusCode(201,JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {
@@ -96,7 +99,20 @@ namespace RBDProject.Controllers
                 if (content == null || result == null)
                     return BadRequest();
 
-                _context.RbdEmpleados.Update(result);
+                content.IdEm = result.IdEm;
+                content.NomEm = result.NomEm;
+                content.DniEm = result.DniEm;
+                content.NomUs = result.NomUs;
+                content.NomClav = result.NomClav;
+                content.CodGen = result.CodGen;
+                content.IdCiudad = result.IdCiudad;
+                content.IdCalle = result.IdCalle;
+                content.DetallDirec = result.DetallDirec;
+                content.CodCar = result.CodCar;
+                content.Suedms = result.Suedms;
+                content.CodEst = result.CodEst;
+
+                _context.RbdEmpleados.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok();

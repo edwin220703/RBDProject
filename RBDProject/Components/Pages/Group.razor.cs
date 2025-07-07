@@ -1,4 +1,6 @@
-﻿using RBDProject.Controllers;
+﻿using Microsoft.AspNetCore.Components;
+using Radzen;
+using RBDProject.Controllers;
 using RBDProject.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -33,6 +35,12 @@ namespace RBDProject.Components.Pages
             SendStatusModal();
             Get();
         }
+
+
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
+
+
 
         public void SendTypeModal(RbdGrupo rbdGrupo, string e)
         {

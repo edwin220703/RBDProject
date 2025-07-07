@@ -93,7 +93,11 @@ namespace RBDProject.Controllers
                     return BadRequest(id);
                 }
 
-                _context.RbdGrupos.Update(result);
+                content.NomGrup = result.NomGrup;
+                content.DesGrup = result.DesGrup;
+                content.CodEst = result.CodEst;
+
+                _context.RbdGrupos.Entry(content).State = EntityState.Modified;
                 _context.SaveChanges();
 
                 return Ok();

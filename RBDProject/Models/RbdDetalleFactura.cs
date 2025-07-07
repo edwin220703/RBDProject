@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RBDProject.Models;
 
@@ -17,5 +18,6 @@ public partial class RbdDetalleFactura
 
     public virtual RbdArticulo CodArtNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual RbdFactura NumFacNavigation { get; set; } = null!;
 }

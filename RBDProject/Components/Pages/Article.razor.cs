@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Components;
+using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
 
@@ -22,9 +24,13 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             Get();
-            GetByEstados();
-            GetByGrupos();
+            GetByOthers();
         }
+
+
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
+
 
         public async Task Search(int id, string value)
         {
@@ -54,7 +60,7 @@ namespace RBDProject.Components.Pages
             }
         }
 
-        public async Task GetByEstados()
+        public async Task GetByOthers()
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
@@ -70,17 +76,9 @@ namespace RBDProject.Components.Pages
                             _listEstados = new List<RbdEstado>();
                         else
                             _listEstados = result2;
-
-                        StateHasChanged();
                     }
                 }
-            }
-        }
 
-        public async Task GetByGrupos()
-        {
-            using (HttpClient client = _http.CreateClient(httpServidor))
-            {
                 using (var content = await client.GetAsync(httpGrupos))
                 {
                     if (content.IsSuccessStatusCode)
@@ -94,13 +92,15 @@ namespace RBDProject.Components.Pages
                         else
                             _listGrupos = result2;
 
-                        StateHasChanged();
                     }
                 }
+
+                StateHasChanged();
             }
         }
 
-        public async Task Add(RbdArticulo articulo)
+
+        public async Task Add(RbdArticulo articulo, List<RbdListaDePrecio> precio)
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
@@ -108,13 +108,25 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        var id = await content.Content.ReadAsStringAsync();
+
+                        var id2 = JsonSerializer.Deserialize<int>(id);
+
+                        foreach (var item in precio)
+                        {
+                            item.CodArt = id2;
+
+                            await client.PostAsJsonAsync(httpApi + "/ListaPrecios", JsonSerializer.Serialize(item));
+
+                        }
+
+                        await Get();
                     }
                 }
             }
         }
 
-        public async Task Update(RbdArticulo articulo)
+        public async Task Update(RbdArticulo articulo, List<RbdListaDePrecio> precios)
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
@@ -122,6 +134,7 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        await client.PutAsJsonAsync(httpApi + $"/ListaPrecio/{articulo.CodArt}", JsonSerializer.Serialize(precios));
                         Get();
                     }
                 }

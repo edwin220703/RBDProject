@@ -3,70 +3,100 @@
   "WorkspaceRootPath": "C:\\Users\\edwin\\source\\repos\\RBDProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\modals\\modal_articulos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\modals\\modal_articulos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\createdbill.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\createdbill.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\article.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\article.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\models\\rbddetallefactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\models\\rbddetallefactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\article.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\article.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\controllers\\rbdfacturascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\controllers\\rbdfacturascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\controllers\\rbdarticuloscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\controllers\\rbdarticuloscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\models\\rbdfactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\models\\rbdfactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\helpers\\detallefac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\helpers\\detallefac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\helpers\\factura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\helpers\\factura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\bill.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\bill.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\createdbill.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\createdbill.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 0,
+      "Orientation": 1,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "DockedHeight": 200,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Article.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Article.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Pages\\Article.razor",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACIAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "CreatedBill.razor",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\CreatedBill.razor",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\CreatedBill.razor",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\CreatedBill.razor",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\CreatedBill.razor",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAAoAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-30T02:12:59.014Z",
+              "WhenOpened": "2025-07-07T11:51:52.229Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CreatedBill.razor.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\CreatedBill.razor.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\CreatedBill.razor.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\CreatedBill.razor.cs",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\CreatedBill.razor.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAwwGAAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-07T11:51:54.894Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DetalleFac.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Helpers\\DetalleFac.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Helpers\\DetalleFac.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Helpers\\DetalleFac.cs",
+              "RelativeToolTip": "RBDProject\\Components\\Helpers\\DetalleFac.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAACMAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-07T13:41:55.026Z",
               "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Article.razor.cs",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor.cs",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Article.razor.cs",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Article.razor.cs",
-              "RelativeToolTip": "RBDProject\\Components\\Pages\\Article.razor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "RBDFacturasController.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDFacturasController.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Controllers\\RBDFacturasController.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDFacturasController.cs",
+              "RelativeToolTip": "RBDProject\\Controllers\\RBDFacturasController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T02:13:00.172Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "RBDArticulosController.cs",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
-              "RelativeDocumentMoniker": "RBDProject\\Controllers\\RBDArticulosController.cs",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Controllers\\RBDArticulosController.cs",
-              "RelativeToolTip": "RBDProject\\Controllers\\RBDArticulosController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T02:13:26.66Z",
+              "WhenOpened": "2025-07-07T13:47:20.37Z",
               "IsPinned": true,
               "EditorCaption": ""
             },
@@ -80,15 +110,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Modal_Articulos.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Modals\\Modal_Articulos.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Modals\\Modal_Articulos.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Modals\\Modal_Articulos.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Modals\\Modal_Articulos.razor",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAgwC8AAABiAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "RbdDetalleFactura.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Models\\RbdDetalleFactura.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Models\\RbdDetalleFactura.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Models\\RbdDetalleFactura.cs",
+              "RelativeToolTip": "RBDProject\\Models\\RbdDetalleFactura.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-07T13:57:29.885Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RbdFactura.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Models\\RbdFactura.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Models\\RbdFactura.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Models\\RbdFactura.cs",
+              "RelativeToolTip": "RBDProject\\Models\\RbdFactura.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-07T13:55:11.761Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Factura.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Helpers\\Factura.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Helpers\\Factura.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Helpers\\Factura.cs",
+              "RelativeToolTip": "RBDProject\\Components\\Helpers\\Factura.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-07T13:41:40.476Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Bill.razor",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Bill.razor",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Bill.razor",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Bill.razor",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\Bill.razor",
+              "ViewState": "AgIAABcAAAAAAAAAAAAwwC0AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-30T02:17:47.929Z",
+              "WhenOpened": "2025-07-07T12:49:44.091Z",
               "EditorCaption": ""
             }
           ]

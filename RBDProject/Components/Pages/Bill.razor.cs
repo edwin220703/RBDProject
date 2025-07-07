@@ -1,4 +1,6 @@
-﻿using RBDProject.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Radzen;
+using RBDProject.Models;
 using System.Text.Json;
 
 namespace RBDProject.Components.Pages
@@ -18,6 +20,11 @@ namespace RBDProject.Components.Pages
         {
             Get();
         }
+
+
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
+
 
         public async Task Search(int id, string value)
         {

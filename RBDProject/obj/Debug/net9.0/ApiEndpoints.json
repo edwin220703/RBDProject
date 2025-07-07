@@ -666,6 +666,38 @@
   },
   {
     "ContainingType": "RBDProject.Controllers.RBDClientesController",
+    "Method": "GetbyId",
+    "RelativePath": "api/RBDClientes/Id={id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDClientesController",
+    "Method": "GetbyName",
+    "RelativePath": "api/RBDClientes/Name={name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDClientesController",
     "Method": "PostTelefono",
     "RelativePath": "api/RBDClientes/Telefono",
     "HttpMethod": "POST",

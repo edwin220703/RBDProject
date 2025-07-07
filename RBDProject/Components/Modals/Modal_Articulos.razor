@@ -12,7 +12,7 @@
             @* FORMULARIO *@
             @* FORMULARIO *@
             <div class="modal-body">
-                <EditForm class="d-flex flex-row gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                <EditForm class="d-flex flex-row gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync((modelo, new List<RbdListaDePrecio>())))">
                     <DataAnnotationsValidator />
                     <section>
                         <div class="mb-3 row">
@@ -71,20 +71,23 @@
                         }
 
                     </section>
+
                     <section>
-                        @if (_listPrecios != null)
+                        @foreach (var l in _listPrecio)
                         {
-                            @foreach(var l in _listPrecios)
-                            {
-                                <div class="mb-3 row">
-                                    <label class="form-label">Precio @(_listPrecios.IndexOf(l)+1)</label>
-                                    <input type="number" min="0" class="form-control" disabled="@_disabled" value="@l.Precio"/>
-                                </div>
-                            }
+                            <div class="mb-3 row">
+                                <label class="form-label">Precio</label>
+                                <InputNumber class="form-control" disabled="@_disabled" @bind-Value="@l.Precio" />
+                            </div>
                         }
 
-                        <button class="btn btn-primary" @onclick=@(()=>{if(_listPrecios.Count<4){_listPrecios.Add(new RbdListaDePrecio());}})>Agregar Precio</button>
+
+                        @if (_listPrecio != null && _listPrecio.Count < 4)
+                        {
+                            <button class="btn btn-primary" @onclick=@(() => { if (modelo.RbdListaDePrecios.Count < 4) { _listPrecio.Add(new RbdListaDePrecio()); } })>Agregar Precio</button>
+                        }
                     </section>
+
                 </EditForm>
             </div>
             @* BOTONES *@
@@ -98,11 +101,11 @@
 
                 @if (utility == "Actualizar")
                 {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync((modelo, _listPrecio)))">@utility</button>
                 }
                 else if (utility == "Crear")
                 {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync((modelo, _listPrecio)))">@utility</button>
                 }
                 else
                 {
@@ -140,22 +143,22 @@
     public RbdArticulo modelo { get; set; } = new RbdArticulo();
 
     [Parameter]
-    public List<RbdGrupo> _listGrupos { get; set; } = null;
+    public List<RbdGrupo> _listGrupos { get; set; } = new List<RbdGrupo>();
 
     [Parameter]
-    public List<RbdEstado> _listEstados { get; set; } = null;
+    public List<RbdListaDePrecio> _listPrecio { get; set; } = new List<RbdListaDePrecio>();
 
     [Parameter]
-    public List<RbdListaDePrecio> _listPrecios { get; set; } = new List<RbdListaDePrecio>();
+    public List<RbdEstado> _listEstados { get; set; } = new List<RbdEstado>();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;
 
     [Parameter]
-    public EventCallback<RbdArticulo> UpdateModel { get; set; }
+    public EventCallback<(RbdArticulo, List<RbdListaDePrecio>)> UpdateModel { get; set; }
 
     [Parameter]
-    public EventCallback<RbdArticulo> AddModel { get; set; }
+    public EventCallback<(RbdArticulo, List<RbdListaDePrecio>)> AddModel { get; set; }
 
     [Parameter]
     public EventCallback<RbdArticulo> DeleteModel { get; set; }

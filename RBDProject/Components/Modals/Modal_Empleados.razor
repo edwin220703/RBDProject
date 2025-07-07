@@ -3,113 +3,150 @@
 
 <!-- Modal Nuevo y actualizar-->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Grupo</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Empleado</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             @* FORMULARIO *@
             <div class="modal-body">
-                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                <EditForm class="d-flex flex-row flex-nowrap gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                    <DataAnnotationsValidator />
+                    <section>
+                        @* ID *@
+                        <div class="mb-3 row">
+                            <label class="form-label">ID</label>
+                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdEm></InputText>
+                            <ValidationMessage For="(() => modelo.IdEm)" />
+                        </div>
 
-                    @* ID *@
-                    <div class="mb-3 row">
-                        <label class="form-label">ID</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdEm></InputText>
-                    </div>
+                        @* NOMBRE *@
+                        <div class="mb-3 row">
+                            <label class="form-label">Nombre</label>
+                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
+                            <ValidationMessage For="(() => modelo.NomEm)" />
+                        </div>
 
-                    @* NOMBRE *@
-                    <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
-                    </div>
-                    
-                    @* DNI *@
-                    <div class="mb-3 row">
-                        <label class="form-label">DNI (CEDULA)</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
-                    </div>
+                        @* DNI *@
+                        <div class="mb-3 row">
+                            <label class="form-label">DNI (CEDULA)</label>
+                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
+                            <ValidationMessage For="(() => modelo.DniEm)" />
+                        </div>
 
-                    @* USUARIO *@
-                    <div class="mb-3 row">
-                        <label class="form-label">USUARIO</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
-                    </div>
+                        @* SUELDO *@
+                        <div class="mb-3 row">
+                            <label class="form-label">SUELDO</label>
+                            <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
+                            <ValidationMessage For="(() => modelo.Suedms)" />
+                        </div>
 
-                    @* CLAVE *@
-                    <div class="mb-3 row">
-                        <label class="form-label">CONTRASEÑA</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
-                    </div>
+                        @* FECHA DE CREACION *@
+                        <div class="mb-3 row">
+                            <label class="form-label">FECHA CREACION</label>
+                            <InputDate class="form-control" disabled="true" @bind-Value=modelo.NumPer></InputDate>
+                            <ValidationMessage For="(() => modelo.NumPer)" />
+                        </div>
 
-                    @* FECHA DE CREACION *@
-                    <div class="mb-3 row">
-                        <label class="form-label">FECHA CREACION</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.NumPer></InputDate>
-                    </div>
+                    </section>
 
-                    @* GENERO *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodGen">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Masculino</option>
-                            <option value="2">Femenino</option>
-                        </select>
-                    </div>
+                    <section class="d-flex flex-column flex-wrap gap-2">
 
-                    @* CIUDAD *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCiudad">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1"></option>
-                            <option value="2"></option>
-                        </select>
-                    </div>
+                        <section>
+                            @* USUARIO *@
+                            <div class="mb-3 row">
+                                <label class="form-label">USUARIO</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
+                                <ValidationMessage For="(() => modelo.NomUs)" />
+                            </div>
 
-                    @* CALLE *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCalle">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1"></option>
-                            <option value="2"></option>
-                        </select>
-                    </div>
+                            @* CLAVE *@
+                            <div class="mb-3 row">
+                                <label class="form-label">CONTRASEÑA</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
+                                <ValidationMessage For="(() => modelo.NomClav)" />
+                            </div>
+                        </section>
+                        <section>
+                            @* CIUDAD *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCiudad">
+                                    @foreach (var ci in _listCiudad)
+                                    {
+                                        <option value="@ci.IdCiudad">@ci.NomCiudad</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.IdCiudad)" />
+                            </div>
 
-                    @* Detalle direccion *@
-                    <div class="mb-3 row">
-                        <label class="form-label">DETALLES DE LA DIRECCION</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputText>
-                    </div>
+                            @* CALLE *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">Calle</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCalle">
+                                    @foreach (var ca in _listCalle)
+                                    {
+                                        <option value="@ca.IdCalle">@ca.NomCalle</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.IdCalle)" />
+                            </div>
 
-                    @* CARGO *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">CARGO</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodCar">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1"></option>
-                            <option value="2"></option>
-                        </select>
-                    </div>
+                            @* Detalle direccion *@
+                            <div class="mb-3 row">
+                                <label class="form-label">DETALLES DE LA DIRECCION</label>
+                                <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputTextArea>
+                                <ValidationMessage For="(() => modelo.DetallDirec)" />
+                            </div>
+                        </section>
 
-                    @* SUELDO *@
-                    <div class="mb-3 row">
-                        <label class="form-label">SUELDO</label>
-                        <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
-                    </div>
+                    </section>
 
-                    @* ESTADO *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodEst">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">ACTIVO</option>
-                            <option value="2">INACTIVO</option>
-                        </select>
-                    </div>
+                    <section>
+
+                        @if (modelo.CodCar != 0 || _listCargo != null)
+                        {
+                            @* CARGO *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">CARGO</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodCar">
+                                    @foreach (var c in _listCargo)
+                                    {
+                                        <option value="@c.CodCar">@c.NomCar</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.CodCar)" />
+                            </div>
+                        }
+
+                        @* GENERO *@
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
+                            <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodGen">
+                                <option value="1">Masculino</option>
+                                <option value="2">Femenino</option>
+                            </InputSelect>
+                            <ValidationMessage For="(() => modelo.CodGen)" />
+                        </div>
+
+
+
+                        @if (modelo.CodEst != 0 || _listEstado != null)
+                        {
+                            @* ESTADO *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodEst">
+                                    @foreach (var e in _listEstado)
+                                    {
+                                        <option value="@e.CodEst">@e.NomEst</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.CodEst)" />
+                            </div>
+                        }
+                    </section>
                 </EditForm>
             </div>
             @* BOTONES *@
@@ -166,6 +203,20 @@
 
     [Parameter]
     public string utility { get; set; } = string.Empty;
+
+
+    [Parameter]
+    public List<RbdCiudade> _listCiudad { get; set; } = new List<RbdCiudade>();
+
+    [Parameter]
+    public List<RbdCalle> _listCalle { get; set; } = new List<RbdCalle>();
+
+    [Parameter]
+    public List<RbdCargo> _listCargo { get; set; } = new List<RbdCargo>();
+
+    [Parameter]
+    public List<RbdEstado> _listEstado { get; set; } = new List<RbdEstado>();
+
 
     [Parameter]
     public EventCallback<RbdEmpleado> UpdateModel { get; set; }

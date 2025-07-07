@@ -90,15 +90,15 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdTipoComprobantes.FindAsync(id);
 
-                if(content == null || value == null)
-                    return BadRequest();
-
                 var resuelt = JsonSerializer.Deserialize<RbdTipoComprobante>(value);
 
-                if (resuelt == null)
+                if(content == null || resuelt == null)
                     return BadRequest();
 
-                _context.RbdTipoComprobantes.Update(resuelt);
+                content.NomTipocom = resuelt.NomTipocom;
+                content.DesTipocom = resuelt.DesTipocom;
+
+                _context.RbdTipoComprobantes.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(resuelt);

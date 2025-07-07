@@ -113,6 +113,8 @@ namespace RBDProject.Controllers
                 if (value == null || content == null)
                     return BadRequest();
 
+
+
                 _context.RbdCuentasPorCobrars.Update(content);
                 await _context.SaveChangesAsync();
 

@@ -2,7 +2,8 @@
 @page "/Empleados"
 @rendermode InteractiveServer
 @inject IHttpClientFactory _http
-
+@inject NotificationService _notificationService
+@inject TooltipService _tooltipService
 
 
 <div class="sticky-bottom p-2 gap-2">
@@ -26,17 +27,21 @@
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@empleados" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedEmpleados>
         <Columns>
+            <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
+                <Template Context="Options">
+                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                    <RadzenButton Icon="Print" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="@nameof(RbdEmpleado.CodEm)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
             <RadzenDataGridColumn Property="@nameof(RbdEmpleado.IdEm)" Filterable="false" Frozen="true" Title="Codigo" Width="80px" />
             <RadzenDataGridColumn Property="@nameof(RbdEmpleado.NomEm)" Title="Nombre" />
             <RadzenDataGridColumn Property="@nameof(RbdEmpleado.DniEm)" Title="DNI" />
-            <RadzenDataGridColumn Property="@nameof(RbdEmpleado.CodEstNavigation.NomEst)" Title="Estado" />
-            <RadzenDataGridColumn Title="Opciones" Filterable="false" Sortable="false">
-                <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal"></RadzenButton>
-                    <RadzenButton Icon="Print" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+            <RadzenDataGridColumn Title="Estados">
+                <Template Context="Estado">
+                    @Estado.CodEstNavigation.NomEst
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -45,4 +50,5 @@
 
 
 @* COMPONENTE MODELO *@
-<RBDProject.Components.Modals.Modal_Empleados modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"></RBDProject.Components.Modals.Modal_Empleados>
+<RBDProject.Components.Modals.Modal_Empleados modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"
+_listCiudad="_listCiudades" _listCalle="_listCalle" _listCargo="_listCargo" _listEstado="_listEstado"></RBDProject.Components.Modals.Modal_Empleados>

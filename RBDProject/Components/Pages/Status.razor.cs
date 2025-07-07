@@ -1,4 +1,6 @@
-﻿using RBDProject.Controllers;
+﻿using Microsoft.AspNetCore.Components;
+using Radzen;
+using RBDProject.Controllers;
 using RBDProject.Models;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -34,6 +36,10 @@ namespace RBDProject.Components.Pages
             model = rbdEstado;
             utilitymodal = e;
         }
+
+
+        //MENSAJE CUANDO PASAS EL MOUSE
+        public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
 
         public async Task Get()

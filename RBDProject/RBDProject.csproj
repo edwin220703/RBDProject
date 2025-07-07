@@ -20,8 +20,4 @@
     <PackageReference Include="Radzen.Blazor" Version="7.1.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
 </Project>

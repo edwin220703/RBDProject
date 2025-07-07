@@ -24,11 +24,13 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdFacturas.ToListAsync();
+                var content = await _context.RbdFacturas.Include(x=>x.CodNCfNavigation)
+                    .Include(x => x.CodCliNavigation).Include(x => x.CodEmNavigation).Include(x => x.CodTipagoNavigation)
+                    .Include(x => x.CodEstNavigation).Include(x=>x.RbdDetalleFacturas).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
-                return Ok(result);
+                return Ok(result); 
             }
             catch (Exception ex)
             {
@@ -43,7 +45,10 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdFacturas.FindAsync(id);
+                var content = await _context.RbdFacturas.Include(x => x.CodNCfNavigation)
+                    .Include(x => x.CodCliNavigation).Include(x => x.CodEmNavigation).Include(x => x.CodTipagoNavigation)
+                    .Include(x => x.CodEstNavigation).Where(x => x.NumFac == id).
+                    Include(x=>x.RbdDetalleFacturas).FirstOrDefaultAsync();
 
                 if (content == null)
                     return BadRequest();
@@ -67,13 +72,15 @@ namespace RBDProject.Controllers
             {
                 var content = JsonSerializer.Deserialize<RbdFactura>(value);
 
-                if(content == null)
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdFacturas.Add(content);
                 await _context.SaveChangesAsync();
 
-                return Ok(content);
+                var id = _context.RbdFacturas.Max(x=>x.NumFac);
+
+                return Ok(JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {
@@ -92,10 +99,18 @@ namespace RBDProject.Controllers
 
                 var result = JsonSerializer.Deserialize<RbdFactura>(value);
 
-                if(content == null || result == null) 
+                if (content == null || result == null)
                     return BadRequest();
 
-                _context.RbdFacturas.Update(result);
+                content.CodNCf = result.CodNCf;
+                content.CodCli = result.CodCli;
+                content.CodEm = result.CodEm;
+                content.CodTipago = result.CodTipago;
+                content.TotalBalance = result.TotalBalance;
+                content.TotalNeto = result.TotalNeto;
+                content.CodEst = result.CodEst;
+
+                _context.RbdFacturas.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(result);
@@ -115,7 +130,7 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdFacturas.FindAsync(id);
 
-                if( content == null ) 
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdFacturas.Remove(content);
@@ -126,7 +141,7 @@ namespace RBDProject.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return  StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
