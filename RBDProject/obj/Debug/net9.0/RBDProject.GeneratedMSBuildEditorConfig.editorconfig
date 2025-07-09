@@ -72,6 +72,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfQ29tcHJvYmFudGVGaXNjYWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_CuentasPorCobrar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfQ3VlbnRhc1BvckNvYnJhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_Empleados.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfRW1wbGVhZG9zLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

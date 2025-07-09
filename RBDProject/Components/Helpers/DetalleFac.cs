@@ -8,7 +8,7 @@ namespace RBDProject.Components.Helpers
     public class DetalleFac
     {
         private int _cantidad { get; set; } = 1;
-        private double _precio { get; set; }
+        private int _precio { get; set; }
         private double _descuentoUnit { get; set; } = 0;
         private double _sub_total { get; set; }
 
@@ -31,11 +31,11 @@ namespace RBDProject.Components.Helpers
             set { _cantidad = value; GetSubTotal(); }
         }
 
-        public double Precio
+        public int Precio
         {
             get { return _precio; }
 
-            set { _precio = value; GetSubTotal(); }
+            set { _precio = Convert.ToInt32(value); GetSubTotal(); }
         }
 
         public double DescuentoUnit
@@ -50,6 +50,6 @@ namespace RBDProject.Components.Helpers
             get { return _sub_total; }
         }
 
-        private void GetSubTotal() => _sub_total = (_cantidad * _precio) - _descuentoUnit;
+        private void GetSubTotal() => _sub_total = (_cantidad * Convert.ToDouble(_precio)) - _descuentoUnit;
     }
 }

@@ -31,10 +31,8 @@ public partial class RbdEmpleado
     [Required(ErrorMessage = "El genero no debe estar vacio")]
     public int CodGen { get; set; }
 
-    [Required(ErrorMessage = "El ciudad no debe estar vacio")]
     public int? IdCiudad { get; set; }
 
-    [Required(ErrorMessage = "El calle no debe estar vacio")]
     public int? IdCalle { get; set; }
 
     public string? DetallDirec { get; set; }
@@ -43,6 +41,7 @@ public partial class RbdEmpleado
     public int? CodCar { get; set; }
 
     [Required(ErrorMessage = "El sueldo no debe estar vacio")]
+    [Range(0,double.MaxValue,ErrorMessage ="Un sueldo solo puede tener de valor minimo 0")]
     public double Suedms { get; set; }
 
     [Required(ErrorMessage = "El estado de empleado no debe estar vacio")]

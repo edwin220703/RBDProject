@@ -20,10 +20,8 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             Get();
-
-            //_selectComprobante.Add(_listComprobante.First());
+            GetTypeReceipts();
             StateHasChanged();
         }
 
@@ -31,6 +29,11 @@ namespace RBDProject.Components.Pages
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public async Task Get()
         {
@@ -45,12 +48,16 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdComprobanteFiscal>>(result);
 
                         if (result2 != null)
+                        {
                             _listComprobante = result2;
+                        }
                         else
                             _listComprobante = new List<RbdComprobanteFiscal>();
                     }
 
                 }
+
+                StateHasChanged();
             }
         }
 
@@ -84,8 +91,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Añadido", $"Se agrego {tc.SecCom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }
@@ -99,8 +106,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {tc.SecCom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }
@@ -114,8 +121,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {tc.SecCom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }
@@ -123,18 +130,8 @@ namespace RBDProject.Components.Pages
 
         public async Task SendTypeModal(RbdComprobanteFiscal tc, string value)
         {
-            if (tc == null)
-                tc = new RbdComprobanteFiscal();
-
-            await GetTypeReceipts();
             utilitymodel = value;
             model = tc;
         }
-
-        public async Task Search(int a, string b)
-        {
-
-        }
-
     }
 }

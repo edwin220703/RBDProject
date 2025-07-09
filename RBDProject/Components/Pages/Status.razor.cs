@@ -18,10 +18,6 @@ namespace RBDProject.Components.Pages
         private RbdEstado model { get; set; } = new RbdEstado();
         private string utilitymodal { get; set; } = string.Empty;
 
-        //Opcion buscar
-        private string textobuscar { get; set; } = string.Empty;
-        private int valor { get; set; } = 1;
-
         //API
         private string httpServidor = "Servidor";
         private string httpApi = "api/RBDEstados";
@@ -41,6 +37,11 @@ namespace RBDProject.Components.Pages
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public async Task Get()
         {
@@ -59,9 +60,9 @@ namespace RBDProject.Components.Pages
                         else
                             estados = result2;
 
-                        StateHasChanged();
                     }
                 }
+                StateHasChanged();
             }
         }
 
@@ -69,11 +70,12 @@ namespace RBDProject.Components.Pages
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                using (var content = await client.PostAsJsonAsync(httpApi,JsonSerializer.Serialize(estado)))
+                using (var content = await client.PostAsJsonAsync(httpApi, JsonSerializer.Serialize(estado)))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {estado.NomEst} correctamente");
+                        await Get();
                     }
                 }
             }
@@ -83,11 +85,12 @@ namespace RBDProject.Components.Pages
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                using (var content = await client.PutAsJsonAsync(httpApi+$"/{estado.CodEst}", JsonSerializer.Serialize(estado)))
+                using (var content = await client.PutAsJsonAsync(httpApi + $"/{estado.CodEst}", JsonSerializer.Serialize(estado)))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {estado.NomEst} correctamente");
+                        await Get();
                     }
                 }
             }
@@ -101,15 +104,11 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Elminacnion", $"Se elimino {estado.NomEst} correctamente");
+                        await Get();
                     }
                 }
             }
-        }
-
-        public async Task Search()
-        {
-
         }
     }
 }

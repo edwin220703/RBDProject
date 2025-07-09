@@ -1,7 +1,37 @@
 ﻿@page "/CuentasPorCobrar"
+@using RBDProject.Models
 
-<h3>AccountsReceivable</h3>
+<div class="sticky-bottom p-2 gap-2">
+    <button type="button" disabled="true" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
+        Pagar
+    </button>
+    <button type="button" disabled="true" class="btn btn-primary">
+        <i class="bi bi-printer mr-2 text-gray-400"></i>
+        Imprimir
+    </button>
+</div>
 
-@code {
+<section class="overflow-y-auto" style="height:81vh;">
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@_listCuentasPorCobrar" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectCuentaPorCobrar>
+        <Columns>
+            <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
+                <Template Context="Options">
+                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ></RadzenButton>
+                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
 
-}
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.NumFact)" Filterable="false" Frozen="true" Title="Factura" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.FechaEmi)" Filterable="false" Frozen="true" Title="Emision" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.VencPago)" Title="Vencimiento" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.Balance)" Title="Balance" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.TotalFact)" Title="Total De Factura" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.CodEm)" Title="Empleado" />
+
+
+        </Columns>
+    </RadzenDataGrid>
+</section>

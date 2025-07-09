@@ -3,7 +3,7 @@
 
 <!-- Modal Nuevo y actualizar-->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Cliente</h1>
@@ -11,76 +11,102 @@
             </div>
             @* FORMULARIO *@
             <div class="modal-body">
-                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    
-                    @* ID *@
-                    <div class="mb-3 row">
-                        <label class="form-label">ID</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdCli></InputText>
-                    </div>
+                <EditForm class="container" Model="modelo">
+                    <DataAnnotationsValidator />
+                    <section class=" d-flex flex-row gap-5 flex-nowrap">
+                        <section style="width:300px">
+                            @* ID *@
+                            <div class="mb-3 row">
+                                <label class="form-label">ID</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdCli></InputText>
+                                <ValidationMessage For="(() => modelo.IdCli)" />
+                            </div>
 
-                    @* NOMBRE *@
-                    <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCli></InputText>
-                    </div>
+                            @* NOMBRE *@
+                            <div class="mb-3 row">
+                                <label class="form-label">Nombre</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCli></InputText>
+                                <ValidationMessage For="(() => modelo.NomCli)" />
+                            </div>
 
-                    @* DNI *@
-                    <div class="mb-3 row">
-                        <label class="form-label">DNI</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniCli></InputText>
-                    </div>
+                            @* DNI *@
+                            <div class="mb-3 row">
+                                <label class="form-label">DNI</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniCli></InputText>
+                                <ValidationMessage For="(() => modelo.DniCli)" />
+                            </div>
 
-                    @* Correo *@
-                    <div class="mb-3 row">
-                        <label class="form-label">CORREO</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.CorrCli></InputText>
-                    </div>
+                            @* Correo *@
+                            <div class="mb-3 row">
+                                <label class="form-label">CORREO</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.CorrCli></InputText>
+                                <ValidationMessage For="(() => modelo.CorrCli)" />
+                            </div>
+                        </section>
 
-                    @* GENERO *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">GENERO</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.CodGen">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Opcion 1</option>
-                        </select>
-                    </div>
+                        <section style="width:300px">
+                            @* CIUDAD *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCiudad">
+                                    <option value="0" selected>Selecciona</option>
+                                    @foreach (var ciu in _listCiudades)
+                                    {
+                                        <option value="@ciu.IdCiudad">@ciu.NomCiudad</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.IdCiudad)" />
+                            </div>
 
-                    @* CIUDAD *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCiudad">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Opcion 1</option>
-                        </select>
-                    </div>
+                            @* CALLE *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">CALLE</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCalle">
+                                    <option value="0" selected>Selecciona</option>
+                                    @foreach (var ca in _listCalles)
+                                    {
+                                        <option value="@ca.IdCalle">@ca.NomCalle</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.IdCalle)" />
+                            </div>
 
-                    @* CALLE *@
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">CALLE</label>
-                        <select class="form-select" disabled="@_disabled" aria-label="Default select example" @bind="modelo.IdCalle">
-                            <option value="0" selected>Selecciona</option>
-                            <option value="1">Opcion 1</option>
-                        </select>
-                    </div>
+                            @* DETALLE DIRECCION *@
+                            <div class="mb-3 row">
+                                <label class="form-label">DETALLE DIRECCION</label>
+                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputText>
+                                <ValidationMessage For="(() => modelo.DetallDirec)" />
+                            </div>
+                        </section>
 
-                    @* DETALLE DIRECCION *@
-                    <div class="mb-3 row">
-                        <label class="form-label">DETALLE DIRECCION</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputText>
-                    </div>
+                        <section style="width:300px">
+                            @* GENERO *@
+                            <div class="mb-3 row">
+                                <label for="exampleFormControlTextarea1" class="form-label">GENERO</label>
+                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodGen">
+                                    <option value="1">Masculino</option>
+                                    <option value="2">Femenino</option>
+                                </InputSelect>
+                                <ValidationMessage For="(() => modelo.CodGen)" />
+                            </div>
 
-                    @* TIPO RNC *@
-                    <div class="mb-3 row">
-                        <label class="form-label">TIPO RNC</label>
-                        <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.TipRnc></InputNumber>
-                    </div>
 
-                    @* FECHA CREACION *@
-                    <div class="mb-3 row">
-                        <label class="form-label">FECHA CREACION</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FecEnt></InputDate>
-                    </div>
+                            @* TIPO RNC *@
+                            <div class="mb-3 row">
+                                <label class="form-label">TIPO RNC</label>
+                                <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.TipRnc></InputNumber>
+                                <ValidationMessage For="(() => modelo.TipRnc)" />
+                            </div>
+
+                            @* FECHA CREACION *@
+                            <div class="mb-3 row">
+                                <label class="form-label">FECHA CREACION</label>
+                                <InputDate class="form-control" disabled="true" @bind-Value=modelo.FecEnt></InputDate>
+                                <ValidationMessage For="(() => modelo.FecEnt)" />
+                            </div>
+                        </section>
+
+                    </section>
 
                 </EditForm>
             </div>
@@ -135,6 +161,12 @@
 
     [Parameter]
     public RbdCliente modelo { get; set; } = new RbdCliente();
+
+    [Parameter]
+    public List<RbdCiudade> _listCiudades { get; set; } = new List<RbdCiudade>();
+
+    [Parameter]
+    public List<RbdCalle> _listCalles { get; set; } = new List<RbdCalle>();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;

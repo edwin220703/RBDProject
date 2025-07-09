@@ -15,5 +15,6 @@ public partial class RbdTipoComprobante
     [Required(ErrorMessage = "La descripcion del comprobante no debe estar vacio")]
     public string? DesTipocom { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<RbdComprobanteFiscal> RbdComprobanteFiscals { get; set; } = new List<RbdComprobanteFiscal>();
 }

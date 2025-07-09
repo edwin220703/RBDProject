@@ -14,16 +14,12 @@ namespace RBDProject.Components.Pages
     {
         //LISTAS PRINCIPALES
         private List<RbdGrupo> grupos { get; set; } = null;
-        IList<RbdGrupo> _selectedgrupo { get;set; }= new List<RbdGrupo>();
+        IList<RbdGrupo> _selectedgrupo { get; set; } = new List<RbdGrupo>();
         private List<RbdEstado> estados { get; set; } = new List<RbdEstado>();
 
         //MODAL
         private RbdGrupo model { get; set; } = new RbdGrupo();
         private string utilitymodal { get; set; } = string.Empty;
-
-        //Opcion buscar
-        private string textobuscar { get; set; } = string.Empty;
-        private int valor { get; set; } = 1;
 
         //URL PETICIONES
         private string httpServer = "Servidor";
@@ -33,14 +29,18 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             SendStatusModal();
-            Get();
+             Get();
         }
 
 
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
-
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public void SendTypeModal(RbdGrupo rbdGrupo, string e)
         {
@@ -66,7 +66,6 @@ namespace RBDProject.Components.Pages
                         else
                             estados = result2;
 
-                        StateHasChanged();
                     }
                 }
             }
@@ -90,9 +89,10 @@ namespace RBDProject.Components.Pages
                         else
                             grupos = result2;
 
-                        StateHasChanged();
                     }
                 }
+
+                StateHasChanged();
             }
         }
 
@@ -105,7 +105,8 @@ namespace RBDProject.Components.Pages
 
                 if (content.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {grupo.NomGrup} correctamente");
+                    await Get();
                 }
             }
         }
@@ -118,7 +119,8 @@ namespace RBDProject.Components.Pages
 
                 if (content.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {grupo.NomGrup} correctamente");
+                    await Get();
                 }
             }
         }
@@ -131,14 +133,10 @@ namespace RBDProject.Components.Pages
 
                 if (content.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {grupo.NomGrup} correctamente");
+                    await Get();
                 }
             }
-        }
-
-        public async Task Search(int a, string value)
-        {
-
         }
     }
 }

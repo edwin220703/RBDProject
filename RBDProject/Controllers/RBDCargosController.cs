@@ -24,7 +24,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdCargos.ToListAsync();
+                var content = await _context.RbdCargos.Include(e=>e.CodEstNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -43,7 +43,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdCargos.FindAsync(id);
+                var content = await _context.RbdCargos.Include(e => e.CodEstNavigation).Where(x => x.CodCar == id).FirstOrDefaultAsync();
 
                 if (content == null)
                     return BadRequest(id);

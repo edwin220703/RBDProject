@@ -12,11 +12,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" disabled="true" class="btn btn-primary">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" disabled="true" class="btn btn-primary">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -30,8 +30,8 @@
                 <Template Context="Options">
                     <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
                     <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" ButtonStyle="ButtonStyle.Primary" MouseEnter="@((args) => ShowTooltip(args, "Imprimir"))"></RadzenButton>
+                    <RadzenButton Icon="delete" Disabled=@(Options.CodTipago<=3) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary" MouseEnter="@((args) => ShowTooltip(args, "Imprimir"))"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
 

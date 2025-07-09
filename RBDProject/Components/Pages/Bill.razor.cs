@@ -21,14 +21,13 @@ namespace RBDProject.Components.Pages
             Get();
         }
 
-
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
-
-        public async Task Search(int id, string value)
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
         {
-
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
         }
 
         public async Task Get()
@@ -62,8 +61,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
-                        StateHasChanged();
+                        ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {articulo.NumFac} correcmtamente");
+                        await Get();
                     }
                 }
             }
@@ -77,8 +76,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
-                        StateHasChanged();
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {articulo.NumFac} correctamente");
+                        await Get();
                     }
                 }
             }
@@ -92,8 +91,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
-                        StateHasChanged();
+                        ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {articulo.NumFac} correctamente");
+                        await Get();
                     }
                 }
             }

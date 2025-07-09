@@ -157,7 +157,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdDetalleFacturas.Where(x => x.NumFac == id).ToListAsync();
+                var content = await _context.RbdDetalleFacturas.Include(x=>x.CodArtNavigation).Where(x => x.NumFac == id).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 

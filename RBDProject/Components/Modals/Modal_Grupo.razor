@@ -12,13 +12,16 @@
             @* FORMULARIO *@
             <div class="modal-body">
                 <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
+                    <DataAnnotationsValidator />
                     <div class="mb-3 row">
                         <label class="form-label">Nombre</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomGrup></InputText>
+                        <ValidationMessage For="(() => modelo.NomGrup)" />
                     </div>
                     <div class="mb-3 row">
                         <label class="form-label">Descripcion</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DesGrup></InputText>
+                        <ValidationMessage For="(() => modelo.DesGrup)" />
                     </div>
                     @if (estados != null)
                     {
@@ -31,6 +34,7 @@
                                     <option value=@e.CodEst>@e.NomEst</option>
                                 }
                             </InputSelect>
+                            <ValidationMessage For="(() => modelo.CodEst)" />
                         </div>
                     }
                 </EditForm>

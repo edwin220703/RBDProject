@@ -84,44 +84,12 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
-            GetArticleAndClients();
-            GetByOther();
+            await GetArticleAndClients();
+            await GetByOther();
 
             if (NumFac != 0)
             {
-                using(var client = _http.CreateClient(_httpServidor))
-                {
-                    using(var content = await client.GetAsync(_httpFactura + $"/{NumFac}"))
-                    {
-                        if (content.IsSuccessStatusCode)
-                        {
-                            var result = await content.Content.ReadAsStringAsync();
-
-                            var result2 = JsonSerializer.Deserialize<RbdFactura>(result);
-
-                            if (result2 != null)
-                                return;
-                            
-                            IDCLI = result2.CodCliNavigation.IdCli;
-                            _modeloPago.CodTipago = result2.CodTipago;
-                            _modeloComprobante.CodTipocom = result2.CodNCfNavigation.CodTipocom;
-                            _modeloArticulo.FecArt = result2.FechaReg;
-
-                            foreach(var item in result2.RbdDetalleFacturas)
-                            {
-                                _listDetalleFac.Add(new DetalleFac()
-                                {
-                                    articulo = item.CodArtNavigation,
-                                    Cantidad =(int) item.CantArt,
-                                    Precio =(double) item.Precio,
-                                    DescuentoUnit =(double) item.DescuentoArt
-                                });
-                            }
-
-                        }
-                    }
-                }
+                await GetEditFactura();
             }
 
             StateHasChanged();
@@ -140,7 +108,7 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdArticulo>>(result);
 
                         if (result2 != null)
-                            _listArticulo = result2;
+                            _listArticulo = result2.Where(x => x.CodEst == 1).ToList();
                     }
                 }
 
@@ -174,7 +142,7 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdTipoPago>>(result);
 
                         if (result2 != null)
-                            _tipoDePago = result2;
+                            _tipoDePago = result2.Where(x => x.CodEst == 1).ToList();
                     }
                 }
 
@@ -192,6 +160,58 @@ namespace RBDProject.Components.Pages
                 }
             }
             StateHasChanged();
+        }
+
+        public async Task GetEditFactura()
+        {
+            using (var client = _http.CreateClient(_httpServidor))
+            {
+                using (var content = await client.GetAsync(_httpFactura + $"/{NumFac}"))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var result = await content.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<RbdFactura>(result);
+
+                        if (result2 != null)
+                        {
+                            await VerifiqueClientes(result2.CodCliNavigation.IdCli, 1);
+                            NAMECLI = _modeloCliente.NomCli;
+
+                            _modeloPago = result2.CodTipagoNavigation;
+                            _modeloArticulo.FecArt = result2.FechaReg;
+
+                            if (result2.CodNCfNavigation != null)
+                                _modeloComprobante.CodTipocom = result2.CodNCfNavigation.CodTipocom;
+                        }
+                    }
+                }
+
+                using (var content = await client.GetAsync(_httpDetalleFactura + $"/{NumFac}"))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var resultDetalle = await content.Content.ReadAsStringAsync();
+
+                        var resultDetalle2 = JsonSerializer.Deserialize<List<RbdDetalleFactura>>(resultDetalle);
+
+                        if (resultDetalle2 != null)
+                            foreach (var d in resultDetalle2)
+                            {
+                                _listDetalleFac.Add(new DetalleFac()
+                                {
+                                    articulo = d.CodArtNavigation,
+                                    Cantidad = d.CantArt.GetValueOrDefault(),
+                                    Precio = Convert.ToInt16(d.Precio.GetValueOrDefault()),
+                                    DescuentoUnit = d.DescuentoArt.GetValueOrDefault()
+                                });
+                            }
+                    }
+                }
+
+                StateHasChanged();
+            }
         }
 
         //BUSQUEDA CLIENTES
@@ -348,6 +368,11 @@ namespace RBDProject.Components.Pages
 
         }
 
+        public void VolveraFactura()
+        {
+            _navigation.NavigateTo("/Facturas");
+        }
+
         //AGREGAR FACTURA
         //AGREGAR FACTURA
         //AGREGAR FACTURA
@@ -361,20 +386,22 @@ namespace RBDProject.Components.Pages
 
                 //CREANDO LA FACTURA BASE
                 var codCli = _modeloCliente.IdCli;
-                var codEm = 8;
+                var codEm = 1;
                 var codTipago = _modeloPago.CodTipago;
                 var FacDate = DateTime.Now;
                 var totalBalance = Total;
                 var totalNeto = Sub_Total;
                 int codEst;
 
-                if (_modeloPago.CodTipago == 5)
+                if (_modeloPago.CodTipago == 2)
                 {
+                    //PENDIENTE
                     codEst = 6;
                 }
                 else
                 {
-                    codEst = 3;
+                    //EMITIDA
+                    codEst = 4;
                 }
 
                 using (HttpClient client = _http.CreateClient(_httpServidor))
@@ -382,7 +409,7 @@ namespace RBDProject.Components.Pages
                     using (var content = await client.PostAsJsonAsync(_httpFactura, JsonSerializer.Serialize(new RbdFactura()
                     {
                         CodCli = _modeloCliente.CodCli,
-                        CodEm = 8,
+                        CodEm = 1,
                         CodTipago = _modeloPago.CodTipago,
                         TotalBalance = Total,
                         TotalNeto = Sub_Total,
@@ -402,7 +429,7 @@ namespace RBDProject.Components.Pages
                                     NumFac = id2,
                                     CodArt = d.articulo.CodArt,
                                     CantArt = d.Cantidad,
-                                    Precio = d.Precio,
+                                    Precio = Convert.ToDouble(d.Precio),
                                     DescuentoArt = d.DescuentoUnit
                                 })))
                                 {

@@ -1,5 +1,6 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
+@rendermode InteractiveServer
 
 <!-- Modal Nuevo y actualizar-->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -12,9 +13,9 @@
             @* FORMULARIO *@
             @* FORMULARIO *@
             <div class="modal-body">
-                <EditForm class="d-flex flex-row gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync((modelo, new List<RbdListaDePrecio>())))">
+                <EditForm class="d-flex flex-row gap-5 nowrap" Model="modelo">
                     <DataAnnotationsValidator />
-                    <section>
+                    <section style="width:300px">
                         <div class="mb-3 row">
                             <label class="form-label">ID</label>
                             <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdArt></InputText>
@@ -23,14 +24,14 @@
                         <div class="mb-3 row">
                             <label class="form-label">Nombre</label>
                             <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomArt></InputText>
-                            <ValidationMessage For="(() => modelo.NomArt)" />
+                            <ValidationMessage For="(() => modelo.NomArt)"/>
                         </div>
                         <div class="mb-3 row">
                             <label class="form-label">Descripcion</label>
                             <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DesArt></InputTextArea>
                         </div>
                     </section>
-                    <section>
+                    <section style="width:300px">
                         <div class="mb-3 row">
                             <label class="form-label">Existencias</label>
                             <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.ExistArt></InputNumber>
@@ -72,20 +73,30 @@
 
                     </section>
 
-                    <section>
-                        @foreach (var l in _listPrecio)
+                    <section style="width:300px">
+
+                        @if (_listPrecio.Count != 0)
                         {
-                            <div class="mb-3 row">
-                                <label class="form-label">Precio</label>
-                                <InputNumber class="form-control" disabled="@_disabled" @bind-Value="@l.Precio" />
-                            </div>
+                            @foreach (var l in _listPrecio)
+                            {
+                                <div class="mb-3 row">
+                                    <label class="form-label">Precio</label>
+                                    <div class="d-flex flex-row gap-1">
+                                        <InputNumber class="form-control" disabled="@_disabled" @bind-Value="@l.Precio" />
+                                        @if (utility != "info")
+                                        {
+                                            <RadzenButton Icon="delete" Disabled=@(utility == "Informacion") ButtonStyle="ButtonStyle.Danger" Click="@(() => DeletePrecio(l))"></RadzenButton>
+                                        }
+                                    </div>
+                                </div>
+                            }
                         }
 
-
-                        @if (_listPrecio != null && _listPrecio.Count < 4)
+                        @if (utility != "Informacion" && _listPrecio.Count < 4)
                         {
-                            <button class="btn btn-primary" @onclick=@(() => { if (modelo.RbdListaDePrecios.Count < 4) { _listPrecio.Add(new RbdListaDePrecio()); } })>Agregar Precio</button>
+                            <button class="btn btn-primary" @onclick=@(() => AddPrecio())>Agregar Precio</button>
                         }
+
                     </section>
 
                 </EditForm>
@@ -109,7 +120,7 @@
                 }
                 else
                 {
-
+                    
                 }
             </div>
         </div>
@@ -138,6 +149,8 @@
 
 @code {
     private bool _disabled { get; set; } = false;
+
+    private bool _disabledPrecio { get; set; } = false;
 
     [Parameter]
     public RbdArticulo modelo { get; set; } = new RbdArticulo();
@@ -184,9 +197,27 @@
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdArticulo();
         StateHasChanged();
+    }
+
+    public void AddPrecio()
+    {
+        if (_listPrecio.Count == 4)
+        {
+            _disabledPrecio = true;
+            return;
+        }
+
+        _listPrecio.Add(new RbdListaDePrecio());
+
+        StateHasChanged();
+    }
+
+    public void DeletePrecio(RbdListaDePrecio p)
+    {
+        _listPrecio.Remove(p);
     }
 }

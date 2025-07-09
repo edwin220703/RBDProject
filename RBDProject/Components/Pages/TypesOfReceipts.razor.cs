@@ -22,12 +22,18 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             Get();
+
             StateHasChanged();
         }
 
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public async Task Get()
         {
@@ -42,13 +48,15 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdTipoComprobante>>(result);
 
                         if (result2 != null)
+                        {
                             _tipoComprobante = result2;
+                        }
                         else
                             _tipoComprobante = new List<RbdTipoComprobante>();
                     }
 
                 }
-            }
+                StateHasChanged();            }
         }
 
         public async Task Post(RbdTipoComprobante tc)
@@ -59,8 +67,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {tc.NomTipocom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }
@@ -74,8 +82,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {tc.NomTipocom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }
@@ -89,8 +97,8 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
+                        ShowNotification(NotificationSeverity.Success, "Elimincion", $"Se elimino {tc.NomTipocom} correctamente");
                         await Get();
-                        StateHasChanged();
                     }
                 }
             }

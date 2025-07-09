@@ -18,13 +18,18 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-             Get();
+            Get();
         }
 
 
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public void SendTypeModal(RbdCiudade cliente, string e)
         {
@@ -32,32 +37,26 @@ namespace RBDProject.Components.Pages
             utilitymodal = e;
         }
 
-        public async Task Search(int id, string texto)
-        {
-
-
-
-        }
-
         public async Task Get()
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                var result = await client.GetAsync(httpApi);
-
-                if (result.IsSuccessStatusCode)
+                using (var result = await client.GetAsync(httpApi))
                 {
-                    var content = await result.Content.ReadAsStringAsync();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var content = await result.Content.ReadAsStringAsync();
 
-                    var result2 = JsonSerializer.Deserialize<List<RbdCiudade>>(content);
+                        var result2 = JsonSerializer.Deserialize<List<RbdCiudade>>(content);
 
-                    if (result2 == null)
-                        _lisciudades = new List<RbdCiudade>();
-                    else
-                        _lisciudades = result2;
+                        if (result2 == null)
+                            _lisciudades = new List<RbdCiudade>();
+                        else
+                            _lisciudades = result2;
 
-                    StateHasChanged();
+                    }
                 }
+                StateHasChanged();
             }
         }
 
@@ -69,7 +68,8 @@ namespace RBDProject.Components.Pages
 
                 if (result.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {ciudade.NomCiudad} correctamente");
+                    await Get();
                 }
             }
         }
@@ -82,7 +82,8 @@ namespace RBDProject.Components.Pages
 
                 if (result.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {ciudade.NomCiudad} correctamente");
+                    await Get();
                 }
             }
         }
@@ -95,7 +96,8 @@ namespace RBDProject.Components.Pages
 
                 if (result.IsSuccessStatusCode)
                 {
-                    Get();
+                    ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {ciudade.NomCiudad} correctamente");
+                    await Get();
                 }
             }
         }

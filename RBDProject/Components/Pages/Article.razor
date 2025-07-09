@@ -12,11 +12,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" disabled="true" class="btn btn-primary">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" disabled="true" class="btn btn-primary">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -31,12 +31,12 @@
                     <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
                     <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn Property="@nameof(RbdArticulo.CodArt)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.IdArt)" Filterable="false" Frozen="true" Title="Codigo" Width="160px" />
+            <RadzenDataGridColumn Property="@nameof(RbdArticulo.IdArt)" Filterable="true" Frozen="true" Title="Codigo" Width="160px" />
             <RadzenDataGridColumn Property="@nameof(RbdArticulo.NomArt)" Title="Nombre"/>
             <RadzenDataGridColumn Property="@nameof(RbdArticulo.DesArt)" Title="Descripcion" />
             <RadzenDataGridColumn Property="@nameof(RbdArticulo.FecArt)" Title="Creacion" />
@@ -58,4 +58,4 @@
 </section>
 
 <RBDProject.Components.Modals.Modal_Articulos AddModel="@((args)=>Add(args.Item1,args.Item2))" UpdateModel="@((args)=>Update(args.Item1,args.Item2))" 
-DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@model.RbdListaDePrecios.ToList()"></RBDProject.Components.Modals.Modal_Articulos>
+DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@_modalListPrecio"></RBDProject.Components.Modals.Modal_Articulos>

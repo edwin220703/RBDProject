@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <EditForm class="d-flex flex-row flex-nowrap gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
                     <DataAnnotationsValidator />
-                    <section>
+                    <section style="width:300px">
                         @* ID *@
                         <div class="mb-3 row">
                             <label class="form-label">ID</label>
@@ -51,7 +51,7 @@
 
                     </section>
 
-                    <section class="d-flex flex-column flex-wrap gap-2">
+                    <section class="d-flex flex-column flex-wrap gap-2" style="width:300px">
 
                         <section>
                             @* USUARIO *@
@@ -103,7 +103,7 @@
 
                     </section>
 
-                    <section>
+                    <section style="width:300px">
 
                         @if (modelo.CodCar != 0 || _listCargo != null)
                         {

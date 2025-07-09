@@ -73,7 +73,9 @@ namespace RBDProject.Controllers
                 _context.RbdComprobanteFiscals.Add(result);
                 await _context.SaveChangesAsync();
 
-                return StatusCode(201,result);
+                var id = _context.RbdComprobanteFiscals.Max(x=>x.CodNcf); 
+
+                return StatusCode(201,JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {

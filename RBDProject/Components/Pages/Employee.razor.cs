@@ -11,15 +11,12 @@ namespace RBDProject.Components.Pages
 {
     partial class Employee
     {
-        List<RbdEmpleado> empleados  { get; set; } = null;
+        List<RbdEmpleado> empleados { get; set; } = null;
         IList<RbdEmpleado> _selectedEmpleados { get; set; } = new List<RbdEmpleado>();
+        
         //MODAL
         private RbdEmpleado model { get; set; } = new RbdEmpleado();
         private string utilitymodal { get; set; } = string.Empty;
-
-        //Opcion buscar
-        private string textobuscar { get; set; } = string.Empty;
-        private int valor { get; set; } = 1;
 
         //API
         private string httpServidor = "Servidor";
@@ -38,13 +35,18 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             GetbyOthers();
-            Get();
+             Get();
         }
 
 
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
+        {
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
+        }
 
         public void SendTypeModal(RbdEmpleado empleado, string e)
         {
@@ -69,9 +71,9 @@ namespace RBDProject.Components.Pages
                         else
                             empleados = result2;
 
-                        StateHasChanged();
                     }
                 }
+                StateHasChanged();
             }
         }
 
@@ -139,11 +141,12 @@ namespace RBDProject.Components.Pages
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                using (var content = await client.PostAsJsonAsync(httpApi,JsonSerializer.Serialize(empleado)))
+                using (var content = await client.PostAsJsonAsync(httpApi, JsonSerializer.Serialize(empleado)))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {empleado.NomEm} correctamente");
+                        await Get();
                     }
                 }
             }
@@ -153,11 +156,12 @@ namespace RBDProject.Components.Pages
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                using (var content = await client.PutAsJsonAsync(httpApi+$"/{empleado.CodEm}", JsonSerializer.Serialize(empleado)))
+                using (var content = await client.PutAsJsonAsync(httpApi + $"/{empleado.CodEm}", JsonSerializer.Serialize(empleado)))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"Se actualizo {empleado.NomEm} correctamente");
+                        await Get();
                     }
                 }
             }
@@ -167,20 +171,15 @@ namespace RBDProject.Components.Pages
         {
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
-                using (var content = await client.DeleteAsync(httpApi+$"/{empleado.CodEm}"))
+                using (var content = await client.DeleteAsync(httpApi + $"/{empleado.CodEm}"))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {empleado.NomEm} correctamente");
+                        await Get();
                     }
                 }
             }
-        }
-
-        public async Task Search()
-        {
-           
-            
         }
     }
 }

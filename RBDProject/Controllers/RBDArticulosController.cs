@@ -115,7 +115,7 @@ namespace RBDProject.Controllers
 
                 var id = _context.RbdArticulos.Max(c => c.CodArt);
 
-                return StatusCode(201, id);
+                return StatusCode(201, JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {
@@ -237,27 +237,20 @@ namespace RBDProject.Controllers
 
                 var result = JsonSerializer.Deserialize<List<RbdListaDePrecio>>(value);
 
-
                 if (content == null || result == null)
                     return BadRequest();
 
-                for (int i = 0; i < result.Count; i++)
+                foreach (var c in content)
                 {
-                    if (i <= content.Count)
-                    {
-                        content[i].CodArt = result[i].CodArt;
-                        content[i].Precio = result[i].Precio;
-
-                        _context.RbdListaDePrecios.Entry(content[i]).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        _context.RbdListaDePrecios.Add(result[i]);
-                    }
-
+                    _context.RbdListaDePrecios.Remove(c);
                 }
 
-                await _context.SaveChangesAsync();
+                foreach (var r in result)
+                {
+                    _context.RbdListaDePrecios.Add(r);
+                }
+
+                _context.SaveChanges();
 
                 return Ok();
             }

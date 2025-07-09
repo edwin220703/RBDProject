@@ -3,18 +3,21 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace RBDProject.Components.Pages
 {
     partial class Article
     {
-        private List<RbdArticulo> _lisarticles { get; set; } = null;
-        private IList<RbdArticulo> _selectedArticle { get; set; } = new List<RbdArticulo>();
-        private RbdArticulo model { get; set; } = new RbdArticulo();
         private string utilitymodal { get; set; } = string.Empty;
-        private List<RbdEstado> _listEstados { get; set; } = null;
-        private List<RbdGrupo> _listGrupos { get; set; } = null;
+        private List<RbdArticulo> _lisarticles { get; set; } = new List<RbdArticulo>();
+        private IList<RbdArticulo> _selectedArticle { get; set; } = new List<RbdArticulo>();
 
+        private RbdArticulo model { get; set; } = new RbdArticulo();
+        private List<RbdListaDePrecio> _modalListPrecio { get; set; } = new List<RbdListaDePrecio>();
+
+        private List<RbdEstado> _listEstados { get; set; } = new List<RbdEstado>();
+        private List<RbdGrupo> _listGrupos { get; set; } = new List<RbdGrupo>();
         //API
         private readonly string httpServidor = "Servidor";
         private readonly string httpApi = "api/RBDArticulos";
@@ -23,18 +26,18 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
             GetByOthers();
+            Get();
         }
 
 
         //MENSAJE CUANDO PASAS EL MOUSE
         public void ShowTooltip(ElementReference elementReference, string text) => _tooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Top });
 
-
-        public async Task Search(int id, string value)
+        //NOTIFICACIONES
+        public void ShowNotification(NotificationSeverity modelo, string titulo, string detalle)
         {
-
+            _notificationService.Notify(new NotificationMessage { Severity = modelo, Summary = titulo, Detail = detalle, Duration = 4000 });
         }
 
         public async Task Get()
@@ -50,9 +53,14 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdArticulo>>(result);
 
                         if (result2 == null)
+                        {
                             _lisarticles = new List<RbdArticulo>();
+                            ShowNotification(NotificationSeverity.Info, "Contenido", "No existen articulos en la base de datos");
+                        }
                         else
+                        {
                             _lisarticles = result2;
+                        }
 
                         StateHasChanged();
                     }
@@ -73,9 +81,13 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdEstado>>(result);
 
                         if (result2 == null)
+                        {
                             _listEstados = new List<RbdEstado>();
+                        }
                         else
+                        {
                             _listEstados = result2;
+                        }
                     }
                 }
 
@@ -102,6 +114,9 @@ namespace RBDProject.Components.Pages
 
         public async Task Add(RbdArticulo articulo, List<RbdListaDePrecio> precio)
         {
+            int id2;
+            articulo.CodArt = 0;
+
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
                 using (var content = await client.PostAsJsonAsync(httpApi, JsonSerializer.Serialize(articulo)))
@@ -110,34 +125,61 @@ namespace RBDProject.Components.Pages
                     {
                         var id = await content.Content.ReadAsStringAsync();
 
-                        var id2 = JsonSerializer.Deserialize<int>(id);
+                        id2 = JsonSerializer.Deserialize<int>(id);
 
-                        foreach (var item in precio)
+                        if (precio != null && precio.Count != 0)
                         {
-                            item.CodArt = id2;
+                            foreach (var item in precio)
+                            {
+                                item.CodArt = id2;
 
-                            await client.PostAsJsonAsync(httpApi + "/ListaPrecios", JsonSerializer.Serialize(item));
+                                await client.PostAsJsonAsync(httpApi + "/ListaPrecios", JsonSerializer.Serialize(item));
 
+                            }
                         }
 
-                        await Get();
+                        ShowNotification(NotificationSeverity.Success, "Articulo", $"Se añadio correctamente el articulo {articulo.NomArt}");
+                    }
+                    else
+                    {
+                        ShowNotification(NotificationSeverity.Error, "Error", $"El producto no fue ingresado correctamente");
                     }
                 }
+
+                await Get();
             }
         }
 
         public async Task Update(RbdArticulo articulo, List<RbdListaDePrecio> precios)
         {
+            foreach (var p in precios)
+            {
+                p.CodArt = articulo.CodArt;
+            }
+
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
                 using (var content = await client.PutAsJsonAsync(httpApi + $"/{articulo.CodArt}", JsonSerializer.Serialize(articulo)))
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        await client.PutAsJsonAsync(httpApi + $"/ListaPrecio/{articulo.CodArt}", JsonSerializer.Serialize(precios));
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Actualizacion", $"{articulo.NomArt} se actualizo correctamente");
+                    }
+                    else
+                    {
+                        ShowNotification(NotificationSeverity.Error, "Error", $"El producto no fue actualizado correctamente");
                     }
                 }
+
+                using (var content = await client.PutAsJsonAsync(httpApi + $"/ListaPrecios/{articulo.CodArt}", JsonSerializer.Serialize(precios)))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+
+                    }
+                }
+
+                await Get();
             }
         }
 
@@ -149,7 +191,12 @@ namespace RBDProject.Components.Pages
                 {
                     if (content.IsSuccessStatusCode)
                     {
-                        Get();
+                        ShowNotification(NotificationSeverity.Success, "Eliminacion", $"{articulo.NomArt} se elimino correctamente");
+                        await Get();
+                    }
+                    else
+                    {
+                        ShowNotification(NotificationSeverity.Error, "Error", $"El producto no fue eliminado correctamente");
                     }
                 }
             }
@@ -159,6 +206,15 @@ namespace RBDProject.Components.Pages
         {
             model = rbdArticulo;
             utilitymodal = e;
+
+            if (rbdArticulo.RbdListaDePrecios != null)
+            {
+                _modalListPrecio = rbdArticulo.RbdListaDePrecios.ToList();
+            }
+            else
+            {
+                _modalListPrecio = new List<RbdListaDePrecio>();
+            }
         }
     }
 }

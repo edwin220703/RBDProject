@@ -114,7 +114,9 @@ namespace RBDProject.Controllers
                 _context.RbdClientes.Add(content);
                 await _context.SaveChangesAsync();
 
-                return Ok();
+                var id = _context.RbdClientes.Max(x => x.CodCli);
+
+                return Ok(JsonSerializer.Serialize(id));
 
             }
             catch (Exception ex)
