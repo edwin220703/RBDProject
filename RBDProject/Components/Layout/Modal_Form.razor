@@ -1,0 +1,38 @@
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog @classModalLarge">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">@_Title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            @ChildContent
+
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? classModalLarge { get; set; }
+
+    [Parameter]
+    public string _Title { get; set; } = "Titulo";
+
+    [Parameter]
+    public bool _largeModal { get; set; } = false;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (_largeModal is true)
+            classModalLarge = "modal-xl";
+        else
+            classModalLarge = string.Empty;
+    }
+}

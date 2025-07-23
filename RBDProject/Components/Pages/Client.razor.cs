@@ -11,7 +11,7 @@ namespace RBDProject.Components.Pages
 {
     partial class Client
     {
-        List<RbdCliente> clientes { get; set; } = null;
+        List<RbdCliente> clientes { get; set; } = new List<RbdCliente>();
         IList<RbdCliente> _selectedCliente { get; set; } = new List<RbdCliente>();
         List<RbdCiudade> _listCiudades { get; set; } = new List<RbdCiudade>();
         List<RbdCalle> _listCalle { get; set; } = new List<RbdCalle>();
@@ -49,6 +49,21 @@ namespace RBDProject.Components.Pages
 
         public void SendTypeModal(RbdCliente cliente, string e)
         {
+            if (cliente.IdCli == null)
+            {
+                string? pre, result;
+
+                pre = _confi.GetValue<string>("Configuracion:Codigo-Cliente");
+                if (clientes.Count != 0)
+                {
+                    result = pre + (clientes.Max(c => c.CodCli) + 1).ToString();
+                }
+                else
+                    result = pre + "1";
+
+                cliente.IdCli = result;
+            }
+
             model = cliente;
             utilitymodal = e;
         }

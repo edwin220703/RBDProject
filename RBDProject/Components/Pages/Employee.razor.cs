@@ -11,9 +11,9 @@ namespace RBDProject.Components.Pages
 {
     partial class Employee
     {
-        List<RbdEmpleado> empleados { get; set; } = null;
+        List<RbdEmpleado> empleados { get; set; } = new List<RbdEmpleado>();
         IList<RbdEmpleado> _selectedEmpleados { get; set; } = new List<RbdEmpleado>();
-        
+
         //MODAL
         private RbdEmpleado model { get; set; } = new RbdEmpleado();
         private string utilitymodal { get; set; } = string.Empty;
@@ -35,7 +35,7 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             GetbyOthers();
-             Get();
+            Get();
         }
 
 
@@ -50,6 +50,24 @@ namespace RBDProject.Components.Pages
 
         public void SendTypeModal(RbdEmpleado empleado, string e)
         {
+            string? pre, result;
+
+            if (empleado.IdEm == null)
+            {
+                pre = _confi.GetValue<string>("Configuracion:Codigo-Empleado");
+
+                if (empleados.Count != 0)
+                {
+                    result = pre + (empleados.Max(e => e.CodEm) + 1);
+                }
+                else
+                {
+                    result = pre + "1";
+                }
+
+                empleado.IdEm = result;
+            }
+
             model = empleado;
             utilitymodal = e;
         }
@@ -129,7 +147,7 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdEstado>>(result);
 
                         if (result2 != null)
-                            _listEstado = result2;
+                            _listEstado = result2.Take(3).ToList();
                     }
                 }
             }

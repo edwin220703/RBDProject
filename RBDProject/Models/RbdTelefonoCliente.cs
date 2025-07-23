@@ -9,7 +9,7 @@ public partial class RbdTelefonoCliente
 {
     public int CodCli { get; set; }
 
-    [RegularExpression("\"/\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{4})/\"", ErrorMessage = "Coloca correctamente el numero telefonico")]
+    [Required(ErrorMessage = "El telefono es obligatorio")]
     public string TelCli { get; set; } = null!;
 
     [JsonIgnore]

@@ -9,11 +9,18 @@ public partial class RbdCiudade
 {
     public int IdCiudad { get; set; }
 
-    [Required(ErrorMessage = "El nombre debe no debe estar vacio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomCiudad { get; set; } = null!;
 
-    [Required(ErrorMessage = "El codigo postal no debe estar vacio")]
     public string? CodPostal { get; set; }
+
+    [Required(ErrorMessage = "La provincia es obligatorio")]
+    public int IdProvincia { get; set; }
+
+    public virtual RbdProvincium IdProvinciaNavigation { get; set; } = null!;
+
+    [JsonIgnore]
+    public virtual ICollection<RbdCalle> RbdCalles { get; set; } = new List<RbdCalle>();
 
     [JsonIgnore]
     public virtual ICollection<RbdCliente> RbdClientes { get; set; } = new List<RbdCliente>();

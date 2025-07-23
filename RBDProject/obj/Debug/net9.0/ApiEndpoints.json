@@ -1,5 +1,37 @@
 [
   {
+    "ContainingType": "RBDProject.Controllers.ConfigurationController",
+    "Method": "Get",
+    "RelativePath": "api/Configuration",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.ConfigurationController",
+    "Method": "Post",
+    "RelativePath": "api/Configuration",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "value",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "RBDProject.Controllers.CuentasPorCobrarController",
     "Method": "Get",
     "RelativePath": "api/CuentasPorCobrar",
@@ -1338,6 +1370,85 @@
     "ContainingType": "RBDProject.Controllers.RBDGruposController",
     "Method": "Delete",
     "RelativePath": "api/RBDGrupos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDProvinceController",
+    "Method": "Get",
+    "RelativePath": "api/RBDProvince",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDProvinceController",
+    "Method": "Post",
+    "RelativePath": "api/RBDProvince",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "value",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDProvinceController",
+    "Method": "Get",
+    "RelativePath": "api/RBDProvince/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDProvinceController",
+    "Method": "Put",
+    "RelativePath": "api/RBDProvince/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "value",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDProvinceController",
+    "Method": "Delete",
+    "RelativePath": "api/RBDProvince/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

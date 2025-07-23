@@ -9,18 +9,16 @@ public partial class RbdDetalleFactura
 {
     public long NumFac { get; set; }
 
-    [Required(ErrorMessage = "Es necesario el codigo del articulo")]
+    [Required(ErrorMessage = "El articulo es obligatorio")]
     public int CodArt { get; set; }
 
-    [Required(ErrorMessage = "Es necesario la cantidad del articulo")]
-    [Range(0, int.MaxValue)]
+    [Required(ErrorMessage = "La cantidad es obligatorio")]
     public int? CantArt { get; set; }
 
-    [Required(ErrorMessage = "Es necesario el precio del articulo")]
-    [Range(0, double.MaxValue)]
+    [Required(ErrorMessage = "El precio es obligatorio")]
+    [Range(0, double.MaxValue, ErrorMessage = "El precio minimo es 0")]
     public double? Precio { get; set; }
 
-    [Range(0, double.MaxValue)]
     public double? DescuentoArt { get; set; }
 
     public virtual RbdArticulo CodArtNavigation { get; set; } = null!;

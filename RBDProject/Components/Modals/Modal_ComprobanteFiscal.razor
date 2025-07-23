@@ -2,92 +2,66 @@
 @using RBDProject.Models;
 
 <!-- Modal Nuevo y actualizar-->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Comprobante Fiscal</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<RBDProject.Components.Layout.Modal_Form _Title="@utility">
+    @* FORMULARIO *@
+    @* FORMULARIO *@
+    <EditForm class="container" Model="modelo" OnValidSubmit="SendModel">
+        <div class="modal-body">
+            <DataAnnotationsValidator />
+            <div class="mb-3 row">
+                <label class="form-label">Secuencia</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.SecCom></InputText>
+                <ValidationMessage For="(() => modelo.SecCom)" />
             </div>
-            @* FORMULARIO *@
-            @* FORMULARIO *@
-            <div class="modal-body">
-                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    <DataAnnotationsValidator/>
-                    <div class="mb-3 row">
-                        <label class="form-label">Secuencia</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.SecCom></InputText>
-                        <ValidationMessage For="(()=>modelo.SecCom)"/>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Descripcion</label>
-                        <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DesCom></InputTextArea>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Impuestos</label>
-                        <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.ImpCom></InputNumber>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Emision</label>
-                        <InputDate class="form-control" disabled="true" @bind-Value=modelo.DocFec></InputDate>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Vencimiento</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FechaVec></InputDate>
-                    </div>
-
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-                        <RadzenLabel Text="Tipo" Component="DropDownBindValue" />
-                        <RadzenDropDown @bind-Value=@modelo.CodTipocom Data=@listaTiposComprobantes TextProperty="@nameof(RbdTipoComprobante.NomTipocom)" ValueProperty="@nameof(RbdTipoComprobante.CodTipocom)" Style="width: 100%; max-width: 400px;" Name="Tipos Comprobantes" />
-                    </RadzenStack>
-
-                </EditForm>
+            <div class="mb-3 row">
+                <label class="form-label">Descripcion</label>
+                <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DesCom></InputTextArea>
+                <ValidationMessage For="(() => modelo.DesCom)" />
             </div>
-            @* BOTONES *@
-            <div class="modal-footer">
-                @if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
-                }
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                @if (utility == "Actualizar")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else
-                {
-
-                }
+            <div class="mb-3 row">
+                <label class="form-label">Impuestos</label>
+                <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.ImpCom></InputNumber>
+                <ValidationMessage For="(() => modelo.ImpCom)" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label">Emision</label>
+                <InputDate class="form-control" disabled="true" @bind-Value=modelo.DocFec></InputDate>
+                <ValidationMessage For="(() => modelo.DocFec)" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label">Vencimiento</label>
+                <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FechaVec></InputDate>
+                <ValidationMessage For="(() => modelo.FechaVec)" />
+            </div>
+            <div class="mb-3 row">
+                <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodTipocom">
+                    @foreach (var ci in listaTiposComprobantes)
+                    {
+                        <option value="@ci.CodTipocom">@ci.NomTipocom</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="(() => modelo.CodTipocom)" />
             </div>
         </div>
-    </div>
-</div>
 
-@* MODAL ELIMINAR *@
-@* MODAL ELIMINAR *@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Estas seguro de que deseas eliminar a @modelo.SecCom?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
-            </div>
+        @* BOTONES *@
+        <div class="modal-footer">
+            @if (utility == "Crear")
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Limpiar">Limpiar</button>
+            }
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
         </div>
-    </div>
-</div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.SecCom"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
+
 
 @code {
     private bool _disabled { get; set; } = false;
@@ -131,10 +105,20 @@
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdComprobanteFiscal();
         StateHasChanged();
+    }
+
+    public async Task SendModel()
+    {
+        switch (utility)
+        {
+            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+        }
     }
 }
 

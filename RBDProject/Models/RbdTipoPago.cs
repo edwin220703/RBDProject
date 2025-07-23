@@ -1,4 +1,4 @@
-﻿using RBDProject.Components.Pages;
+﻿using System;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,16 +10,18 @@ public partial class RbdTipoPago
 {
     public int CodTipago { get; set; }
 
-    [Required(ErrorMessage ="El nombre no debe estar vacio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomPago { get; set; } = null!;
 
+    [Required(ErrorMessage = "La fecha de creacion es obligatorio")]
     public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage ="El Estado no debe estar vacio")]
+    [Required(ErrorMessage = "El estado es obligatorio")]
     public int? CodEst { get; set; }
 
     public virtual RbdEstado? CodEstNavigation { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<RbdDetalleCuentaPorCobrar> RbdDetalleCuentaPorCobrars { get; set; } = new List<RbdDetalleCuentaPorCobrar>();
 
     [JsonIgnore]

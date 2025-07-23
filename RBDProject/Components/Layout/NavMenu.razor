@@ -1,4 +1,6 @@
-﻿    <!-- Sidebar -->
+﻿@using RBDProject.Components.Helpers
+
+    <!-- Sidebar -->
 <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color:#000435">
 
     <!-- Sidebar - Brand -->
@@ -95,6 +97,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Seccion Ciudades y Calles:</h6>
+                <NavLink class="collapse-item" href="/Provincias" Match="NavLinkMatch.Prefix">Provincia</NavLink>
                 <NavLink class="collapse-item" href="/Ciudades" Match="NavLinkMatch.Prefix">Ciudades</NavLink>
                 <NavLink class="collapse-item" href="/Calles" Match="NavLinkMatch.Prefix">Calles</NavLink>
             </div>

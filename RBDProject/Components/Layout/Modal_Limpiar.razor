@@ -1,0 +1,23 @@
+﻿@* MODAL Limpiar *@
+<div class="modal fade" id="Limpiar" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Limpiar</h1>
+                <button type="button" class="btn-close" data-bs-target="#staticBackdrop" data-bs-toggle="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Esta seguro que desea limpiar este formulario?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-target="#staticBackdrop" data-bs-toggle="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-target="#staticBackdrop" data-bs-toggle="modal" @onclick=@(() => Limpiar.InvokeAsync())>Limpiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback Limpiar { get; set; }
+}

@@ -9,11 +9,12 @@ public partial class RbdListaDePrecio
 {
     public int CodArt { get; set; }
 
-    [Required(ErrorMessage = "El precio es necesario")]
-    [Range(0, int.MaxValue,ErrorMessage ="El precio no debe ser negativo")]
-    public int Precio { get; set; }
+    [Required(ErrorMessage = "El precio es obligatorio")]
+    [Range(0, int.MaxValue,ErrorMessage ="El valor minimo del precio debe ser 0")]
+    public double Precio { get; set; }
 
-    public DateTime? FecCreacion { get; set; }
+    [Required(ErrorMessage = "La fecha de cracion es obligatorio")]
+    public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
     public int? CodEst { get; set; }
 

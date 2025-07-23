@@ -84,7 +84,7 @@ namespace RBDProject.Components.Pages
                         if (result2 == null)
                             _listEstados = new List<RbdEstado>();
                         else
-                            _listEstados = result2;
+                            _listEstados = result2.Take(3).ToList();
                     }
                 }
             }

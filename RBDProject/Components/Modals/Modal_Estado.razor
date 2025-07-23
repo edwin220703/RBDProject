@@ -2,78 +2,49 @@
 @using RBDProject.Models;
 
 <!-- Modal Nuevo y actualizar-->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Estado</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<RBDProject.Components.Layout.Modal_Form _Title="@utility">
+    @* FORMULARIO *@
+    <EditForm class="container" Model="modelo" OnValidSubmit="SendModel">
+        <DataAnnotationsValidator />
+        <div class="modal-body">
+            <div class="mb-3 row">
+                <label class="form-label">Nombre</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEst></InputText>
+                <ValidationMessage For="(() => modelo.NomEst)" />
             </div>
-            @* FORMULARIO *@
-            <div class="modal-body">
-                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEst></InputText>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Descripcion</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.Descripcion></InputText>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
-                        <InputDate class="form-control" disabled="@_disabled" @bind-Value=modelo.FecCreacion></InputDate>
-                    </div>
-                </EditForm>
+            <div class="mb-3 row">
+                <label class="form-label">Descripcion</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.Descripcion></InputText>
+                <ValidationMessage For="(() => modelo.Descripcion)" />
             </div>
-            @* BOTONES *@
-            <div class="modal-footer">
-                @if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
-                }
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                @if (utility == "Actualizar")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else
-                {
-
-                }
+            <div class="mb-3 row">
+                <label for="exampleFormControlTextarea1" class="form-label">Fecha de Creacion</label>
+                <InputDate class="form-control" disabled="true" @bind-Value=modelo.FecCreacion></InputDate>
+                <ValidationMessage For="(() => modelo.FecCreacion)" />
             </div>
+
         </div>
-    </div>
-</div>
 
-@* MODAL ELIMINAR *@
-@* MODAL ELIMINAR *@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Estas seguro de que deseas eliminar a @modelo.NomEst?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
-            </div>
+        @* Pie Del Modal/BOTONES *@
+        <div class="modal-footer">
+            @if (utility == "Crear")
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Limpiar">Limpiar</button>
+            }
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
         </div>
-    </div>
-</div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.NomEst"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
 
 @code {
     private bool _disabled { get; set; } = false;
+    private string _titleButtons { get; set; } = "Crear";
 
     [Parameter]
     public RbdEstado modelo { get; set; } = new RbdEstado();
@@ -111,9 +82,19 @@
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdEstado();
         StateHasChanged();
+    }
+
+    public async Task SendModel()
+    {
+        switch (utility)
+        {
+            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+        }
     }
 }

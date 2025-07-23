@@ -86,7 +86,7 @@ namespace RBDProject.Components.Pages
                         }
                         else
                         {
-                            _listEstados = result2;
+                            _listEstados = result2.Take(3).ToList();
                         }
                     }
                 }
@@ -204,6 +204,24 @@ namespace RBDProject.Components.Pages
 
         public void SendTypeModal(RbdArticulo rbdArticulo, string e)
         {
+            if (rbdArticulo.IdArt == null)
+            {
+                string? pre = _confi.GetValue<string>("Configuracion:Codigo-Articulo");
+                string result;
+
+                if (_lisarticles.Count != 0)
+                {
+                    result = $"{pre}{_lisarticles.Max(a => a.CodArt)}";
+
+                }
+                else
+                {
+                    result = pre + "1";
+                }
+
+                rbdArticulo.IdArt = result;
+            }
+
             model = rbdArticulo;
             utilitymodal = e;
 

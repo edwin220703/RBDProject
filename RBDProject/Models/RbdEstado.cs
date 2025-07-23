@@ -9,11 +9,12 @@ public partial class RbdEstado
 {
     public int CodEst { get; set; }
 
-    [Required(ErrorMessage = "El nombre de estado no debe estar vacio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string? NomEst { get; set; }
 
     public string? Descripcion { get; set; }
 
+    [Required(ErrorMessage = "La fecha es obligatorio")]
     public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
     [JsonIgnore]

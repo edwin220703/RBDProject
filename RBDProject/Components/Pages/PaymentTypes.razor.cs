@@ -78,7 +78,7 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdEstado>>(result);
 
                         if (result2 != null)
-                            _listEstados = result2;
+                            _listEstados = result2.Take(3).ToList();
                         else
                             _listEstados = new List<RbdEstado>();
                     }

@@ -45,6 +45,8 @@ public partial class BdrbdContext : DbContext
 
     public virtual DbSet<RbdListaDePrecio> RbdListaDePrecios { get; set; }
 
+    public virtual DbSet<RbdProvincium> RbdProvincia { get; set; }
+
     public virtual DbSet<RbdTelefonoCliente> RbdTelefonoClientes { get; set; }
 
     public virtual DbSet<RbdTelefonoEmpleado> RbdTelefonoEmpleados { get; set; }
@@ -105,9 +107,15 @@ public partial class BdrbdContext : DbContext
             entity.ToTable("RBD_Calle");
 
             entity.Property(e => e.IdCalle).HasColumnName("Id_calle");
+            entity.Property(e => e.IdCiudad).HasColumnName("Id_Ciudad");
             entity.Property(e => e.NomCalle)
                 .HasColumnType("text")
                 .HasColumnName("Nom_calle");
+
+            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RbdCalles)
+                .HasForeignKey(d => d.IdCiudad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RBD_Calle_RBD_Ciudades");
         });
 
         modelBuilder.Entity<RbdCargo>(entity =>
@@ -146,10 +154,16 @@ public partial class BdrbdContext : DbContext
             entity.Property(e => e.CodPostal)
                 .HasColumnType("text")
                 .HasColumnName("Cod_postal");
+            entity.Property(e => e.IdProvincia).HasColumnName("Id_Provincia");
             entity.Property(e => e.NomCiudad)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Nom_ciudad");
+
+            entity.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.RbdCiudades)
+                .HasForeignKey(d => d.IdProvincia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RBD_Ciudades_RBD_Provincia");
         });
 
         modelBuilder.Entity<RbdCliente>(entity =>
@@ -181,6 +195,7 @@ public partial class BdrbdContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Id_cli");
+            entity.Property(e => e.IdProvincia).HasColumnName("Id_provincia");
             entity.Property(e => e.NomCli)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -197,6 +212,10 @@ public partial class BdrbdContext : DbContext
             entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RbdClientes)
                 .HasForeignKey(d => d.IdCiudad)
                 .HasConstraintName("FK_RBD_Clientes_RBD_Ciudades");
+
+            entity.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.RbdClientes)
+                .HasForeignKey(d => d.IdProvincia)
+                .HasConstraintName("FK_RBD_Clientes_RBD_Provincia");
         });
 
         modelBuilder.Entity<RbdComprobanteFiscal>(entity =>
@@ -324,6 +343,7 @@ public partial class BdrbdContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Id_em");
+            entity.Property(e => e.IdProvincia).HasColumnName("Id_provincia");
             entity.Property(e => e.NomClav)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -362,6 +382,11 @@ public partial class BdrbdContext : DbContext
             entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RbdEmpleados)
                 .HasForeignKey(d => d.IdCiudad)
                 .HasConstraintName("FK_RBD_Empleado_RBD_Ciudades");
+
+            entity.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.RbdEmpleados)
+                .HasForeignKey(d => d.IdProvincia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RBD_Empleado_RBD_Provincia");
         });
 
         modelBuilder.Entity<RbdEstado>(entity =>
@@ -398,6 +423,7 @@ public partial class BdrbdContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("Fecha_reg");
+            entity.Property(e => e.Miscelaneo).HasColumnType("text");
             entity.Property(e => e.TotalBalance).HasColumnName("Total_balance");
             entity.Property(e => e.TotalNeto).HasColumnName("Total_neto");
 
@@ -485,6 +511,19 @@ public partial class BdrbdContext : DbContext
             entity.HasOne(d => d.CodEstNavigation).WithMany(p => p.RbdListaDePrecios)
                 .HasForeignKey(d => d.CodEst)
                 .HasConstraintName("FK_RBD_Lista_De_Precios_RBD_Estado");
+        });
+
+        modelBuilder.Entity<RbdProvincium>(entity =>
+        {
+            entity.HasKey(e => e.IdProvincia).HasName("PK__RBD_Prov__1B620273B0A612BD");
+
+            entity.ToTable("RBD_Provincia");
+
+            entity.Property(e => e.IdProvincia).HasColumnName("Id_Provincia");
+            entity.Property(e => e.NomProvincia)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Nom_Provincia");
         });
 
         modelBuilder.Entity<RbdTelefonoCliente>(entity =>

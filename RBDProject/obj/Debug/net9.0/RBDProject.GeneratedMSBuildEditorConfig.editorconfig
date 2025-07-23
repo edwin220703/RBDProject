@@ -44,6 +44,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Layout/Modal_Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTW9kYWxfRGVsZXRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Layout/Modal_Form.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTW9kYWxfRm9ybS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Layout/Modal_Limpiar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTW9kYWxfTGltcGlhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -72,6 +84,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfQ29tcHJvYmFudGVGaXNjYWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_Configuracion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfQ29uZmlndXJhY2lvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_CuentasPorCobrar.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfQ3VlbnRhc1BvckNvYnJhci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -90,6 +106,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_Position.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfUG9zaXRpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_Provincia.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcTW9kYWxfUHJvdmluY2lhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Modals/Modal_TipoComprobante.razor]
@@ -150,6 +170,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Pages/Position.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQb3NpdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Pages/Province.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm92aW5jZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Pages/Settings.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTZXR0aW5ncy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/edwin/source/repos/RBDProject/RBDProject/Components/Pages/SignIn.razor]

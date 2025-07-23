@@ -9,24 +9,25 @@ public partial class RbdArticulo
 {
     public int CodArt { get; set; }
 
-    [Required(ErrorMessage = "Es necesario el ID del producto")]
+    [Required(ErrorMessage = "El codigo es obligatorio")]
     public string IdArt { get; set; } = null!;
 
-    [Required(ErrorMessage = "Es necesario el Nombre del Producto")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomArt { get; set; } = null!;
 
     public string? DesArt { get; set; }
 
-    [Required(ErrorMessage = "Es necesario las existencias del producto")]
-    [Range(0, int.MaxValue,ErrorMessage ="El numero minimo de existencias es 0")]
+    [Required(ErrorMessage = "Las existencias son obligatorio")]
+    [Range(0, int.MaxValue,ErrorMessage ="El valor minimo tiene que ser [0]")]
     public int ExistArt { get; set; }
 
+    [Required(ErrorMessage = "La fecha es obligatoria")]
     public DateTime FecArt { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "Es necesario el grupo a pertenecer los articulos")]
+    [Required(ErrorMessage = "El grupo es obligatorio")]
     public int CodGrup { get; set; }
 
-    [Required(ErrorMessage = "el estado del producto es necesario")]
+    [Required(ErrorMessage = "El estado es obligatorio")]
     public int CodEst { get; set; }
 
     public virtual RbdEstado CodEstNavigation { get; set; } = null!;

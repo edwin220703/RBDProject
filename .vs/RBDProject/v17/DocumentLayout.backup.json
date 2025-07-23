@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\edwin\\source\\repos\\RBDProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\client.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\client.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\layout\\topbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\layout\\topbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\signin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\signin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\client.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\client.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,48 +22,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MainLayout.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\MainLayout.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Layout\\MainLayout.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\MainLayout.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Layout\\MainLayout.razor",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAADAAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-09T21:05:49.253Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Layout\\NavMenu.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABDAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-09T21:06:38.966Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SignIn.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\SignIn.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\SignIn.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\SignIn.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Pages\\SignIn.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-09T21:06:26.574Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -78,15 +34,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
+              "RelativeDocumentMoniker": "RBDProject\\appsettings.json",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
+              "RelativeToolTip": "RBDProject\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-23T20:38:23.912Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Client.razor.cs",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor.cs",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Client.razor.cs",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor.cs",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\Client.razor.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADcAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-23T20:34:09.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "TopBar.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\TopBar.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Layout\\TopBar.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Layout\\TopBar.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Layout\\TopBar.razor",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "Client.razor",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor",
+              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Client.razor",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor",
+              "RelativeToolTip": "RBDProject\\Components\\Pages\\Client.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-09T21:05:31.188Z",
+              "WhenOpened": "2025-07-23T20:34:06.019Z",
               "EditorCaption": ""
             }
           ]

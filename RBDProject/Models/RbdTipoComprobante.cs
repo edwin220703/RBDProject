@@ -9,10 +9,10 @@ public partial class RbdTipoComprobante
 {
     public int CodTipocom { get; set; }
 
-    [Required(ErrorMessage = "El nombre del comprobante no debe estar vacio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomTipocom { get; set; } = null!;
 
-    [Required(ErrorMessage = "La descripcion del comprobante no debe estar vacio")]
+    [Required(ErrorMessage = "La descripcion es obligatorio")]
     public string? DesTipocom { get; set; }
 
     [JsonIgnore]

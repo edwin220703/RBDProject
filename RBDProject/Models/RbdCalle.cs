@@ -9,8 +9,13 @@ public partial class RbdCalle
 {
     public int IdCalle { get; set; }
 
-    [Required(ErrorMessage = "Es necesario el nombre de la calle")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string? NomCalle { get; set; }
+
+    [Required(ErrorMessage = "La ciudad es obligatoria")]
+    public int IdCiudad { get; set; }
+
+    public virtual RbdCiudade IdCiudadNavigation { get; set; } = null!;
 
     [JsonIgnore]
     public virtual ICollection<RbdCliente> RbdClientes { get; set; } = new List<RbdCliente>();

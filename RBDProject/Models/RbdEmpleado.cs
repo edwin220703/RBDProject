@@ -9,26 +9,25 @@ public partial class RbdEmpleado
 {
     public int CodEm { get; set; }
 
-    [Required(ErrorMessage = "El ID del empleado no debe estar vacio")]
+    [Required(ErrorMessage = "El codigo es obligatorio")]
     public string IdEm { get; set; } = null!;
 
-    [Required(ErrorMessage = "El nombre del empleado no debe estar vacio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomEm { get; set; } = null!;
 
-    [MinLength(11, ErrorMessage = "Solo puede obtener 11 numeros")]
-    [RegularExpression("\\d{11}",ErrorMessage = "(Solo puedes poner 11 numeros)")]
-    [Required(ErrorMessage = "El DNI/Cedula debe estar completo")]
+    [Required(ErrorMessage = "El DNI/Cedula es obligatorio")]
     public string DniEm { get; set; } = null!;
 
-    [Required(ErrorMessage = "El nombre de usuario no debe estar vacio")]
+    [Required(ErrorMessage = "El usuario es obligatorio")]
     public string NomUs { get; set; } = null!;
 
-    [Required(ErrorMessage = "La contraseña no debe estar vacio")]
+    [Required(ErrorMessage = "La contraseña es obligatoria")]
     public string NomClav { get; set; } = null!;
 
+    [Required(ErrorMessage = "La fecha de ingreso es obligatoria")]
     public DateTime? NumPer { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "El genero no debe estar vacio")]
+    [Required(ErrorMessage = "El genero es obligatorio")]
     public int CodGen { get; set; }
 
     public int? IdCiudad { get; set; }
@@ -37,15 +36,16 @@ public partial class RbdEmpleado
 
     public string? DetallDirec { get; set; }
 
-    [Required(ErrorMessage = "El cargo no debe estar vacio")]
+    [Required(ErrorMessage = "El cargo es obligatorio")]
     public int? CodCar { get; set; }
 
-    [Required(ErrorMessage = "El sueldo no debe estar vacio")]
-    [Range(0,double.MaxValue,ErrorMessage ="Un sueldo solo puede tener de valor minimo 0")]
+    [Required(ErrorMessage = "El sueldo es obligatorio")]
     public double Suedms { get; set; }
 
-    [Required(ErrorMessage = "El estado de empleado no debe estar vacio")]
+    [Required(ErrorMessage = "El estado es obligatorio")]
     public int CodEst { get; set; }
+
+    public int IdProvincia { get; set; }
 
     public virtual RbdCargo? CodCarNavigation { get; set; }
 
@@ -56,6 +56,8 @@ public partial class RbdEmpleado
     public virtual RbdCalle? IdCalleNavigation { get; set; }
 
     public virtual RbdCiudade? IdCiudadNavigation { get; set; }
+
+    public virtual RbdProvincium IdProvinciaNavigation { get; set; } = null!;
 
     [JsonIgnore]
     public virtual ICollection<RbdFactura> RbdFacturas { get; set; } = new List<RbdFactura>();

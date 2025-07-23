@@ -7,17 +7,21 @@ namespace RBDProject.Components.Pages
 {
     partial class City
     {
-        private List<RbdCiudade> _lisciudades { get; set; } = null;
+        private List<RbdCiudade> _lisciudades { get; set; } = new List<RbdCiudade>();
+        private List<RbdProvincium> _listprovincia { get; set; } = new List<RbdProvincium>();
         private IList<RbdCiudade> _selectedCiudades { get; set; } = new List<RbdCiudade>();
+
         private RbdCiudade model { get; set; } = new RbdCiudade();
         private string utilitymodal { get; set; } = string.Empty;
 
         //API
         private string httpServidor = "Servidor";
         private string httpApi = "api/RbdCiudades";
+        private string httpProvincia = "api/RbdProvince";
 
         protected override async Task OnInitializedAsync()
         {
+            GetOthers();
             Get();
         }
 
@@ -57,6 +61,28 @@ namespace RBDProject.Components.Pages
                     }
                 }
                 StateHasChanged();
+            }
+        }
+
+        public async Task GetOthers()
+        {
+            using (HttpClient client = _http.CreateClient(httpServidor))
+            {
+                using (var result = await client.GetAsync(httpProvincia))
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var content = await result.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<List<RbdProvincium>>(content);
+
+                        if (result2 == null)
+                            _listprovincia = new List<RbdProvincium>();
+                        else
+                            _listprovincia = result2;
+
+                    }
+                }
             }
         }
 

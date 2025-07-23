@@ -9,7 +9,7 @@ public partial class RbdTelefonoEmpleado
 {
     public int CodEm { get; set; }
 
-    [RegularExpression("\"/\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{4})/\"",ErrorMessage ="Coloca correctamente el numero telefonico")]
+    [Required(ErrorMessage = "El telefono es obligatorio")]
     public string TelEm { get; set; } = null!;
 
     [JsonIgnore]

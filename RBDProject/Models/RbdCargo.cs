@@ -6,14 +6,15 @@ using System.Text.Json.Serialization;
 namespace RBDProject.Models;
 
 public partial class RbdCargo
-{ 
+{
     public int CodCar { get; set; }
 
-    [Required(ErrorMessage = "El nombre del cargo es obligatorio")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public string NomCar { get; set; } = null!;
 
     public string? DesCar { get; set; }
 
+    [Required(ErrorMessage = "La fecha es obligatoria")]
     public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
     [Required(ErrorMessage = "El estado es obligatorio")]

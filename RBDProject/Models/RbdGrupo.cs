@@ -9,14 +9,14 @@ public partial class RbdGrupo
 {
     public int CodGrup { get; set; }
 
-    [Required(ErrorMessage = "El nombre de grupo no debe estar vacio")]
+    [Required(ErrorMessage = "El codigo es obligatorio")]
     public string NomGrup { get; set; } = null!;
 
     public string? DesGrup { get; set; }
 
+    [Required(ErrorMessage = "La fecha de registro es obligatorio")]
     public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "El estado de grupo no debe estar vacio")]
     public int? CodEst { get; set; }
 
     public virtual RbdEstado? CodEstNavigation { get; set; }

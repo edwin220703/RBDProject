@@ -1,0 +1,89 @@
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+<RBDProject.Components.Layout.Modal_Form _Title="@utility">
+    @* FORMULARIO *@
+    <EditForm class="container" Model="modelo" OnValidSubmit="SendModel">
+        <DataAnnotationsValidator />
+        <div class="modal-body">
+            <div class="mb-3 row">
+                <label class="form-label">Nombre</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomProvincia></InputText>
+                <ValidationMessage For="(() => modelo.NomProvincia)" />
+            </div>
+        </div>
+
+        @* Pie Del Modal/BOTONES *@
+        <div class="modal-footer">
+            @if (utility == "Crear")
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Limpiar">Limpiar</button>
+            }
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
+        </div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.NomProvincia"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
+
+@code {
+    private bool _disabled { get; set; } = false;
+    private string _titleButtons { get; set; } = "Crear";
+
+    [Parameter]
+    public RbdProvincium modelo { get; set; } = new RbdProvincium();
+
+    [Parameter]
+    public string utility { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<RbdProvincium> UpdateModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdProvincium> AddModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdProvincium> DeleteModel { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _disabled = false;
+
+        switch (utility)
+        {
+            case "add": utility = "Crear"; break;
+            case "update": utility = "Actualizar"; break;
+            case "delete": utility = "Eliminar"; break;
+
+            case "info":
+                {
+                    utility = "Informacion";
+                    _disabled = true;
+                }
+                ; break;
+        }
+
+        StateHasChanged();
+    }
+
+    public void Clean()
+    {
+        modelo = new RbdProvincium();
+        StateHasChanged();
+    }
+
+    public async Task SendModel()
+    {
+        switch (utility)
+        {
+            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+        }
+    }
+}

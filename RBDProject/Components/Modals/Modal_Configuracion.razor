@@ -1,0 +1,51 @@
+﻿@page "/Configuracion"
+@using Models
+@using System.Text.Json
+@inject IHttpClientFactory _http
+
+
+@* FORMULARIO *@
+<EditForm class="container" Model="confi" OnValidSubmit="SendModel">
+    <div class="modal-body">
+        <div class="mb-3 row">
+            <label class="form-label">Articulo</label>
+            <InputText class="form-control" disabled="true" @bind-Value=confi.Articulo></InputText>
+        </div>
+        <div class="mb-3 row">
+            <label class="form-label">Cliente</label>
+            <InputText class="form-control" disabled="true" @bind-Value=confi.Cliente></InputText>
+        </div>
+        <div class="mb-3 row">
+            <label for="exampleFormControlTextarea1" class="form-label">Empleados</label>
+            <InputText class="form-control" disabled="true" @bind-Value=confi.Empleados></InputText>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private string utility { get; set; } = "Crear";
+
+    private bool _disabled { get; set; } = false;
+
+    private Configuracion confi { get; set; } = new Configuracion();
+
+    [Inject]
+    private IConfiguration c { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var Articulo = c.GetValue<string>("Configuracion:Codigo-Articulo");
+        var Cliente = c.GetValue<string>("Configuracion:Codigo-Cliente");
+        var Empleado = c.GetValue<string>("Configuracion:Codigo-Empleado");
+
+        confi.Articulo = Articulo;
+        confi.Cliente = Cliente;
+        confi.Empleados = Empleado;
+
+        StateHasChanged();
+    }
+    public async Task SendModel()
+    {
+
+    }
+}

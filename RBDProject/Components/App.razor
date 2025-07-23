@@ -13,15 +13,14 @@
     <link rel="stylesheet" href="@Assets["lib/bootstrap/css/bootstrap-reboot.css"]" />
     <link rel="stylesheet" href="@Assets["lib/bootstrap/css/bootstrap-utilities.css"]" />
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    @* IMPORTENTE MIS ICONOS *@
+    @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"> *@
+
     <RadzenTheme Theme="material" />
 
     @* PLANTILLA *@
     <link href="@Assets["lib/vendor/fontawesome-free/css/all.min.css"]" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
     <link href="@Assets["lib/css/sb-admin-2.css"]" rel="stylesheet">
-
 
     <ImportMap />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -33,19 +32,21 @@
     <script src="_framework/blazor.web.js"></script>
 
     <script src="@Assets["lib/vendor/jquery/jquery.min.js"]"></script>
-    <script src="@Assets["lib/vendor/bootstrap/js/bootstrap.bundle.min.js"]"></script>
     <script src="@Assets["lib/vendor/jquery-easing/jquery.easing.min.js"]"></script>
+
+    <script src="@Assets["lib/bootstrap/js/bootstrap.js"]"></script>
+    <script src="@Assets["lib/vendor/bootstrap/js/bootstrap.bundle.min.js"]"></script>
+
     <script src="@Assets["lib/js/sb-admin-2.js"]"></script>
-    <script src="@Assets["lib/vendor/chart.js/Chart.min.js"]"></script>
-    <script src="@Assets["lib/js/demo/chart-area-demo.js"]"></script>
-    <script src="@Assets["lib/js/demo/chart-pie-demo.js"]"></script>
+    @* <script src="@Assets["lib/vendor/chart.js/Chart.min.js"]"></script> *@
+@*     <script src="@Assets["lib/js/demo/chart-area-demo.js"]"></script>
+    <script src="@Assets["lib/js/demo/chart-pie-demo.js"]"></script> *@
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
-    <script src="@urlpoppers" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+    @* <script src="@urlpoppers" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script> *@
 </body>
 
 </html>
 
 @code{
-    private string urlpoppers = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
+    // private string urlpoppers = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
 }

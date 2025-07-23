@@ -2,198 +2,161 @@
 @using RBDProject.Models;
 
 <!-- Modal Nuevo y actualizar-->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Empleado</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            @* FORMULARIO *@
-            <div class="modal-body">
-                <EditForm class="d-flex flex-row flex-nowrap gap-5" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    <DataAnnotationsValidator />
-                    <section style="width:300px">
-                        @* ID *@
-                        <div class="mb-3 row">
-                            <label class="form-label">ID</label>
-                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.IdEm></InputText>
-                            <ValidationMessage For="(() => modelo.IdEm)" />
-                        </div>
+<RBDProject.Components.Layout.Modal_Form _largeModal=true _Title="@utility">
+    @* FORMULARIO *@
+    <EditForm Model="modelo" OnValidSubmit="SendModel">
+        <div class="modal-body d-flex flex-row flex-nowrap gap-5">
+            <DataAnnotationsValidator />
+            <section style="width:300px">
+                @* ID *@
+                <div class="mb-3 row">
+                    <label class="form-label">ID</label>
+                    <InputText class="form-control" disabled="true" @bind-Value=modelo.IdEm></InputText>
+                    <ValidationMessage For="(() => modelo.IdEm)" />
+                </div>
 
-                        @* NOMBRE *@
-                        <div class="mb-3 row">
-                            <label class="form-label">Nombre</label>
-                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
-                            <ValidationMessage For="(() => modelo.NomEm)" />
-                        </div>
+                @* NOMBRE *@
+                <div class="mb-3 row">
+                    <label class="form-label">Nombre</label>
+                    <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
+                    <ValidationMessage For="(() => modelo.NomEm)" />
+                </div>
 
-                        @* DNI *@
-                        <div class="mb-3 row">
-                            <label class="form-label">DNI (CEDULA)</label>
-                            <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
-                            <ValidationMessage For="(() => modelo.DniEm)" />
-                        </div>
+                @* DNI *@
+                <div class="mb-3 row">
+                    <label class="form-label">DNI (CEDULA)</label>
+                    <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
+                    <ValidationMessage For="(() => modelo.DniEm)" />
+                </div>
 
-                        @* SUELDO *@
-                        <div class="mb-3 row">
-                            <label class="form-label">SUELDO</label>
-                            <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
-                            <ValidationMessage For="(() => modelo.Suedms)" />
-                        </div>
+                @* SUELDO *@
+                <div class="mb-3 row">
+                    <label class="form-label">SUELDO</label>
+                    <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
+                    <ValidationMessage For="(() => modelo.Suedms)" />
+                </div>
 
-                        @* FECHA DE CREACION *@
-                        <div class="mb-3 row">
-                            <label class="form-label">FECHA CREACION</label>
-                            <InputDate class="form-control" disabled="true" @bind-Value=modelo.NumPer></InputDate>
-                            <ValidationMessage For="(() => modelo.NumPer)" />
-                        </div>
+                @* FECHA DE CREACION *@
+                <div class="mb-3 row">
+                    <label class="form-label">FECHA CREACION</label>
+                    <InputDate class="form-control" disabled="true" @bind-Value=modelo.NumPer></InputDate>
+                    <ValidationMessage For="(() => modelo.NumPer)" />
+                </div>
+            </section>
 
-                    </section>
+            <section class="d-flex flex-column flex-wrap gap-2" style="width:300px">
 
-                    <section class="d-flex flex-column flex-wrap gap-2" style="width:300px">
+                <section>
+                    @* USUARIO *@
+                    <div class="mb-3 row">
+                        <label class="form-label">USUARIO</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
+                        <ValidationMessage For="(() => modelo.NomUs)" />
+                    </div>
 
-                        <section>
-                            @* USUARIO *@
-                            <div class="mb-3 row">
-                                <label class="form-label">USUARIO</label>
-                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
-                                <ValidationMessage For="(() => modelo.NomUs)" />
-                            </div>
+                    @* CLAVE *@
+                    <div class="mb-3 row">
+                        <label class="form-label">CONTRASEÑA</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
+                        <ValidationMessage For="(() => modelo.NomClav)" />
+                    </div>
+                </section>
+                <section>
+                    @* CIUDAD *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                        <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCiudad">
+                            @foreach (var ci in _listCiudad)
+                            {
+                                <option value="@ci.IdCiudad">@ci.NomCiudad</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="(() => modelo.IdCiudad)" />
+                    </div>
 
-                            @* CLAVE *@
-                            <div class="mb-3 row">
-                                <label class="form-label">CONTRASEÑA</label>
-                                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
-                                <ValidationMessage For="(() => modelo.NomClav)" />
-                            </div>
-                        </section>
-                        <section>
-                            @* CIUDAD *@
-                            <div class="mb-3 row">
-                                <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
-                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCiudad">
-                                    @foreach (var ci in _listCiudad)
-                                    {
-                                        <option value="@ci.IdCiudad">@ci.NomCiudad</option>
-                                    }
-                                </InputSelect>
-                                <ValidationMessage For="(() => modelo.IdCiudad)" />
-                            </div>
+                    @* CALLE *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Calle</label>
+                        <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCalle">
+                            @foreach (var ca in _listCalle)
+                            {
+                                <option value="@ca.IdCalle">@ca.NomCalle</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="(() => modelo.IdCalle)" />
+                    </div>
 
-                            @* CALLE *@
-                            <div class="mb-3 row">
-                                <label for="exampleFormControlTextarea1" class="form-label">Calle</label>
-                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCalle">
-                                    @foreach (var ca in _listCalle)
-                                    {
-                                        <option value="@ca.IdCalle">@ca.NomCalle</option>
-                                    }
-                                </InputSelect>
-                                <ValidationMessage For="(() => modelo.IdCalle)" />
-                            </div>
+                    @* Detalle direccion *@
+                    <div class="mb-3 row">
+                        <label class="form-label">DETALLES DE LA DIRECCION</label>
+                        <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputTextArea>
+                        <ValidationMessage For="(() => modelo.DetallDirec)" />
+                    </div>
+                </section>
 
-                            @* Detalle direccion *@
-                            <div class="mb-3 row">
-                                <label class="form-label">DETALLES DE LA DIRECCION</label>
-                                <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DetallDirec></InputTextArea>
-                                <ValidationMessage For="(() => modelo.DetallDirec)" />
-                            </div>
-                        </section>
+            </section>
 
-                    </section>
+            <section style="width:300px">
 
-                    <section style="width:300px">
-
-                        @if (modelo.CodCar != 0 || _listCargo != null)
-                        {
-                            @* CARGO *@
-                            <div class="mb-3 row">
-                                <label for="exampleFormControlTextarea1" class="form-label">CARGO</label>
-                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodCar">
-                                    @foreach (var c in _listCargo)
-                                    {
-                                        <option value="@c.CodCar">@c.NomCar</option>
-                                    }
-                                </InputSelect>
-                                <ValidationMessage For="(() => modelo.CodCar)" />
-                            </div>
-                        }
-
-                        @* GENERO *@
-                        <div class="mb-3 row">
-                            <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
-                            <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodGen">
-                                <option value="1">Masculino</option>
-                                <option value="2">Femenino</option>
-                            </InputSelect>
-                            <ValidationMessage For="(() => modelo.CodGen)" />
-                        </div>
-
-
-
-                        @if (modelo.CodEst != 0 || _listEstado != null)
-                        {
-                            @* ESTADO *@
-                            <div class="mb-3 row">
-                                <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
-                                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodEst">
-                                    @foreach (var e in _listEstado)
-                                    {
-                                        <option value="@e.CodEst">@e.NomEst</option>
-                                    }
-                                </InputSelect>
-                                <ValidationMessage For="(() => modelo.CodEst)" />
-                            </div>
-                        }
-                    </section>
-                </EditForm>
-            </div>
-            @* BOTONES *@
-            <div class="modal-footer">
-                @if (utility == "Crear")
+                @if (modelo.CodCar != 0 || _listCargo != null)
                 {
-                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
+                    @* CARGO *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">CARGO</label>
+                        <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodCar">
+                            @foreach (var c in _listCargo)
+                            {
+                                <option value="@c.CodCar">@c.NomCar</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="(() => modelo.CodCar)" />
+                    </div>
                 }
 
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @* GENERO *@
+                <div class="mb-3 row">
+                    <label for="exampleFormControlTextarea1" class="form-label">Genero</label>
+                    <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodGen">
+                        <option value="1">Masculino</option>
+                        <option value="2">Femenino</option>
+                    </InputSelect>
+                    <ValidationMessage For="(() => modelo.CodGen)" />
+                </div>
 
-                @if (utility == "Actualizar")
+                @if (modelo.CodEst != 0 || _listEstado != null)
                 {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
+                    @* ESTADO *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Estado</label>
+                        <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodEst">
+                            @foreach (var e in _listEstado)
+                            {
+                                <option value="@e.CodEst">@e.NomEst</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="(() => modelo.CodEst)" />
+                    </div>
                 }
-                else if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else
-                {
+            </section>
 
-                }
-            </div>
         </div>
-    </div>
-</div>
 
-@* MODAL ELIMINAR *@
-@* MODAL ELIMINAR *@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Estas seguro de que deseas eliminar a @modelo.NomEm?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
-            </div>
+        @* BOTONES *@
+        <div class="modal-footer">
+            @if (utility == "Crear")
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Limpiar">Limpiar</button>
+            }
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
         </div>
-    </div>
-</div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.NomEm"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
 
 @code {
     private bool _disabled { get; set; } = false;
@@ -252,5 +215,15 @@
     {
         modelo = new RbdEmpleado();
         StateHasChanged();
+    }
+
+    public async Task SendModel()
+    {
+        switch (utility)
+        {
+            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+        }
     }
 }

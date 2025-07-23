@@ -2,82 +2,63 @@
 @using RBDProject.Models;
 
 <!-- Modal Nuevo y actualizar-->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@utility Ciudades</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<RBDProject.Components.Layout.Modal_Form _Title="@utility">
+    @* FORMULARIO *@
+    @* FORMULARIO *@
+    <EditForm Model="modelo" OnValidSubmit=SendModel>
+        <DataAnnotationsValidator />
+        <div class="modal-body container">
+            <div class="mb-3 row">
+                <label class="form-label">Id</label>
+                <InputNumber class="form-control" disabled="true" @bind-Value=modelo.IdCiudad></InputNumber>
+                <ValidationMessage For="(() => modelo.IdCiudad)" />
             </div>
-            @* FORMULARIO *@
-            @* FORMULARIO *@
-            <div class="modal-body">
-                <EditForm class="container" Model="modelo" OnSubmit="@(() => AddModel.InvokeAsync(modelo))">
-                    <div class="mb-3 row">
-                        <label class="form-label">Id</label>
-                        <InputNumber class="form-control" disabled="true" @bind-Value=modelo.IdCiudad></InputNumber>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Descripcion</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCiudad></InputText>
-                    </div>
-                    <div class="mb-3 row">
-                        <label class="form-label">Codigo Postal</label>
-                        <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.CodPostal></InputText>
-                    </div>
-                </EditForm>
+            <div class="mb-3 row">
+                <label class="form-label">Descripcion</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCiudad></InputText>
+                <ValidationMessage For="(() => modelo.NomCiudad)" />
             </div>
-            @* BOTONES *@
-            <div class="modal-footer">
-                @if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" @onclick="@Clean">Limpiar</button>
-                }
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                @if (utility == "Actualizar")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => UpdateModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else if (utility == "Crear")
-                {
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="@(() => AddModel.InvokeAsync(modelo))">@utility</button>
-                }
-                else
-                {
-
-                }
+            <div class="mb-3 row">
+                <label class="form-label">Codigo Postal</label>
+                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.CodPostal></InputText>
+                <ValidationMessage For="(() => modelo.CodPostal)" />
+            </div>
+            <div>
+                <label class="form-label">Provincia</label>
+                <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdProvincia">
+                    @foreach (var e in listProvincia)
+                    {
+                        <option value="@e.IdProvincia">@e.NomProvincia</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="(() => modelo.IdProvincia)"></ValidationMessage>
             </div>
         </div>
-    </div>
-</div>
+        @* BOTONES *@
+        <div class="modal-footer">
+            @if (utility == "Crear")
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Limpiar">Limpiar</button>
+            }
 
-@* MODAL ELIMINAR *@
-@* MODAL ELIMINAR *@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Grupo</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Estas seguro de que deseas eliminar a @modelo.NomCiudad?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="@(() => DeleteModel.InvokeAsync(modelo))">Eliminar</button>
-            </div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
         </div>
-    </div>
-</div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.NomCiudad"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
 
 @code {
     private bool _disabled { get; set; } = false;
 
     [Parameter]
     public RbdCiudade modelo { get; set; } = new RbdCiudade();
+
+    [Parameter]
+    public List<RbdProvincium> listProvincia { get; set; } = new List<RbdProvincium>();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;
@@ -112,9 +93,19 @@
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdCiudade();
         StateHasChanged();
+    }
+
+    public async Task SendModel()
+    {
+        switch (utility)
+        {
+            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+        }
     }
 }

@@ -10,25 +10,27 @@ public partial class RbdFactura
 
     public int? CodNCf { get; set; }
 
-    [Required(ErrorMessage = "El codigo de cliente no debe estar vacio")]
-    public int CodCli { get; set; } = 1;
+    [Required(ErrorMessage = "El cliente es obligatorio")]
+    public int CodCli { get; set; }
 
-    [Required(ErrorMessage = "El codigo de empleado no debe estar vacio")]
+    [Required(ErrorMessage = "El empleado es obligatorio")]
     public int CodEm { get; set; }
 
-    [Required(ErrorMessage = "El tipo de pago no debe estar vacio")]
+    [Required(ErrorMessage = "La forma de pago es obligatorio")]
     public int CodTipago { get; set; }
 
-    [Required(ErrorMessage = "El balance no debe estar vacio")]
+    [Required(ErrorMessage = "El balance es obligatorio")]
     public double TotalBalance { get; set; }
 
-    [Required(ErrorMessage = "El balance neto no debe estar vacio")]
+    [Required(ErrorMessage = "El balance neto es obligatorio")]
     public double TotalNeto { get; set; }
 
+    [Required(ErrorMessage = "La fecha de registro es obligatoria")]
     public DateTime FechaReg { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "El estado no debe estar vacio")]
     public int CodEst { get; set; }
+
+    public string? Miscelaneo { get; set; }
 
     public virtual RbdCliente CodCliNavigation { get; set; } = null!;
 
