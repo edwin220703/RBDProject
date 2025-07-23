@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
@@ -22,6 +23,7 @@ namespace RBDProject.Components.Pages
         {
             Get();
             GetTypeReceipts();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Comprobantes");
             StateHasChanged();
         }
 

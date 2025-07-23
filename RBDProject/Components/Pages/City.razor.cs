@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
@@ -23,6 +24,7 @@ namespace RBDProject.Components.Pages
         {
             GetOthers();
             Get();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Ciudad");
         }
 
 

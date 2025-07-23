@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
@@ -22,6 +23,7 @@ namespace RBDProject.Components.Pages
         {
             GetByEstados();
             Get();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Pagos");
         }
 
         public void SendTypeModal(RbdTipoPago tp, string e)

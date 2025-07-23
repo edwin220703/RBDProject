@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
 using System.Text.Json;
@@ -19,6 +20,7 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             Get();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Factura");
         }
 
         //MENSAJE CUANDO PASAS EL MOUSE

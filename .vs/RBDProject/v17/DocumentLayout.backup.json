@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\edwin\\source\\repos\\RBDProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\client.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\client.razor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\components\\pages\\client.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\components\\pages\\client.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\wwwroot\\lib\\myjs.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\wwwroot\\lib\\myjs.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,40 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
-              "RelativeDocumentMoniker": "RBDProject\\appsettings.json",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
-              "RelativeToolTip": "RBDProject\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-23T20:38:23.912Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Client.razor.cs",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor.cs",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Client.razor.cs",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor.cs",
-              "RelativeToolTip": "RBDProject\\Components\\Pages\\Client.razor.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAADcAAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-23T20:34:09.992Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Client.razor",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor",
-              "RelativeDocumentMoniker": "RBDProject\\Components\\Pages\\Client.razor",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Components\\Pages\\Client.razor",
-              "RelativeToolTip": "RBDProject\\Components\\Pages\\Client.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-23T20:34:06.019Z",
+              "Title": "Myjs.js",
+              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\wwwroot\\lib\\Myjs.js",
+              "RelativeDocumentMoniker": "RBDProject\\wwwroot\\lib\\Myjs.js",
+              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\wwwroot\\lib\\Myjs.js*",
+              "RelativeToolTip": "RBDProject\\wwwroot\\lib\\Myjs.js*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-07-23T21:44:52.36Z",
               "EditorCaption": ""
             }
           ]

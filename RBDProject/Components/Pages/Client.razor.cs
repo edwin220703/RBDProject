@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Controllers;
 using RBDProject.Models;
@@ -34,6 +35,7 @@ namespace RBDProject.Components.Pages
         {
             GetOthers();
             Get();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Cliente");
         }
 
 

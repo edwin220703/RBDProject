@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Controllers;
 using RBDProject.Models;
@@ -25,6 +26,7 @@ namespace RBDProject.Components.Pages
         protected override async Task OnInitializedAsync()
         {
              Get();
+            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Estados");
         }
 
         public void SendTypeModal(RbdEstado rbdEstado, string e)
