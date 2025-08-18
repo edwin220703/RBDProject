@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Controllers;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,7 +15,7 @@ namespace RBDProject.Components.Pages
 {
     partial class Status
     {
-        List<RbdEstado> estados { get; set; } = null;
+        List<RbdEstado> estados { get; set; } = new List<RbdEstado>();
         IList<RbdEstado> _selectedEstados { get; set; } = new List<RbdEstado>();
 
         //MODAL
@@ -25,8 +28,8 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-             Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Estados");
+             await Get();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Estados");
         }
 
         public void SendTypeModal(RbdEstado rbdEstado, string e)
@@ -110,6 +113,83 @@ namespace RBDProject.Components.Pages
                         await Get();
                     }
                 }
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.Estados(estados);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedEstados.Count == 1)
+                        {
+                            reporte.Estados(new List<RbdEstado> { _selectedEstados[0] });
+                        }
+
+                        if (_selectedEstados.Count > 1)
+                        {
+                            reporte.Estados(_selectedEstados.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Articulos");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Descripcion"),
+                new DataColumn("Fecha de Creacion"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in estados)
+                        {
+                            dt.Rows.Add(a.CodEst, a.NomEst, a.Descripcion, a.FecCreacion);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedEstados)
+                        {
+                            dt.Rows.Add(a.CodEst, a.NomEst, a.Descripcion, a.FecCreacion);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Estados - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

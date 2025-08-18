@@ -24,7 +24,8 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).Include(l => l.RbdListaDePrecios).
+                var content = await _context.RbdArticulos.Include(e => e.CodEstNavigation).
+                    Include(l => l.RbdListaDePrecios).
                      Include(g => g.CodGrupNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);

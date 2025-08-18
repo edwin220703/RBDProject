@@ -1,10 +1,25 @@
 ﻿@page "/TiposDeComprobantes"
 @using RBDProject.Models
+
 @rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
+@inject IJSRuntime _jSRuntime
+
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
-@inject IJSRuntime _jSRuntime
+@inject NavigationManager _navigate
+
+<PageTitle>Tipos De Comprobantes</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if(context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigate.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -12,11 +27,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -25,7 +40,7 @@
 @* TABLA PERO VERSION RADZEN *@
 <section style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_tipoComprobante" GridLines=DataGridGridLines.Both  ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectTipoComprobante>
+                    Data="@_tipoComprobante" GridLines=DataGridGridLines.Both  ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectTipoComprobante>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Filterable="false" Frozen=true Sortable="false">
                 <Template Context="Options">
@@ -44,3 +59,7 @@
 
 @* MODAL *@
 <RBDProject.Components.Modals.Modal_TipoComprobante AddModel="Post" DeleteModel="Delete" UpdateModel="Put" modelo="@model" utility="@utilitymodel"></RBDProject.Components.Modals.Modal_TipoComprobante>
+
+<RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_tipoComprobante.ToList().Count) CountList="@(_selectTipoComprobante.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
+
+<RBDProject.Components.Modals.ModalExportar CountGeneral=@(_tipoComprobante.ToList().Count) CountList="@(_selectTipoComprobante.Count)" OpcionExport="@((a)=>ExportarDocumento(a.Item1,a.Item2))"></RBDProject.Components.Modals.ModalExportar>

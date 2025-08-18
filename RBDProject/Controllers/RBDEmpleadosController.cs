@@ -24,9 +24,13 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdEmpleados.Include(G=>G.CodGenNavigation).
-                    Include(ci=>ci.IdCiudadNavigation).Include(ca=>ca.IdCalleNavigation).
-                    Include(c=>c.CodCarNavigation).Include(e=>e.CodEstNavigation).ToListAsync();
+                var content = await _context.RbdEmpleados.Include(G => G.CodGenNavigation).
+                    Include(ci => ci.IdProvinciaNavigation).
+                    Include(ci => ci.IdCiudadNavigation).
+                    Include(ca => ca.IdCalleNavigation).
+                    Include(c => c.CodCarNavigation).
+                    Include(e => e.CodEstNavigation).
+                    Include(t => t.RbdTelefonoEmpleados).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -45,7 +49,39 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdEmpleados.FindAsync(id);
+                var content = await _context.RbdEmpleados.Include(G => G.CodGenNavigation).
+                                Include(ci => ci.IdProvinciaNavigation).
+                                Include(ci => ci.IdCiudadNavigation).
+                                Include(ca => ca.IdCalleNavigation).
+                                Include(c => c.CodCarNavigation).
+                                Include(e => e.CodEstNavigation).
+                                Include(t => t.RbdTelefonoEmpleados).
+                                Where(x=>x.CodEm == id).FirstOrDefaultAsync();
+
+                if (content == null)
+                    return BadRequest();
+
+                var result = JsonSerializer.Serialize(content);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        // GET api/<RbdEmpleadosController>/5
+        [HttpGet("{name}/{password}")]
+        public async Task<IActionResult> Get(string name, string password)
+        {
+            try
+            {
+                var content = await _context.RbdEmpleados.
+                                Include(c => c.CodCarNavigation).
+                                Where(x => x.NomUs == name && x.NomClav == password).FirstOrDefaultAsync();
 
                 if (content == null)
                     return BadRequest();
@@ -77,7 +113,18 @@ namespace RBDProject.Controllers
 
                 var id = _context.RbdEmpleados.Max(x => x.CodEm);
 
-                return StatusCode(201,JsonSerializer.Serialize(id));
+                //AÑADIR TELEFONO
+                if (content.RbdTelefonoEmpleados.Count != 0)
+                {
+                    RbdTelefonoEmpleado tel = new RbdTelefonoEmpleado();
+                    tel.CodEm = id;
+                    tel.TelEm = content.RbdTelefonoEmpleados.First().TelEm;
+
+                    _context.RbdTelefonoEmpleados.Add(tel);
+                    await _context.SaveChangesAsync();
+                }
+
+                return StatusCode(201, JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {

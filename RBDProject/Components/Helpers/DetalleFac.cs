@@ -50,6 +50,6 @@ namespace RBDProject.Components.Helpers
             get { return _sub_total; }
         }
 
-        private void GetSubTotal() => _sub_total = (_cantidad * _precio) - _descuentoUnit;
+        private void GetSubTotal() => _sub_total = _cantidad * (Precio - DescuentoUnit);
     }
 }

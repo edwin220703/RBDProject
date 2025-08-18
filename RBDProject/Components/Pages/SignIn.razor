@@ -1,36 +1,65 @@
-﻿@using RBDProject.Components.Layout
+﻿@using RBDProject.AuthFolder
+@using RBDProject.Components.Layout
+@using RBDProject.Models
+@using System.Text.Json
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
 
 @layout EmptyLayout
-@page "/SignIn"
+@page "/"
 
-@inject NotificationService _notificationService
-@inject TooltipService _tooltipService
- 
-<section class="bg-light d-flex flex-row justify-content-center align-items-center" style="height:100vh">
-    <div class="card shadow-lg w-100" style="max-width: 480px;">
-        <div class="card-body">
-            <div class="text-center">
-                <h1 class="card-title h3">Iniciar Session</h1>
-                <p class="card-text text-muted">Aliance Software Proyecto</p>
+@inject IJSRuntime _jSRuntime
+@inject IHttpClientFactory _http
+@inject NavigationManager _navigate
+@inject AuthenticationStateProvider _provider
+
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                     class="img-fluid" alt="Sample image">
             </div>
-            <div class="mt-4">
-                <form action="">
-                    <div class="mb-4">
-                        <label for="email" class="form-label text-muted">Usuario</label>
-                        <input type="text" class="form-control" id="email" placeholder="usuario" required>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <EditForm Model="LoginRequest" OnValidSubmit="IniciarSession">
+                    <DataAnnotationsValidator />
+                    <!-- Email input -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Usuario</label>
+                        <InputText class="form-control form-control-lg" placeholder="Usuario" @bind-Value=@LoginRequest.Username></InputText>
+                        <ValidationMessage For="(() => LoginRequest.Username)" />
                     </div>
-                    <div class="mb-4">
-                        <label for="password" class="form-label text-muted">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+
+                    <!-- Password input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label class="form-label" for="form3Example4">Contraseña</label>
+                        <InputText class="form-control form-control-lg" placeholder="Contraseña" @bind-Value=@LoginRequest.Password></InputText>
+                        <ValidationMessage For="(() => LoginRequest.Password)" />
                     </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-dark btn-lg">Ingresar</button>
+
+                    @if (ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ErrorMessage
+                        </div>
+                    }
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <button type="submit" data-mdb-button-init data-mdb-ripple-init disabled="@isLoading" class="btn btn-primary btn-lg"
+                                style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="sr-only">Cargando...</span>
+                            }
+                            else
+                            {
+                                <span>Iniciar Session</span>
+                            }
+                        </button>
                     </div>
-                    <p class="text-center text-muted mt-4">
-                        ¿Olvidaste tu contraseña?
-                        <a href="#!" class="text-decoration-none">Enviar Ticket</a>.
-                    </p>
-                </form>
+
+                </EditForm>
             </div>
         </div>
     </div>
@@ -38,5 +67,38 @@
 
 
 @code {
+    [SupplyParameterFromForm]
+    private AdminLoginRequest LoginRequest { get; set; } = new();
 
+    private string? ErrorMessage;
+    private bool isLoading = false;
+
+    private async Task IniciarSession()
+    {
+        try
+        {
+            isLoading = true;
+            var customAuthenticationStateProvider = (CustomAuthStateProvider)_provider;
+            var token = await customAuthenticationStateProvider.Login(LoginRequest.Username, LoginRequest.Password);
+
+            _navigate.NavigateTo("/postlogin?Token=" + token);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+            var a = _jSRuntime.InvokeVoidAsync("RecargarPagina");
+        }
+    }
+
+    private class AdminLoginRequest
+    {
+        [Required]
+        public string Username { get; set; } = string.Empty;
+        [Required]
+        public string Password { get; set; } = string.Empty;
+    }
 }

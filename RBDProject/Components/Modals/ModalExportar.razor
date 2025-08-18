@@ -1,0 +1,50 @@
+﻿<div class="modal fade" id="idExportar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Exportar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column gap-2">
+                @* SELECCIONANDO PERSONAS *@
+                <RadzenFieldset Text="Seleccion" Style="background-color:white;">
+                    <RadzenRadioButtonList Orientation="Orientation.Vertical" @bind-Value=@cantidad TValue="int">
+                        <Items>
+                            <RadzenRadioButtonListItem Text="Todos Los Reportes" Value="1" Disabled=@(CountGeneral == 0) />
+                            <RadzenRadioButtonListItem Text="Reporte Seleccionado" Value="2" Disabled=@(CountList == 0) />
+                        </Items>
+                    </RadzenRadioButtonList>
+                </RadzenFieldset>
+
+                @* DOCUMENTO *@
+                <RadzenFieldset Text="Documento" Style="background-color:white;">
+                    <RadzenRadioButtonList Orientation="Orientation.Horizontal" @bind-Value=@Tipo TValue="int">
+                        <Items>
+                            <RadzenRadioButtonListItem Text="EXCEL" Value="1" />
+                        </Items>
+                    </RadzenRadioButtonList>
+                </RadzenFieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @onclick=@(() => OpcionExport.InvokeAsync((cantidad, Tipo)))>Exportar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private int cantidad { get; set; } = 1;
+
+    private int Tipo { get; set; } = 1;
+
+    [Parameter]
+    public EventCallback<(int, int)> OpcionExport { get; set; }
+
+    [Parameter]
+    public int CountList { get; set; } = 0;
+
+    [Parameter]
+    public int CountGeneral { get; set; } = 0;
+}

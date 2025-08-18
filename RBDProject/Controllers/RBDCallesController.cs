@@ -23,7 +23,7 @@ namespace RBDProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _context.RbdCalles.ToListAsync();
+            var result = await _context.RbdCalles.Include(ciu=>ciu.IdCiudadNavigation).ToListAsync();
 
             return Ok(JsonSerializer.Serialize(result));
         }
@@ -32,7 +32,7 @@ namespace RBDProject.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = _context.RbdCalles.FirstOrDefault(x => x.IdCalle == id);
+            var result = await _context.RbdCalles.FirstOrDefaultAsync(x => x.IdCalle == id);
 
             if (result is not null)
             {

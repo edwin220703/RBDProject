@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Controllers;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -35,9 +38,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            GetbyOthers();
-            Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Empleados");
+            await GetbyOthers();
+            await Get();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Empleados");
         }
 
 
@@ -166,6 +169,7 @@ namespace RBDProject.Components.Pages
                     if (content.IsSuccessStatusCode)
                     {
                         ShowNotification(NotificationSeverity.Success, "Añadido", $"Se añadio {empleado.NomEm} correctamente");
+                        
                         await Get();
                     }
                 }
@@ -199,6 +203,118 @@ namespace RBDProject.Components.Pages
                         await Get();
                     }
                 }
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.MultiEmpleados(empleados);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedEmpleados.Count == 1)
+                        {
+                            reporte.MultiEmpleados(new List<RbdEmpleado> { _selectedEmpleados[0] });
+                        }
+
+                        if (_selectedEmpleados.Count > 1)
+                        {
+                            reporte.MultiEmpleados(_selectedEmpleados.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public void ImprimirReporteIndividual(RbdEmpleado _empleado)
+        {
+            Reporte R = new Reporte();
+
+            R.Empleados(_empleado);
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Articulos");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("ID"),
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("DNI/Cedula"),
+                new DataColumn("Genero"),
+
+                new DataColumn("Provincia"),
+                new DataColumn("Ciudad"),
+                new DataColumn("Calle"),
+                new DataColumn("Detalle"),
+
+                new DataColumn("Usuario"),
+                new DataColumn("Cargo"),
+                new DataColumn("Sueldo"),
+                new DataColumn("Estado"),
+                new DataColumn("Fecha de Creacion"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in empleados)
+                        {
+                            var genero = a.CodGenNavigation != null ? a.CodGenNavigation.NomGen : "";
+                            var provincia = a.IdProvinciaNavigation != null ? a.IdProvinciaNavigation.NomProvincia : "";
+                            var Ciudad = a.IdCiudadNavigation != null ? a.IdCiudadNavigation.NomCiudad : "";
+                            var Calle = a.IdCalleNavigation != null ? a.IdCalleNavigation.NomCalle : "";
+                            var Cargo = a.CodCarNavigation != null ? a.CodCarNavigation.NomCar : "";
+
+
+                            dt.Rows.Add(a.CodEm, a.IdEm, a.NomEm,a.DniEm,genero, provincia,
+                                Ciudad,Calle,a.DetallDirec,a.NomUs,Cargo,a.Suedms,a.CodEstNavigation.NomEst,a.NumPer);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedEmpleados)
+                        {
+                            var genero = a.CodGenNavigation != null ? a.CodGenNavigation.NomGen : "";
+                            var provincia = a.IdProvinciaNavigation != null ? a.IdProvinciaNavigation.NomProvincia : "";
+                            var Ciudad = a.IdCiudadNavigation != null ? a.IdCiudadNavigation.NomCiudad : "";
+                            var Calle = a.IdCalleNavigation != null ? a.IdCalleNavigation.NomCalle : "";
+                            var Cargo = a.CodCarNavigation != null ? a.CodCarNavigation.NomCar : "";
+
+
+                            dt.Rows.Add(a.CodEm, a.IdEm, a.NomEm, a.DniEm, genero, provincia,
+                                Ciudad, Calle, a.DetallDirec, a.NomUs, Cargo, a.Suedms, a.CodEstNavigation.NomEst, a.NumPer);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Empleados - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

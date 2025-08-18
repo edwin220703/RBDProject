@@ -1,12 +1,27 @@
 ﻿@page "/Articulos"
 @using RBDProject.Models
+
 @rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
+@inject IConfiguration _confi
+@inject IJSRuntime _jSRuntime
+
 @inject NotificationService _NotifyServices
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
-@inject IConfiguration _confi
-@inject IJSRuntime _jSRuntime
+@inject NavigationManager _navigate
+
+<PageTitle>Articulo</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigate.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -14,11 +29,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -26,7 +41,7 @@
 
 <section class="overflow-y-auto" style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_lisarticles" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedArticle>
+                    Data="@_lisarticles" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedArticle>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
@@ -61,3 +76,9 @@
 
 <RBDProject.Components.Modals.Modal_Articulos AddModel="@((args)=>Add(args.Item1,args.Item2))" UpdateModel="@((args)=>Update(args.Item1,args.Item2))" 
 DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@_modalListPrecio"></RBDProject.Components.Modals.Modal_Articulos>
+
+
+<RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_lisarticles.Count) CountList="@(_selectedArticle.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
+
+<RBDProject.Components.Modals.ModalExportar CountGeneral=@(_lisarticles.Count) CountList="@(_selectedArticle.Count)" OpcionExport="@((a) => ExportarDocumento(a.Item1, a.Item2))"></RBDProject.Components.Modals.ModalExportar>
+

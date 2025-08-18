@@ -1,10 +1,24 @@
 ﻿@page "/ComprobanteFiscal"
 @using RBDProject.Models
+
 @rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
+@inject IJSRuntime _jSRuntime
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
-@inject IJSRuntime _jSRuntime
+@inject NavigationManager _navigate
+
+<PageTitle>Comprobantes</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigate.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"

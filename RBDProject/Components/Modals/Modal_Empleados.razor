@@ -137,6 +137,10 @@
                         <ValidationMessage For="(() => modelo.CodEst)" />
                     </div>
                 }
+
+                <label for="exampleFormControlTextarea1" class="form-label">Contacto</label>
+                <InputText class="form-control" disabled="@_disabled" aria-label="Default select example" @bind-Value="telefonoEmpleado.TelEm"></InputText>
+                <ValidationMessage For="(() => telefonoEmpleado.TelEm)" />
             </section>
 
         </div>
@@ -160,13 +164,13 @@
 
 @code {
     private bool _disabled { get; set; } = false;
+    private RbdTelefonoEmpleado telefonoEmpleado { get; set; } = new RbdTelefonoEmpleado();
 
     [Parameter]
     public RbdEmpleado modelo { get; set; } = new RbdEmpleado();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;
-
 
     [Parameter]
     public List<RbdCiudade> _listCiudad { get; set; } = new List<RbdCiudade>();
@@ -180,7 +184,6 @@
     [Parameter]
     public List<RbdEstado> _listEstado { get; set; } = new List<RbdEstado>();
 
-
     [Parameter]
     public EventCallback<RbdEmpleado> UpdateModel { get; set; }
 
@@ -192,6 +195,11 @@
 
     protected override void OnParametersSet()
     {
+        if (modelo.CodEm != 0 && modelo.RbdTelefonoEmpleados.Count != 0)
+        {
+            telefonoEmpleado.TelEm = modelo.RbdTelefonoEmpleados.First().TelEm;
+        }
+
         _disabled = false;
 
         switch (utility)
@@ -211,7 +219,7 @@
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdEmpleado();
         StateHasChanged();
@@ -219,8 +227,20 @@
 
     public async Task SendModel()
     {
+        try
+        {
+
+            modelo.RbdTelefonoEmpleados.First().TelEm = telefonoEmpleado.TelEm;
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
         switch (utility)
         {
+
+
             case "Crear": await AddModel.InvokeAsync(modelo); break;
             case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -9,7 +12,7 @@ namespace RBDProject.Components.Pages
 {
     partial class Street
     {
-        private List<RbdCalle> _listCalle { get; set; } = null;
+        private List<RbdCalle> _listCalle { get; set; } = new List<RbdCalle>();
         private IList<RbdCalle> _selectedCalle { get; set; } = new List<RbdCalle>();
         private RbdCalle model { get; set; } = new RbdCalle();
         private string utilitymodal { get; set; } = string.Empty;
@@ -20,8 +23,8 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-             Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Calle");
+            await Get();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Calle");
         }
 
         public void SendTypeModal(RbdCalle rbdCalle, string e)
@@ -102,6 +105,81 @@ namespace RBDProject.Components.Pages
                     ShowNotification(NotificationSeverity.Success, "Eliminacion", $"Se elimino {calle.NomCalle}");
                     await Get();
                 }
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.Calle(_listCalle);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedCalle.Count == 1)
+                        {
+                            reporte.Calle(new List<RbdCalle> { _selectedCalle[0] });
+                        }
+
+                        if (_selectedCalle.Count > 1)
+                        {
+                            reporte.Calle(_selectedCalle.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("TiposComprobantes");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Ciudad"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in _listCalle)
+                        {
+                            dt.Rows.Add(a.IdCalle, a.NomCalle, a.IdCiudadNavigation.NomCiudad);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedCalle.ToList())
+                        {
+                            dt.Rows.Add(a.IdCalle, a.NomCalle, a.IdCiudadNavigation.NomCiudad);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Calles - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

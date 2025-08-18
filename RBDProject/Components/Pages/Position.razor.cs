@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Controllers;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -27,9 +30,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            GetStatus();
-             Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Articulo");
+            await Get();
+            await GetStatus();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Cargo");
 
         }
 
@@ -134,6 +137,84 @@ namespace RBDProject.Components.Pages
                         await Get();
                     }
                 }
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.Cargo(cargos);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedCargos.Count == 1)
+                        {
+                            reporte.Cargo(new List<RbdCargo> { _selectedCargos[0] });
+                        }
+
+                        if (_selectedCargos.Count > 1)
+                        {
+                            reporte.Cargo(_selectedCargos.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Cargo");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Descripcion"),
+                new DataColumn("Fecha de Creacion"),
+                new DataColumn("Estado"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in cargos)
+                        {
+                            dt.Rows.Add(a.CodCar, a.NomCar,a.DesCar,a.FecCreacion,a.CodEstNavigation.NomEst);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedCargos)
+                        {
+                            dt.Rows.Add(a.CodCar, a.NomCar, a.DesCar, a.FecCreacion, a.CodEstNavigation.NomEst);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Cargos - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

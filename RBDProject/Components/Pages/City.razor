@@ -1,10 +1,24 @@
 ﻿@page "/Ciudades"
 @using RBDProject.Models
+
 @rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
+@inject IJSRuntime _jSRuntime 
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
-@inject IJSRuntime _jSRuntime 
+@inject NavigationManager _navigate
+
+<PageTitle>Ciudad</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigate.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -12,11 +26,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -24,7 +38,7 @@
 
 <section style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_lisciudades" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedCiudades>
+                    Data="@_lisciudades" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedCiudades>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
@@ -43,3 +57,8 @@
 </section>
 
 <RBDProject.Components.Modals.Modal_Ciudad AddModel="@Add" listProvincia=@_listprovincia UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal"></RBDProject.Components.Modals.Modal_Ciudad>
+
+<RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_lisciudades.Count) CountList="@(_selectedCiudades.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
+
+<RBDProject.Components.Modals.ModalExportar CountGeneral=@(_lisciudades.Count) CountList="@(_selectedCiudades.Count)" OpcionExport="@((a) => ExportarDocumento(a.Item1, a.Item2))"></RBDProject.Components.Modals.ModalExportar>
+

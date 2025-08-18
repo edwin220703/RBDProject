@@ -9,11 +9,6 @@
         <DataAnnotationsValidator />
         <div class="modal-body container">
             <div class="mb-3 row">
-                <label class="form-label">Id</label>
-                <InputNumber class="form-control" disabled="true" @bind-Value=modelo.IdCiudad></InputNumber>
-                <ValidationMessage For="(() => modelo.IdCiudad)" />
-            </div>
-            <div class="mb-3 row">
                 <label class="form-label">Descripcion</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCiudad></InputText>
                 <ValidationMessage For="(() => modelo.NomCiudad)" />
@@ -103,7 +98,7 @@
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
+            case "Crear": await AddModel.InvokeAsync(modelo); Clean(); break;
             case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }

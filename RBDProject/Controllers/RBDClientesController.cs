@@ -24,9 +24,13 @@ namespace RBDProject.Controllers
         {
             try
             {
-                //var content = await _context.RbdClientes.Include(g=>g.CodGenNavigation).
-                //    Include(ciu=>ciu.IdCiudadNavigation).Include(c=>c.IdCalleNavigation).ToListAsync();
-                var content = await _context.RbdClientes.ToListAsync();
+                var content = await _context.RbdClientes.Include(g => g.CodGenNavigation).
+                    Include(p=>p.IdProvinciaNavigation).
+                    Include(ciu => ciu.IdCiudadNavigation).
+                    Include(c => c.IdCalleNavigation).
+                    Include(t => t.RbdTelefonoClientes).ToListAsync();
+
+                //var content = await _context.RbdClientes.ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -35,7 +39,7 @@ namespace RBDProject.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return StatusCode(500,ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -87,7 +91,7 @@ namespace RBDProject.Controllers
             try
             {
                 var content = await _context.RbdClientes.Include(g => g.CodGenNavigation).
-                    Include(ciu => ciu.IdCiudadNavigation).Include(c => c.IdCalleNavigation).Where(x=>x.NomCli == Name).FirstOrDefaultAsync();
+                    Include(ciu => ciu.IdCiudadNavigation).Include(c => c.IdCalleNavigation).Where(x => x.NomCli == Name).FirstOrDefaultAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -107,17 +111,32 @@ namespace RBDProject.Controllers
             try
             {
                 var content = JsonSerializer.Deserialize<RbdCliente>(value);
+                string numero = content.RbdTelefonoClientes.FirstOrDefault().TelCli;
 
-                if(content == null) 
+                if (content == null)
                     return BadRequest();
 
+                content.RbdTelefonoClientes = new List<RbdTelefonoCliente>();
+
+                //AÑADIR CLIENTE
                 _context.RbdClientes.Add(content);
                 await _context.SaveChangesAsync();
 
                 var id = _context.RbdClientes.Max(x => x.CodCli);
 
-                return Ok(JsonSerializer.Serialize(id));
+                //AÑADIR TELEFONO
+                if (numero != null)
+                {
+                    RbdTelefonoCliente tel = new RbdTelefonoCliente();
+                    tel.CodCli = id;
+                    tel.TelCli = numero;
 
+                    _context.RbdTelefonoClientes.Add(tel);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                return Ok(JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {
@@ -146,9 +165,25 @@ namespace RBDProject.Controllers
                 content.CodGen = result.CodGen;
                 content.IdCiudad = result.IdCiudad;
                 content.IdCalle = result.IdCalle;
-                content.DetallDirec=result.DetallDirec;
+                content.DetallDirec = result.DetallDirec;
                 content.TipRnc = result.TipRnc;
 
+                //ELIMINAR Y ACTUALIZAR TELEFONO
+                var telcontent = await _context.RbdTelefonoClientes.Where(d => d.CodCli == id).FirstOrDefaultAsync();
+
+                if (telcontent != null)
+                {
+                    _context.RbdTelefonoClientes.Remove(telcontent);
+                    await _context.SaveChangesAsync();
+                }
+
+                RbdTelefonoCliente t = new RbdTelefonoCliente();
+                t.CodCli = id;
+                t.TelCli = result.RbdTelefonoClientes.FirstOrDefault().TelCli;
+
+                _context.RbdTelefonoClientes.Add(t);
+
+                //ACTUALIZANDO TODO
                 _context.RbdClientes.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
@@ -169,7 +204,7 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdClientes.FindAsync(id);
 
-                if(content == null) 
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdClientes.Remove(content);
@@ -183,102 +218,5 @@ namespace RBDProject.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-        //ZONA CELULAR
-        //ZONA CELULAR
-        //ZONA CELULAR
-        // GET api/<RBDClientesController>/Telefono/5
-        [HttpGet("Telefono/{id}")]
-        public async Task<IActionResult> GetTelefono(int id)
-        {
-            try
-            {
-                var content = await _context.RbdTelefonoClientes.Where(x => x.CodCli == id).ToListAsync();
-
-                var result = JsonSerializer.Serialize(content);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost("Telefono")]
-        public async Task<IActionResult> PostTelefono([FromBody] string value)
-        {
-            try
-            {
-                var content = JsonSerializer.Deserialize<RbdTelefonoCliente>(value);
-
-                if (content == null)
-                    return BadRequest();
-
-                _context.RbdTelefonoClientes.Add(content);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        // PUT api/<RBDClientesController>/Telefono/5
-        [HttpPut("Telefono/{id}")]
-        public async Task<IActionResult> PutTelefono(int id, [FromBody] string value)
-        {
-            try
-            {
-                var content = await _context.RbdTelefonoClientes.Where(x=>x.CodCli == id).FirstAsync();
-
-                var result = JsonSerializer.Deserialize<RbdCliente>(value);
-
-                if (content == null || result == null)
-                    return BadRequest();
-
-                _context.RbdTelefonoClientes.Update(content);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        // DELETE api/<RBDClientesController>/Telefono/5
-        [HttpDelete("/Telefono{id}")]
-        public async Task<IActionResult> DeleteTelefono(int id, [FromBody]string value)
-        {
-            try
-            {
-                var content = await _context.RbdTelefonoClientes.Where(x=>x.CodCli==id).FirstAsync();
-
-                var result = JsonSerializer.Deserialize<RbdTelefonoCliente>(value);
-
-                if (content == null || result == null)
-                    return BadRequest();
-
-                _context.RbdTelefonoClientes.Remove(result);
-                await _context.SaveChangesAsync();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RBDProject.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,7 +25,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdComprobanteFiscals.Include(t=>t.CodTipocomNavigation).ToListAsync();
+                var content = await _context.RbdComprobanteFiscals.Include(t => t.CodTipocomNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -33,7 +34,7 @@ namespace RBDProject.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return StatusCode(500,ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -59,6 +60,60 @@ namespace RBDProject.Controllers
             }
         }
 
+        // GET api/<RBDComprobanteFiscalesController>/5
+        [HttpGet("tipo={sec}")]
+        public async Task<IActionResult> GetSec(int sec)
+        {
+            try
+            {
+                var content = await _context.RbdComprobanteFiscals.Where(x => x.CodTipocom == sec).ToListAsync();
+
+                //Obteniendo el ultimo Comprobante
+                var LastResult = content.Last();
+
+                //IDENTIFICANDO EL TIPO DE COMPROBANTE
+                var matches = Regex.Matches(LastResult.SecCom, "^(.{3})");
+                string Comp = string.Empty;
+
+                foreach (Match match in matches)
+                {
+                    Console.WriteLine(match.Groups[1].Value);
+                    Comp = match.Groups[1].Value;
+                }
+
+                //VERIFICANDO LA SECUENCIA
+                matches = Regex.Matches(LastResult.SecCom, @"\b\w*?(\d{8})\b");
+                string Sec = string.Empty;
+                foreach (Match match in matches)
+                {
+                    Console.WriteLine(match.Groups[1].Value);
+                    Sec = match.Groups[1].Value;
+                }
+
+                //APLICANDO LA SECUENCIA
+                int contador = (int.Parse(Sec)) + 1;
+
+                for (int i = contador.ToString().Length; i < 8; i++)
+                {
+                    Comp += '0';
+                }
+
+                LastResult.SecCom = Comp.Trim() + contador.ToString();
+
+                if (content == null)
+                    return BadRequest();
+
+                var result = JsonSerializer.Serialize(LastResult);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // POST api/<RBDComprobanteFiscalesController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] string value)
@@ -67,15 +122,15 @@ namespace RBDProject.Controllers
             {
                 var result = JsonSerializer.Deserialize<RbdComprobanteFiscal>(value);
 
-                if(result == null)
+                if (result == null)
                     return BadRequest();
 
                 _context.RbdComprobanteFiscals.Add(result);
                 await _context.SaveChangesAsync();
 
-                var id = _context.RbdComprobanteFiscals.Max(x=>x.CodNcf); 
+                var id = _context.RbdComprobanteFiscals.Max(x => x.CodNcf);
 
-                return StatusCode(201,JsonSerializer.Serialize(id));
+                return StatusCode(201, JsonSerializer.Serialize(id));
             }
             catch (Exception ex)
             {
@@ -94,7 +149,7 @@ namespace RBDProject.Controllers
 
                 var result = JsonSerializer.Deserialize<RbdComprobanteFiscal>(value);
 
-                if (content == null || result == null) 
+                if (content == null || result == null)
                     return BadRequest();
 
                 content.SecCom = result.SecCom;
@@ -123,7 +178,7 @@ namespace RBDProject.Controllers
             {
                 var content = await _context.RbdComprobanteFiscals.FindAsync(id);
 
-                if(content == null)
+                if (content == null)
                     return BadRequest();
 
                 _context.RbdComprobanteFiscals.Remove(content);

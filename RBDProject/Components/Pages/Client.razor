@@ -1,11 +1,25 @@
 ﻿@using RBDProject.Models;
 @page "/Clientes"
+
 @rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
-@inject NotificationService _notificationService
-@inject TooltipService _tooltipService
 @inject IConfiguration _confi
 @inject IJSRuntime _jSRuntime
+@inject NotificationService _notificationService
+@inject TooltipService _tooltipService
+@inject NavigationManager _navigate
+
+<PageTitle>Clientes</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigate.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -13,11 +27,11 @@
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -26,14 +40,14 @@
 @* SECCION DE TABLA *@
 <section style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@clientes" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedCliente>
+                    Data="@clientes" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedCliente>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
                     <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                    <RadzenButton Icon="Edit" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
                     <RadzenButton Icon="delete" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=@(Options.CodCli == 1) Click="@(() => ImprimirReporteIndividual(Options))" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="@nameof(RbdCliente.CodCli)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
@@ -48,4 +62,9 @@
 
 @* COMPONENTE MODELO *@
 <RBDProject.Components.Modals.Modal_Clientes modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"
-                                             _listCiudades="@_listCiudades" _listCalles="@_listCalle"></RBDProject.Components.Modals.Modal_Clientes>
+                                             _listCiudades="@_listCiudades" _listCalles="@_listCalle" _listProvincia="@_listProvincia"></RBDProject.Components.Modals.Modal_Clientes>
+
+<RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(clientes.Count) CountList="@(_selectedCliente.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
+
+<RBDProject.Components.Modals.ModalExportar CountGeneral=@(clientes.Count) CountList="@(_selectedCliente.Count)" OpcionExport="@((a) => ExportarDocumento(a.Item1, a.Item2))"></RBDProject.Components.Modals.ModalExportar>
+

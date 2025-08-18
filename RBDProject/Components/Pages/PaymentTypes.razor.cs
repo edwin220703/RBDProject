@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 
 namespace RBDProject.Components.Pages
 {
     partial class PaymentTypes
     {
-        private List<RbdTipoPago> _listPagos { get; set; } = null;
+        private List<RbdTipoPago> _listPagos { get; set; } = new List<RbdTipoPago>();
         private IList<RbdTipoPago> _selectedPagos { get; set; } = new List<RbdTipoPago>();
         private RbdTipoPago model { get; set; } = new RbdTipoPago();
         private string utilitymodal { get; set; } = string.Empty;
-        private List<RbdEstado> _listEstados { get; set; } = null;
+        private List<RbdEstado> _listEstados { get; set; } = new List<RbdEstado>();
 
         //API
         private string httpServidor = "Servidor";
@@ -21,9 +24,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            GetByEstados();
-            Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Pagos");
+            await GetByEstados();
+            await Get();
+           var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Pagos");
         }
 
         public void SendTypeModal(RbdTipoPago tp, string e)
@@ -133,5 +136,85 @@ namespace RBDProject.Components.Pages
             }
         }
 
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.TiposDePago(_listPagos);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedPagos.Count == 1)
+                        {
+                            reporte.TiposDePago(new List<RbdTipoPago> { _selectedPagos[0] });
+                        }
+
+                        if (_selectedPagos.Count > 1)
+                        {
+                            reporte.TiposDePago(_selectedPagos.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Pagos");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Fecha de Creacion"),
+                new DataColumn("Estado"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in _listPagos)
+                        {
+                            var estado = a.CodEstNavigation != null ? a.CodEstNavigation.NomEst : "";
+
+                            dt.Rows.Add(a.CodTipago, a.NomPago,a.FecCreacion,estado);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedPagos)
+                        {
+                            var estado = a.CodEstNavigation != null ? a.CodEstNavigation.NomEst : "";
+
+                            dt.Rows.Add(a.CodTipago, a.NomPago, a.FecCreacion, estado);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Pagos - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
+            }
+        }
     }
 }

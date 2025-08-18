@@ -11,7 +11,7 @@ namespace RBDProject.Components.Pages
         private string _httpServer = "Servidor";
         private string _httpApi = "api/RBDComprobanteFiscales";
 
-        private IEnumerable<RbdComprobanteFiscal> _listComprobante { get; set; } = null;
+        private IEnumerable<RbdComprobanteFiscal> _listComprobante { get; set; } = new List<RbdComprobanteFiscal>();
         private IList<RbdComprobanteFiscal> _selectComprobante { get; set; } = new List<RbdComprobanteFiscal>();
         private List<RbdTipoComprobante> _listTiposComprobantes { get; set; } = new List<RbdTipoComprobante>();
 
@@ -21,9 +21,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
-            GetTypeReceipts();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Comprobantes");
+            await Get();
+            await GetTypeReceipts();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Comprobantes");
             StateHasChanged();
         }
 
@@ -76,7 +76,9 @@ namespace RBDProject.Components.Pages
                         var result2 = JsonSerializer.Deserialize<List<RbdTipoComprobante>>(result);
 
                         if (result2 != null)
-                            _listTiposComprobantes = result2;
+                        {
+                           _listTiposComprobantes = result2;
+                        }
                         else
                             _listTiposComprobantes = new List<RbdTipoComprobante>();
                     }
@@ -130,7 +132,7 @@ namespace RBDProject.Components.Pages
             }
         }
 
-        public async Task SendTypeModal(RbdComprobanteFiscal tc, string value)
+        public void SendTypeModal(RbdComprobanteFiscal tc, string value)
         {
             utilitymodel = value;
             model = tc;

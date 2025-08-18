@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RBDProject.Models;
 
@@ -42,6 +43,7 @@ public partial class RbdFactura
 
     public virtual RbdTipoPago CodTipagoNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual RbdCuentasPorCobrar? RbdCuentasPorCobrar { get; set; }
 
     public virtual ICollection<RbdDetalleFactura> RbdDetalleFacturas { get; set; } = new List<RbdDetalleFactura>();

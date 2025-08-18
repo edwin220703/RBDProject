@@ -1,0 +1,148 @@
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+@rendermode InteractiveServer
+
+@page "/CXC/Pagar"
+@inject IHttpClientFactory _http
+@inject IJSRuntime _jSRuntime
+@inject NotificationService _notificationService
+
+<RadzenNotification></RadzenNotification>
+
+<section class="d-flex flex-column align-items-center justify-content-between" style="height:auto;">
+    @* BUSQUEDA Y OPCION *@
+    <section style="height:auto;" class="d-flex flex-column gap-1">
+        <section class="d-flex flex-row gap-1 align-items-start">
+
+            @* FACTURA *@
+            <RadzenFieldset Text="Factura" Style="background-color:white;margin:auto;">
+                <div>
+                    @* No. Factura *@
+                    <div class="">
+                        <label for="exampleFormControlInput1" class="form-label" style="font-size:small">No. Factura</label>
+                        <input type="number" min="0" class="form-control" id="exampleFormControlInput1" placeholder="00"
+                               Style="width: 100px;height:30px;font-size:smaller;"
+                               @onkeypress=@((e) => GetByFactura(e))
+                               @bind-value=@NoFactura disabled="@(OpcionAbono == 1 ? true : false)">
+                    </div>
+                </div>
+            </RadzenFieldset>
+
+
+            @* CLIENTE *@
+            @* CLIENTE *@
+            <RadzenFieldset Text="Clientes" Style="background-color:white; margin:auto;height:auto">
+                <RadzenStack Orientation=Orientation.Horizontal Gap="2">
+
+                    @* ID *@
+                    <div class="d-flex flex-column">
+                        <label for="exampleFormControlInput1" class="form-label" style="font-size:small">ID</label>
+                        <RadzenAutoComplete @bind-Value=_modeloCliente.IdCli Change=@(() => ChangedClient(1)) Data=@_listClientes TextProperty="@nameof(RbdCliente.IdCli)"
+                                            Style="width: 100px;height:35px;font-size:smaller;text-align:center" Placeholder="C-2" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
+                    </div>
+
+                    @* NOMBRE *@
+                    <div class="d-flex flex-column">
+                        <label for="exampleFormControlInput1" class="form-label" style="font-size:small">Nombre</label>
+                        <RadzenDropDownDataGrid AllowClear="true" @bind-Value=_modeloCliente.NomCli Change=@(() => ChangedClient(2)) AllowVirtualization="true"
+                                                AllowFiltering="true" Data=@_listClientes
+                                                Style="width: 200px;height:35px;font-size:small;"
+                                                TextProperty="@nameof(RbdCliente.NomCli)"
+                                                ValueProperty="@nameof(RbdCliente.NomCli)"
+                                                Placeholder="Cliente" />
+                    </div>
+
+                    @* CEDULA *@
+                    <div class="d-flex flex-column">
+                        <label for="exampleFormControlInput1" class="form-label" style="font-size:small">Cedula</label>
+
+                        <RadzenAutoComplete @bind-Value=_modeloCliente.DniCli Data=@_listClientes
+                                            Change=@(() => ChangedClient(3)) TextProperty="@nameof(RbdCliente.DniCli)"
+                                            Style="width: 120px;height:35px;font-size:small;"
+                                            InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
+                    </div>
+                </RadzenStack>
+            </RadzenFieldset>
+
+
+            @* TIPO DE ABONO *@
+            <RadzenFieldset Text="Tipo De Abono" Style="background-color:white;margin:auto">
+                <RadzenRadioButtonList Orientation="Orientation.Vertical" @bind-Value=@OpcionAbono TValue="int" Style="font-size:small">
+                    <Items>
+                        <RadzenRadioButtonListItem Text="General" Value="1" />
+                        <RadzenRadioButtonListItem Text="Individual" Value="2" />
+                    </Items>
+                </RadzenRadioButtonList>
+            </RadzenFieldset>
+
+            @* TIPOS DE PAGO *@
+            <RadzenFieldset Text="Tipo De Pago" Style="background-color:white;margin:auto">
+                <RadzenStack Orientation="Orientation.Vertical">
+                    <RadzenDropDown @bind-Value=@_modeloPago.CodTipago Data=@_listPagos
+                                    TextProperty="@nameof(RbdTipoPago.NomPago)"
+                                    ValueProperty="@nameof(RbdTipoPago.CodTipago)"
+                                    Style="width:200px; max-width: 400px; height:35px; font-size:small" Name="DropDownTextValueProperties" />
+                </RadzenStack>
+            </RadzenFieldset>
+        </section>
+
+        @* TABLA *@
+        <section style="height:235px">
+            <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="3" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                            Data="@_listaCXC" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="@(OpcionAbono == 1 ? DataGridSelectionMode.Multiple : DataGridSelectionMode.Single)" @bind-Value=@_selectCXC>
+                <Columns>
+                    <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.NumFact)" Filterable="false" Frozen="true" Title="No. Fact" Width="100px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.FechaEmi)" Title="Emision" Width="100px" />
+                    <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.VencPago)" Title="Vencimiento" Width="100px" />
+                    <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.Balance)" Filterable="false" Frozen="true" Title="Balance" Width="150px" />
+                    <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.TotalFact)" Title="Total" Width="150px" />
+                </Columns>
+            </RadzenDataGrid>
+        </section>
+    </section>
+
+    @* BALANCE *@
+    @* PAGO *@
+    <section class="d-flex flex-row nowrap gap-2 justify-content-between align-items-start" style="width:auto;">
+        <section class="d-flex flex-row nowrap gap-2">
+            <RadzenFieldset Text="Informaciones" Style="background-color:white;">
+                <div class="d-flex flex-row gap-2">
+                    @* No. Facturas *@
+                    <RadzenStack>
+                        <RadzenLabel Text="Cantidad de Facturas" style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenNumeric @bind-Value=@CountFact Style="width: 120px;height:35px;font-size:small;" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+
+                    @* BALANCE *@
+                    <RadzenStack>
+                        <RadzenLabel Text="Balance Total" style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenNumeric ReadOnly=true @bind-Value=@Pendiente Style="width: 120px;height:35px;font-size:small;" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                </div>
+            </RadzenFieldset>
+
+        </section>
+
+        <section class="d-flex flex-row nowrap gap-2">
+            <RadzenFieldset Text="Pago" Style="background-color:white;">
+                <div class="d-flex flex-row gap-2">
+                    @* Pago *@
+                    <RadzenStack>
+                        <RadzenLabel Text="Total a Pagar" style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenNumeric @bind-Value=@PagoTotal Style="width: 120px;height:35px;font-size:small;" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenStack>
+                </div>
+            </RadzenFieldset>
+
+            @* BOTONES DE CREACION *@
+            <RadzenFieldset Text="Finalizacion" Style="background-color:white;">
+                <RadzenStack>
+                    <RadzenButton Text="Realizar Pago" Click="Crear" ButtonStyle="ButtonStyle.Primary"/>
+                </RadzenStack>
+            </RadzenFieldset>
+        </section>
+    </section>
+</section>
+

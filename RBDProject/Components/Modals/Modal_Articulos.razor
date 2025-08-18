@@ -189,7 +189,7 @@
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync((modelo, _listPrecio)); break;
+            case "Crear": await AddModel.InvokeAsync((modelo, _listPrecio));break;
             case "Actualizar": await UpdateModel.InvokeAsync((modelo, _listPrecio)); break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }

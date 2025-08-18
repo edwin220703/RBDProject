@@ -24,13 +24,13 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdFacturas.Include(x=>x.CodNCfNavigation)
+                var content = await _context.RbdFacturas.Include(x => x.CodNCfNavigation)
                     .Include(x => x.CodCliNavigation).Include(x => x.CodEmNavigation).Include(x => x.CodTipagoNavigation)
-                    .Include(x => x.CodEstNavigation).Include(x=>x.RbdDetalleFacturas).ToListAsync();
+                    .Include(x => x.CodEstNavigation).Include(x => x.RbdDetalleFacturas).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
-                return Ok(result); 
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -45,10 +45,20 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdFacturas.Include(x => x.CodNCfNavigation)
-                    .Include(x => x.CodCliNavigation).Include(x => x.CodEmNavigation).Include(x => x.CodTipagoNavigation)
-                    .Include(x => x.CodEstNavigation).Where(x => x.NumFac == id).
-                    Include(x=>x.RbdDetalleFacturas).FirstOrDefaultAsync();
+                var content = await _context.RbdFacturas.Include(x => x.CodNCfNavigation).
+                    Include(x => x.CodCliNavigation).
+                    Include(x => x.CodEmNavigation).
+                    Include(x => x.CodTipagoNavigation).
+                    Include(x => x.CodEstNavigation).Where(x => x.NumFac == id).
+                    Include(x => x.RbdDetalleFacturas).FirstOrDefaultAsync();
+
+                if (content.RbdDetalleFacturas.Count != 0)
+                {
+                    foreach (var a in content.RbdDetalleFacturas)
+                    {
+                        a.CodArtNavigation = await _context.RbdArticulos.FirstOrDefaultAsync(x => x.CodArt == a.CodArt);
+                    }
+                }
 
                 if (content == null)
                     return BadRequest();
@@ -78,7 +88,7 @@ namespace RBDProject.Controllers
                 _context.RbdFacturas.Add(content);
                 await _context.SaveChangesAsync();
 
-                var id = _context.RbdFacturas.Max(x=>x.NumFac);
+                var id = _context.RbdFacturas.Max(x => x.NumFac);
 
                 return Ok(JsonSerializer.Serialize(id));
             }
@@ -91,7 +101,7 @@ namespace RBDProject.Controllers
 
         // PUT api/<RBDFacturasController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(long id, [FromBody] string value)
         {
             try
             {
@@ -109,6 +119,7 @@ namespace RBDProject.Controllers
                 content.TotalBalance = result.TotalBalance;
                 content.TotalNeto = result.TotalNeto;
                 content.CodEst = result.CodEst;
+                content.Miscelaneo = result.Miscelaneo;
 
                 _context.RbdFacturas.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -157,7 +168,7 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdDetalleFacturas.Include(x=>x.CodArtNavigation).Where(x => x.NumFac == id).ToListAsync();
+                var content = await _context.RbdDetalleFacturas.Include(x => x.CodArtNavigation).Where(x => x.NumFac == id).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -194,8 +205,8 @@ namespace RBDProject.Controllers
         }
 
         // PUT api/<RBDFacturasController>/DetalleFactura/5
-        [HttpPut("DetalleFactura/{id}")]
-        public async Task<IActionResult> PutDetalleFactura(int id, [FromBody] string value)
+        [HttpPut("DetalleFactura")]
+        public async Task<IActionResult> PutDetalleFactura([FromBody] string value)
         {
             try
             {
@@ -204,7 +215,19 @@ namespace RBDProject.Controllers
                 if (result == null)
                     return BadRequest();
 
-                _context.RbdDetalleFacturas.Update(result);
+
+                var content = _context.RbdDetalleFacturas.FirstOrDefault(x => x.NumFac == result.NumFac && x.CodArt == result.CodArt);
+                
+                if (content == null)
+                    return BadRequest();
+                
+                content.CantArt = result.CantArt;
+                content.Precio = result.Precio;
+                content.DescuentoArt = result.DescuentoArt;
+
+                
+                //INSERTANDO NUEVO
+                _context.RbdDetalleFacturas.Add(content);
                 await _context.SaveChangesAsync();
 
                 return Ok(result);
@@ -230,6 +253,31 @@ namespace RBDProject.Controllers
                 _context.RbdDetalleFacturas.Remove(content);
                 await _context.SaveChangesAsync();
 
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete("DetalleFactura/{id}")]
+        public async Task<IActionResult> DeleteDetalleFactura(long id)
+        {
+            try
+            {
+                var content = await _context.RbdDetalleFacturas.Where(x => x.NumFac == id).ToListAsync();
+
+                if (content == null)
+                    return BadRequest();
+
+                foreach (var a in content)
+                {
+                    _context.RbdDetalleFacturas.Remove(a);
+                }
+
+                await _context.SaveChangesAsync();
                 return NoContent();
             }
             catch (Exception ex)

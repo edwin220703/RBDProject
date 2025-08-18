@@ -1,0 +1,36 @@
+﻿<div class="modal fade" id="idReporte" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Menu Reportes</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <RadzenRadioButtonList Orientation="Orientation.Vertical" @bind-Value=@value TValue="int">
+                    <Items>
+                        <RadzenRadioButtonListItem Text="Todos Los Reportes" Value="1" Disabled=@(CountGeneral==0)/>
+                        <RadzenRadioButtonListItem Text="Reporte Seleccionado" Value="2" Disabled=@(CountList==0) />
+                    </Items>
+                </RadzenRadioButtonList>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @onclick=@(()=>OpcionReporte.InvokeAsync(value))>Crear Reporte</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code{
+    private int value { get; set; } = 1;
+
+    [Parameter]
+    public EventCallback<int> OpcionReporte { get; set; }
+
+    [Parameter]
+    public int CountList { get; set; } = 0;
+
+    [Parameter]
+    public int CountGeneral { get; set; } = 0;
+}

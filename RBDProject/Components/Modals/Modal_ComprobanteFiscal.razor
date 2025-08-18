@@ -34,7 +34,7 @@
                 <ValidationMessage For="(() => modelo.FechaVec)" />
             </div>
             <div class="mb-3 row">
-                <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
+                <label for="exampleFormControlTextarea1" class="form-label">Tipos De Comprobantes</label>
                 <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodTipocom">
                     @foreach (var ci in listaTiposComprobantes)
                     {

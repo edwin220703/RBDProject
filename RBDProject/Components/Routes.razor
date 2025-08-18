@@ -1,6 +1,28 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
+﻿@using Microsoft.AspNetCore.Components.Authorization;
+@using RBDProject.AuthFolder
+
+@inject NavigationManager _navigate
+
+<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+
+        @*         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/> *@
+
+        @* MODIFICADO *@
+        <CascadingAuthenticationState>
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+
+                <NotAuthorized>
+                    @if (context.User.Identity?.IsAuthenticated != true)
+                    {
+                        _navigate.NavigateTo("/");
+
+                    }
+                </NotAuthorized>
+
+            </AuthorizeRouteView>
+        </CascadingAuthenticationState>
+
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>

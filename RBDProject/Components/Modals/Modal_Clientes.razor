@@ -36,14 +36,32 @@
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.CorrCli></InputText>
                         <ValidationMessage For="(() => modelo.CorrCli)" />
                     </div>
+
+                    @* Contacto *@
+                    <div class="mb-3 row">
+                        <label class="form-label">Contacto</label>
+                        <InputText class="form-control" disabled="@_disabled" @bind-Value=telefonoCliente.TelCli></InputText>
+                        <ValidationMessage For="(() => telefonoCliente.TelCli)" />
+                    </div>
                 </section>
 
                 <section style="width:300px">
+                    @* Provincia *@
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Provincia</label>
+                        <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdProvincia">
+                            @foreach (var ca in _listProvincia)
+                            {
+                                <option value="@ca.IdProvincia">@ca.NomProvincia</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="(() => modelo.IdProvincia)" />
+                    </div>
+
                     @* CIUDAD *@
                     <div class="mb-3 row">
                         <label for="exampleFormControlTextarea1" class="form-label">CIUDAD</label>
                         <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCiudad">
-                            <option value="0" selected>Selecciona</option>
                             @foreach (var ciu in _listCiudades)
                             {
                                 <option value="@ciu.IdCiudad">@ciu.NomCiudad</option>
@@ -56,7 +74,6 @@
                     <div class="mb-3 row">
                         <label for="exampleFormControlTextarea1" class="form-label">CALLE</label>
                         <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.IdCalle">
-                            <option value="0" selected>Selecciona</option>
                             @foreach (var ca in _listCalles)
                             {
                                 <option value="@ca.IdCalle">@ca.NomCalle</option>
@@ -121,6 +138,7 @@
 
 @code {
     private bool _disabled { get; set; } = false;
+    private RbdTelefonoCliente telefonoCliente { get; set; } = new RbdTelefonoCliente();
 
     [Parameter]
     public RbdCliente modelo { get; set; } = new RbdCliente();
@@ -130,6 +148,9 @@
 
     [Parameter]
     public List<RbdCalle> _listCalles { get; set; } = new List<RbdCalle>();
+
+    [Parameter]
+    public List<RbdProvincium> _listProvincia { get; set; } = new List<RbdProvincium>();
 
     [Parameter]
     public string utility { get; set; } = string.Empty;
@@ -145,6 +166,15 @@
 
     protected override void OnParametersSet()
     {
+        if (modelo.CodCli != 0 && modelo.RbdTelefonoClientes.Count != 0)
+        {
+            telefonoCliente = modelo.RbdTelefonoClientes.First();
+        }
+        else
+        {
+            telefonoCliente.TelCli = string.Empty;
+        }
+
         _disabled = false;
 
         switch (utility)
@@ -157,14 +187,13 @@
                 {
                     utility = "Informacion";
                     _disabled = true;
-                }
-                ; break;
+                }; break;
         }
 
         StateHasChanged();
     }
 
-    public async Task Clean()
+    public void Clean()
     {
         modelo = new RbdCliente();
         StateHasChanged();
@@ -172,10 +201,29 @@
 
     public async Task SendModel()
     {
+        try
+        {
+            modelo.RbdTelefonoClientes.First().TelCli = telefonoCliente.TelCli;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear": 
+                {
+                    modelo.RbdTelefonoClientes.Add(telefonoCliente);
+                    await AddModel.InvokeAsync(modelo);
+                }; break;
+            case "Actualizar":
+                {
+                    modelo.RbdTelefonoClientes.Clear();
+                    modelo.RbdTelefonoClientes.Add(telefonoCliente);
+
+                    await UpdateModel.InvokeAsync(modelo);
+                };break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

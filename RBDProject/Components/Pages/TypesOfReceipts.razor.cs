@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -13,7 +16,7 @@ namespace RBDProject.Components.Pages
         private string _httpServer = "Servidor";
         private string _httpApi = "api/RBDTipoComprobante";
 
-        private IEnumerable<RbdTipoComprobante> _tipoComprobante { get; set; } = null;
+        private IEnumerable<RbdTipoComprobante> _tipoComprobante { get; set; } = new List<RbdTipoComprobante>();
         private IList<RbdTipoComprobante> _selectTipoComprobante { get; set; } = new List<RbdTipoComprobante>();
 
         //MODAL
@@ -22,8 +25,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Tipos De Comprobantes");
+            await Get();
+
+            var a =_jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Tipos De Comprobantes");
 
             StateHasChanged();
         }
@@ -58,7 +62,8 @@ namespace RBDProject.Components.Pages
                     }
 
                 }
-                StateHasChanged();            }
+                StateHasChanged();
+            }
         }
 
         public async Task Post(RbdTipoComprobante tc)
@@ -106,19 +111,90 @@ namespace RBDProject.Components.Pages
             }
         }
 
-        public async Task SendTypeModal(RbdTipoComprobante tc, string value)
+        public void SendTypeModal(RbdTipoComprobante tc, string value)
         {
-            if(tc == null)
+            if (tc == null)
                 tc = new RbdTipoComprobante();
 
             utilitymodel = value;
             model = tc;
         }
 
-        public async Task Search(int a, string b)
+        public void ImprimirReporte(int value)
         {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.TiposDeComprobante(_tipoComprobante.ToList());
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectTipoComprobante.Count == 1)
+                        {
+                            reporte.TiposDeComprobante(new List<RbdTipoComprobante> { _selectTipoComprobante[0] });
+                        }
+
+                        if (_selectTipoComprobante.Count > 1)
+                        {
+                            reporte.TiposDeComprobante(_selectTipoComprobante.ToList());
+                        }
+                    }
+                    ; break;
+            }
 
         }
 
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("TiposComprobantes");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Descripcion"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in _tipoComprobante)
+                        {
+                            dt.Rows.Add(a.CodTipocom, a.NomTipocom, a.DesTipocom);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectTipoComprobante.ToList())
+                        {
+                            dt.Rows.Add(a.CodTipocom, a.NomTipocom, a.DesTipocom);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Tipos De Comprobante - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
+            }
+        }
     }
 }

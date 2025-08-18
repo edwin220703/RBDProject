@@ -1,51 +1,382 @@
 ﻿@page "/Configuracion"
 @using Models
 @using System.Text.Json
+@using System.Text.RegularExpressions
+
+@rendermode InteractiveServer
+
 @inject IHttpClientFactory _http
+@inject IConfiguration? _configuration
+@inject IJSRuntime _jSRuntime
 
 
-@* FORMULARIO *@
-<EditForm class="container" Model="confi" OnValidSubmit="SendModel">
-    <div class="modal-body">
-        <div class="mb-3 row">
-            <label class="form-label">Articulo</label>
-            <InputText class="form-control" disabled="true" @bind-Value=confi.Articulo></InputText>
-        </div>
-        <div class="mb-3 row">
-            <label class="form-label">Cliente</label>
-            <InputText class="form-control" disabled="true" @bind-Value=confi.Cliente></InputText>
-        </div>
-        <div class="mb-3 row">
-            <label for="exampleFormControlTextarea1" class="form-label">Empleados</label>
-            <InputText class="form-control" disabled="true" @bind-Value=confi.Empleados></InputText>
+<section class="d-flex flex-column flex-nowrap gap-2">
+    @* SECCION PERMISO *@
+    <RadzenFieldset Text="Modulo De Permisos" Style="background-color:white;font-size:small">
+        <section class="d-flex flex-row flex-nowrap gap-2 p-2 justify-content-evenly" style="background-color:white; border-radius:10px">
+
+            @* USER *@
+            <section class="shadow p-2 w-25" style="border-radius:10px; background-color:white;">
+                <div>
+                    <label class="col-form-label-lg">Permisos Usuarios</label>
+                </div>
+                <div class="rz-text-align-center">
+                    <RadzenCheckBoxList @bind-Value=@valuesUser TValue="int" Orientation="Orientation.Vertical">
+                        <Items>
+                            @foreach (var d in Tier_User)
+                            {
+                                @if (d.Key == "Usuario" || d.Key == "Administrador")
+                                {
+                                    <RadzenCheckBoxListItem Disabled=true Text="@d.Key" Value="@d.Value" />
+                                }
+                                else
+                                {
+                                    <RadzenCheckBoxListItem Text="@d.Key" Value="@d.Value" />
+                                }
+                            }
+                        </Items>
+                    </RadzenCheckBoxList>
+                </div>
+            </section>
+
+            @* SUPERVISOR *@
+            <section class="shadow p-2 w-25" style="border-radius:10px; background-color:white;">
+                <div>
+                    <label class="col-form-label-lg">Permisos Supervisor</label>
+                </div>
+                <div class="rz-text-align-center">
+                    <RadzenCheckBoxList @bind-Value=@valuesSup TValue="int" Orientation="Orientation.Vertical">
+                        <Items>
+                            @foreach (var d in Tier_Sup)
+                            {
+                                @if (d.Key == "Supervisor" || d.Key == "Administrador")
+                                {
+                                    <RadzenCheckBoxListItem Disabled=true Text="@d.Key" Value="@d.Value" />
+                                }
+                                else
+                                {
+                                    <RadzenCheckBoxListItem Text="@d.Key" Value="@d.Value" />
+                                }
+                            }
+                        </Items>
+                    </RadzenCheckBoxList>
+                </div>
+            </section>
+
+            @* ADMINISTRADOR *@
+            <section class="shadow p-2 w-25" style="border-radius:10px; background-color:white;">
+                <div>
+                    <label class="col-form-label-lg">Permisos Admin</label>
+                </div>
+                <div class="rz-text-align-center">
+                    <RadzenCheckBoxList @bind-Value=@valuesAdm TValue="int" Orientation="Orientation.Vertical">
+                        <Items>
+                            @foreach (var d in Tier_Admin)
+                            {
+                                @if (d.Key == "Administrador")
+                                {
+                                    <RadzenCheckBoxListItem Disabled=true Text="@d.Key" Value="@d.Value" />
+                                }
+                                else
+                                {
+                                    <RadzenCheckBoxListItem Text="@d.Key" Value="@d.Value" />
+                                }
+                            }
+                        </Items>
+                    </RadzenCheckBoxList>
+                </div>
+            </section>
+
+        </section>
+    </RadzenFieldset>
+
+    @* MODULO PARA CONFIG ARTICULOS *@
+    <RadzenFieldset Text="Modulo De Configuracion De Articulos" Style="background-color:white;font-size:small">
+        <section class="d-flex flex-column justify-content-center shadow p-2 w-50" style="border-radius:10px; background-color:white;">
+            <div>
+                <label class="form-label">Registro Prefijo</label>
+            </div>
+            @* PREFIJOS DE LETRAS *@
+            <EditForm class="container" Model="confi" OnValidSubmit="SaveChanged">
+                <div class="modal-body">
+                    <div class="mb-3 row">
+                        <label class="form-label">Articulo</label>
+                        <InputText class="form-control" @bind-Value=confi.Articulo></InputText>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="form-label">Cliente</label>
+                        <InputText class="form-control" @bind-Value=confi.Cliente></InputText>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="exampleFormControlTextarea1" class="form-label">Empleados</label>
+                        <InputText class="form-control" @bind-Value=confi.Empleados></InputText>
+                    </div>
+                </div>
+            </EditForm>
+        </section>
+    </RadzenFieldset>
+</section>
+
+<footer class="sticky-footer bg-white">
+    <div class="d-flex flex-row justify-content-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Confirmacion">Guardar Cambios</button>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal fade" id="Confirmacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Guardar Cambios</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estas Seguro de guardar cambios?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" @onclick=@SaveChanged data-bs-dismiss="modal">Guardar Cambios</button>
+            </div>
         </div>
     </div>
-</EditForm>
+</div>
+
 
 @code {
-    private string utility { get; set; } = "Crear";
+    private string _httpServidor = "Servidor";
+    private string _httpCargo = "api/RBDCargos";
 
-    private bool _disabled { get; set; } = false;
+    // LIST
+    private List<RbdCargo> _listCargo { get; set; } = new List<RbdCargo>();
 
+    // MODEL
     private Configuracion confi { get; set; } = new Configuracion();
 
-    [Inject]
-    private IConfiguration c { get; set; }
+    // Diccionary
+    private Dictionary<string, int> Tier_Admin { get; set; } = new Dictionary<string, int>();
+    private Dictionary<string, int> Tier_Sup { get; set; } = new Dictionary<string, int>();
+    private Dictionary<string, int> Tier_User { get; set; } = new Dictionary<string, int>();
+
+    IEnumerable<int> valuesAdm = new List<int>() { 1 };
+    IEnumerable<int> valuesSup = new List<int>() { 1, 3 };
+    IEnumerable<int> valuesUser = new List<int>() { 1, 2 };
 
     protected override async Task OnInitializedAsync()
     {
-        var Articulo = c.GetValue<string>("Configuracion:Codigo-Articulo");
-        var Cliente = c.GetValue<string>("Configuracion:Codigo-Cliente");
-        var Empleado = c.GetValue<string>("Configuracion:Codigo-Empleado");
+        GetCodigos();
+        await GetCargos();
+        var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Configuracion");
+
+
+        StateHasChanged();
+    }
+
+    public async Task GetCargos()
+    {
+        using (var client = _http.CreateClient(_httpServidor))
+        {
+            using (var content = await client.GetAsync(_httpCargo))
+            {
+                if (content.IsSuccessStatusCode)
+                {
+                    var result = await content.Content.ReadAsStringAsync();
+
+                    var result2 = JsonSerializer.Deserialize<List<RbdCargo>>(result);
+
+                    if (result2 != null)
+                    {
+                        _listCargo = result2;
+                        SetDir(result2);
+                    }
+                }
+            }
+        }
+    }
+
+    public void GetCodigos()
+    {
+        string? Articulo = _configuration?.GetValue<string>("Configuracion:Codigo-Articulo");
+        string? Cliente = _configuration?.GetValue<string>("Configuracion:Codigo-Cliente");
+        string? Empleado = _configuration?.GetValue<string>("Configuracion:Codigo-Empleado");
 
         confi.Articulo = Articulo;
         confi.Cliente = Cliente;
         confi.Empleados = Empleado;
-
-        StateHasChanged();
     }
-    public async Task SendModel()
-    {
 
+    public void SetDir(List<RbdCargo> _cargos)
+    {
+        string? PA = _configuration?.GetValue<string>("Permisos:Administrador");
+        string? PS = _configuration?.GetValue<string>("Permisos:Supervisor");
+        string? PE = _configuration?.GetValue<string>("Permisos:Empleado");
+
+        if (PA == null || PS == null || PE == null)
+            return;
+
+        // LLENANDO DATOS
+        for (int i = 0; i < _cargos.Count; i++)
+        {
+            Tier_Admin.Add(_cargos[i].NomCar, _cargos[i].CodCar);
+            Tier_Sup.Add(_cargos[i].NomCar, _cargos[i].CodCar);
+            Tier_User.Add(_cargos[i].NomCar, _cargos[i].CodCar);
+        }
+
+        // ASIGNANDO
+        Regex regex;
+        string path;
+
+
+        // ADMINISTRATOR
+        foreach (var a in _cargos)
+        {
+            path = a.NomCar;
+            regex = new Regex(a.NomCar);
+
+            bool coincide = regex.IsMatch(PA);
+
+            if (coincide)
+            {
+                valuesAdm = valuesAdm.Append(a.CodCar);
+            }
+
+        }
+
+        // SUPERVISOR
+        foreach (var s in _cargos)
+        {
+            path = s.NomCar;
+            regex = new Regex(s.NomCar);
+
+            bool coincide = regex.IsMatch(PS);
+
+            if (coincide)
+            {
+                valuesSup = valuesSup.Append(s.CodCar);
+            }
+
+        }
+
+        // EMPLEADO
+        foreach (var e in _cargos)
+        {
+            path = e.NomCar;
+            regex = new Regex(e.NomCar);
+
+            bool coincide = regex.IsMatch(PE);
+
+            if (coincide)
+            {
+                valuesUser = valuesUser.Append(e.CodCar);
+            }
+
+        }
+
+    }
+
+
+    public async Task SaveChanged()
+    {
+        await SavePermition();
+        await SaveConfi();
+        await Task.Delay(100);
+
+        var a = _jSRuntime.InvokeVoidAsync("RecargarPagina");
+    }
+
+    public async Task SavePermition()
+    {
+                try
+        {
+            // Ruta del archivo (en Blazor Server suele estar en la raíz del proyecto)
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+
+            // Leer el contenido actual
+            string json = File.ReadAllText(filePath);
+
+            // Parsear el JSON
+            using var doc = JsonDocument.Parse(json);
+            var jsonObj = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+            // Convertir a diccionario dinámico para manipular
+            var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json)!;
+
+            // ✅ Acceder al objeto "MyConfig"
+            var myConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(dict["Permisos"].ToString()!);
+
+
+            string StringAdmin = string.Empty;
+            string StringSup = string.Empty;
+            string StringEmp = string.Empty;
+
+            foreach(var c in valuesAdm)
+            {
+                StringAdmin += $",{_listCargo.Where(x => x.CodCar == c).First().NomCar}";
+            }
+
+            foreach (var c in valuesSup)
+            {
+                StringSup += $",{_listCargo.Where(x => x.CodCar == c).First().NomCar}";
+            }
+
+            foreach (var c in valuesUser)
+            {
+                StringEmp += $",{_listCargo.Where(x => x.CodCar == c).First().NomCar}";
+            }
+
+            // Cambiar un valor
+            myConfig["Administrador"] = StringAdmin;
+            myConfig["Supervisor"] = StringSup;
+            myConfig["Empleado"] = StringEmp;
+
+            // Guardar el cambio
+            dict["Permisos"] = myConfig;
+            string updatedJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true });
+
+            // Escribir nuevamente en appsettings.json
+            File.WriteAllText(filePath, updatedJson);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task SaveConfi()
+    {
+        try
+        {
+            // Ruta del archivo (en Blazor Server suele estar en la raíz del proyecto)
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+
+            // Leer el contenido actual
+            string json = File.ReadAllText(filePath);
+
+            // Parsear el JSON
+            using var doc = JsonDocument.Parse(json);
+            var jsonObj = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+            // Convertir a diccionario dinámico para manipular
+            var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json)!;
+
+            // ✅ Acceder al objeto "MyConfig"
+            var myConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(dict["Configuracion"].ToString()!);
+
+            // Cambiar un valor
+            myConfig["Codigo-Articulo"] = confi.Articulo == null ? string.Empty : confi.Articulo;
+            myConfig["Codigo-Cliente"] = confi.Cliente == null ? string.Empty : confi.Cliente;
+            myConfig["Codigo-Empleado"] = confi.Empleados == null ? string.Empty : confi.Empleados;
+
+            // Guardar el cambio
+            dict["Configuracion"] = myConfig;
+            string updatedJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true });
+
+            // Escribir nuevamente en appsettings.json
+            File.WriteAllText(filePath, updatedJson);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

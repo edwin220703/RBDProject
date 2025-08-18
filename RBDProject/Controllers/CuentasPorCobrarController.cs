@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RBDProject.Models;
 using System.Text.Json;
@@ -24,7 +25,8 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdCuentasPorCobrars.ToListAsync();
+                var content = await _context.RbdCuentasPorCobrars.Include(d=>d.RbdDetalleCuentaPorCobrars).
+                    Include(f=>f.NumFactNavigation).ToListAsync();
 
                 var result = JsonSerializer.Serialize(content);
 
@@ -43,12 +45,15 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdCuentasPorCobrars.FindAsync(id);
+                var content = await _context.RbdCuentasPorCobrars.
+                    Include(d => d.RbdDetalleCuentaPorCobrars).
+                    Include(f => f.NumFactNavigation).
+                    FirstOrDefaultAsync(x => x.CodCcobro == id);
 
-                if(content == null)
-                    return NoContent();
+                if (content == null)
+                    return BadRequest();
 
-                return Ok(content);
+                return Ok(JsonSerializer.Serialize(content));
             }
             catch (Exception ex)
             {
@@ -63,12 +68,51 @@ namespace RBDProject.Controllers
         {
             try
             {
-                var content = await _context.RbdCuentasPorCobrars.Where(x => x.NumFact == id).FirstOrDefaultAsync();
+                var content = await _context.RbdCuentasPorCobrars.
+                    Include(x=>x.NumFactNavigation).
+                    Where(x => x.NumFact == id).
+                    FirstOrDefaultAsync();
 
                 if (content == null)
                     return NoContent();
 
-                return Ok(content);
+                return Ok(JsonSerializer.Serialize(content));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<CuentasPorCobrarController>/Factura/5
+        [HttpGet("cliente/{id}")]
+        public IActionResult GetCxCCliente(int id)
+        {
+            try
+            {
+                var content = from c in _context.RbdCuentasPorCobrars
+                              join f in _context.RbdFacturas on c.NumFact equals f.NumFac
+                              join cli in _context.RbdClientes on f.CodCli equals cli.CodCli
+                              where cli.CodCli == id
+                              select new RbdCuentasPorCobrar
+                              {
+                                  CodCcobro = c.CodCcobro,
+                                  NumFact = f.NumFac,
+                                  FechaEmi = c.FechaEmi,
+                                  VencPago = c.VencPago,
+                                  Balance = c.Balance,
+                                  TotalFact = c.TotalFact,
+                                  CodEm = c.CodEm,
+                                  NumFactNavigation = f
+                              };
+
+                if (content == null)
+                    return NoContent();
+
+                var jsoncontent = JsonSerializer.Serialize(content);
+
+                return Ok(jsoncontent);
             }
             catch (Exception ex)
             {
@@ -177,20 +221,27 @@ namespace RBDProject.Controllers
         }
 
         // POST api/<CuentasPorCobrarController>
-        [HttpPost("DetalleCuentaPorCobrar")]
-        public async Task<IActionResult> PostDetalleCuentaPorCobrar([FromBody] string value)
+        [HttpPost("DetalleCuentaPorCobrar/{id}")]
+        public async Task<IActionResult> PostDetalleCuentaPorCobrar(long id,[FromBody] string value)
         {
             try
             {
-                var result = JsonSerializer.Deserialize<RbdDetalleCuentaPorCobrar>(value);
+                //FACTURA
+                var fact = await _context.RbdCuentasPorCobrars.Where(X=>X.CodCcobro == id).FirstOrDefaultAsync();
 
-                if (result == null)
+                if (fact == null)
                     return BadRequest();
 
-                _context.RbdDetalleCuentaPorCobrars.Add(result);
+                //DETALLE
+                var content = JsonSerializer.Deserialize<RbdDetalleCuentaPorCobrar>(value);
+
+                if(content == null)
+                    return BadRequest();
+
+                _context.RbdDetalleCuentaPorCobrars.Add(content);
                 await _context.SaveChangesAsync();
 
-                return StatusCode(201, JsonSerializer.Serialize(result));
+                return StatusCode(201, JsonSerializer.Serialize(content));
             }
             catch (Exception ex)
             {

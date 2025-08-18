@@ -6,8 +6,12 @@ using RBDProject.Components;
 using RBDProject.Components.Helpers;
 using RBDProject.Models;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components.Authorization;
+using RBDProject.AuthFolder;
 
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -23,9 +27,14 @@ builder.Services.Configure<Configuracion>(
     builder.Configuration.GetSection("Configuracion")
 );
 
+//AUTENTICACION
+builder.Services.AddScoped<UserServices>();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
 
 builder.Services.AddHttpClient();
 
@@ -48,6 +57,7 @@ builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,6 +68,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
     app.UseMigrationsEndPoint();
 }
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

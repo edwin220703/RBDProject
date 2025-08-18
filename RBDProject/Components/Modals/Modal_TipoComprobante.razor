@@ -9,12 +9,7 @@
         <DataAnnotationsValidator />
         <div class="modal-body container">
             <div class="mb-3 row">
-                <label class="form-label">Nombre</label>
-                <InputNumber class="form-control" disabled="true" @bind-Value=modelo.CodTipocom></InputNumber>
-                <ValidationMessage For="(() => modelo.CodTipocom)" />
-            </div>
-            <div class="mb-3 row">
-                <label class="form-label">Descripcion</label>
+                <label class="form-label">Nombre Del tipo de Comprobante</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomTipocom></InputText>
                 <ValidationMessage For="(() => modelo.NomTipocom)" />
             </div>

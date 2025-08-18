@@ -9,7 +9,7 @@ public partial class RbdTelefonoEmpleado
 {
     public int CodEm { get; set; }
 
-    [Required(ErrorMessage = "El telefono es obligatorio")]
+    [RegularExpression("^(\\+0?1\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", ErrorMessage = "El telefono debe ser correcto. incluir guiones (-)")]
     public string TelEm { get; set; } = null!;
 
     [JsonIgnore]

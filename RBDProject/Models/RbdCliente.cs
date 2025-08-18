@@ -32,6 +32,7 @@ public partial class RbdCliente
 
     public double? TipRnc { get; set; }
 
+    [Required(ErrorMessage = "El nombre es obligatorio")]
     public DateTime? FecEnt { get; set; } = DateTime.Now;
 
     public int? IdProvincia { get; set; }

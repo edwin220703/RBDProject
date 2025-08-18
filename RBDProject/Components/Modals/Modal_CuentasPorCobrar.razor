@@ -1,5 +1,80 @@
-﻿<h3>Modal_CuentasPorCobrar</h3>
+﻿@using RBDProject.Controllers
+@using RBDProject.Models;
+
+<!-- Modal Nuevo y actualizar-->
+<RBDProject.Components.Layout.Modal_Form _Title="@utility">
+    @* FORMULARIO *@
+    @* FORMULARIO *@
+    <EditForm Model="modelo" OnValidSubmit="SendModel">
+        <DataAnnotationsValidator />
+        <div class="modal-body container">
+            <div class="mb-3 row">
+                <label class="form-label">Fecha de Pago</label>
+                <InputDate class="form-control" disabled="true" @bind-Value=modelo.FechaPago></InputDate>
+                <ValidationMessage For="(() => modelo.FechaPago)" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label">Monto</label>
+                <InputNumber class="form-control" @bind-Value=modelo.Monto></InputNumber>
+                <ValidationMessage For="(() => modelo.Monto)" />
+            </div>
+
+            <div class="mb-3 row">
+                <label class="form-label">Tipo De Pago</label>
+                <InputSelect class="form-control" @bind-Value=modelo.CodTippago>
+                    @foreach(var p in Pagos)
+                    {
+                        <option value="@p.CodTipago">@p.NomPago</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="(() => modelo.Monto)" />
+            </div>
+        </div>
+        @* BOTONES *@
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <button type="submit" class="btn btn-primary">@utility</button>
+        </div>
+    </EditForm>
+</RBDProject.Components.Layout.Modal_Form>
+
+<RBDProject.Components.Layout.Modal_Delete Delete="SendModel" _nombreModelo="@modelo.FechaPago.ToString()"></RBDProject.Components.Layout.Modal_Delete>
+<RBDProject.Components.Layout.Modal_Limpiar Limpiar="Clean"></RBDProject.Components.Layout.Modal_Limpiar>
 
 @code {
+    [Parameter]
+    public RbdDetalleCuentaPorCobrar modelo { get; set; } = new RbdDetalleCuentaPorCobrar();
 
+    [Parameter]
+    public List<RbdTipoPago> Pagos { get; set; } = new List<RbdTipoPago>();
+
+    [Parameter]
+    public string utility { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<RbdTipoComprobante> UpdateModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdTipoComprobante> AddModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RbdTipoComprobante> DeleteModel { get; set; }
+
+    protected override void OnParametersSet()
+    {
+
+        StateHasChanged();
+    }
+
+    public void Clean()
+    {
+        modelo = new RbdDetalleCuentaPorCobrar();
+        StateHasChanged();
+    }
+
+    public void SendModel()
+    {
+
+    }
 }

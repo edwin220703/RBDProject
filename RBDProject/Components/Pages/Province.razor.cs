@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ClosedXML.Excel;
+using ConsoleApp1;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 
 namespace RBDProject.Components.Pages
 {
     partial class Province
     {
-        List<RbdProvincium> _listProvincias { get; set; } = null;
+        List<RbdProvincium> _listProvincias { get; set; } = new List<RbdProvincium>();
         IList<RbdProvincium> _selectedProvincias { get; set; } = new List<RbdProvincium>();
 
         //MODAL
@@ -21,8 +24,8 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Provincia");
+            await Get();
+            var a =_jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Provincia");
         }
 
         public void SendTypeModal(RbdProvincium rbdProvince, string e)
@@ -66,6 +69,16 @@ namespace RBDProject.Components.Pages
 
         public async Task Add(RbdProvincium province)
         {
+            if (_listProvincias.Where(p => p.NomProvincia.Contains(province.NomProvincia)).Count() >= 1)
+            {
+                bool continous = await _jSRuntime.InvokeAsync<bool>("AlertaInfo", _listProvincias.Where(p => p.NomProvincia.Contains(province.NomProvincia)).Count(), "provincias");
+
+                if (!continous)
+                {
+                    return;
+                }
+            }
+
             using (HttpClient client = _http.CreateClient(httpServidor))
             {
                 using (var content = await client.PostAsJsonAsync(httpApi, JsonSerializer.Serialize(province)))
@@ -106,6 +119,83 @@ namespace RBDProject.Components.Pages
                         await Get();
                     }
                 }
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.Provincias(_listProvincias);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedProvincias.Count == 1)
+                        {
+                            reporte.Provincias(new List<RbdProvincium> { _selectedProvincias[0] });
+                        }
+
+                        if (_selectedProvincias.Count > 1)
+                        {
+                            reporte.Provincias(_selectedProvincias.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Articulos");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Descripcion"),
+                new DataColumn("Fecha de Creacion"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        foreach (var a in _listProvincias)
+                        {
+                            dt.Rows.Add(a.IdProvincia, a.NomProvincia);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedProvincias)
+                        {
+                            dt.Rows.Add(a.IdProvincia, a.NomProvincia);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Provincias - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

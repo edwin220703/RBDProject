@@ -23,7 +23,7 @@ namespace RBDProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var content = await _context.RbdCiudades.ToListAsync();
+            var content = await _context.RbdCiudades.Include(p=>p.IdProvinciaNavigation).ToListAsync();
 
             if (content == null)
                 return NotFound();
@@ -97,8 +97,6 @@ namespace RBDProject.Controllers
                 Console.WriteLine(ex.Message);
                 return BadRequest(ex.Message);
             }
-
-            return NotFound();
         }
 
         // DELETE api/<RBDCiudadesController>/5

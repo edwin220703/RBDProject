@@ -15,7 +15,7 @@
             </div>
             <div class="mb-3 row">
                 <label class="form-label">Descripcion</label>
-                <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DesGrup></InputText>
+                <InputTextArea class="form-control" disabled="@_disabled" @bind-Value=modelo.DesGrup></InputTextArea>
                 <ValidationMessage For="(() => modelo.DesGrup)" />
             </div>
             @if (estados != null)

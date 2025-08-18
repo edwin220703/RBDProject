@@ -1,10 +1,16 @@
 ﻿
+using ClosedXML.Excel;
+using ConsoleApp1;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
 using Radzen;
 using RBDProject.Models;
+using System.Data;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RBDProject.Components.Pages
 {
@@ -27,9 +33,9 @@ namespace RBDProject.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            GetByOthers();
-            Get();
-            _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Articulo");
+            await GetByOthers();
+            await Get();
+            var a = _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Articulo");
         }
 
 
@@ -234,6 +240,116 @@ namespace RBDProject.Components.Pages
             else
             {
                 _modalListPrecio = new List<RbdListaDePrecio>();
+            }
+        }
+
+        public void ImprimirReporte(int value)
+        {
+            Reporte reporte = new Reporte();
+
+            switch (value)
+            {
+                case 1:
+                    {
+                        reporte.Articulos(_lisarticles);
+                    }
+                    ; break;
+                case 2:
+                    {
+                        if (_selectedArticle.Count == 1)
+                        {
+                            reporte.Articulos(new List<RbdArticulo> { _selectedArticle[0] });
+                        }
+
+                        if (_selectedArticle.Count > 1)
+                        {
+                            reporte.Articulos(_selectedArticle.ToList());
+                        }
+                    }
+                    ; break;
+            }
+        }
+
+        public async Task ExportarDocumento(int value, int tipo)
+        {
+            DataTable dt = new DataTable("Articulos");
+
+            //GENERANDO COLUMNAS
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn("Codigo"),
+                new DataColumn("Nombre"),
+                new DataColumn("Descripcion"),
+                new DataColumn("Existencias"),
+                new DataColumn("Fecha de Creacion"),
+                new DataColumn("Grupo"),
+                new DataColumn("Estado"),
+                new DataColumn("Precio 1"),
+                new DataColumn("Precio 2"),
+                new DataColumn("Precio 3"),
+                new DataColumn("Precio 4"),
+            });
+
+            switch (value)
+            {
+                case 1:
+                    {
+
+
+                        foreach (var a in _lisarticles)
+                        {
+                            //ASIGNANDO PRECIOS
+                            double[] e = new double[4] { 0, 0, 0, 0 };
+                            int i = 0;
+
+                            if (a.RbdListaDePrecios != null)
+                                foreach (var p in a.RbdListaDePrecios)
+                                {
+                                    e[i] = p.Precio;
+                                    i++;
+                                }
+                            //TERMINANDO DE ASIGNAR
+
+                            dt.Rows.Add(a.CodGrup, a.NomArt, a.DesArt, a.ExistArt, a.FecArt, a.CodGrupNavigation.NomGrup, a.CodEstNavigation.NomEst, e[0], e[1], e[2], e[3]);
+                        }
+                    }
+                    ; break;
+                case 2:
+                    {
+                        foreach (var a in _selectedArticle.ToList())
+                        {
+                            //ASIGNANDO PRECIOS
+                            double[] e = new double[4] { 0, 0, 0, 0 };
+                            int i = 0;
+
+                            if (a.RbdListaDePrecios != null)
+                                foreach (var p in a.RbdListaDePrecios)
+                                {
+                                    e[i] = p.Precio;
+                                    i++;
+                                }
+                            //TERMINANDO DE ASIGNAR
+
+                            dt.Rows.Add(a.CodGrup, a.NomArt, a.DesArt, a.ExistArt, a.FecArt, a.CodGrupNavigation.NomGrup, a.CodEstNavigation.NomEst, e[0], e[1], e[2], e[3]);
+                        }
+                    }
+                    ; break;
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+
+                var mbyte = new byte[0];
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    mbyte = stream.ToArray();
+                    //(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nombre");
+                    await _jSRuntime.InvokeAsync<object>("BlazorFile", $"Reporte De Articulos - {DateTime.Now} - RBD SOFTWARE.xlsx", Convert.ToBase64String(stream.ToArray()));
+                }
+
             }
         }
     }

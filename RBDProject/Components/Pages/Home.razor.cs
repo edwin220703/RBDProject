@@ -7,7 +7,7 @@ namespace RBDProject.Components.Pages
 {
     partial class Home
     {
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             _jSRuntime.InvokeVoidAsync("CambiarTitle", "Panel Home");
         }

@@ -1,12 +1,17 @@
 ﻿@page "/CuentasPorCobrar"
 @using RBDProject.Models
+@rendermode InteractiveServer
+@inject IHttpClientFactory _http
+@inject IJSRuntime _jSRuntime
+
+<PageTitle>Cuenta por Cobrar</PageTitle>
 
 <div class="sticky-bottom p-2 gap-2">
-    <button type="button" disabled="true" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <NavLink type="button" class="btn btn-primary" href="/CXC/Pagar" Match="NavLinkMatch.All">
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Pagar
-    </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    </NavLink>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
@@ -14,7 +19,7 @@
 
 <section class="overflow-y-auto" style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_listCuentasPorCobrar" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectCuentaPorCobrar>
+                    Data="@_listCuentasPorCobrar" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectCuentaPorCobrar>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
@@ -24,14 +29,11 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.NumFact)" Filterable="false" Frozen="true" Title="Factura" />
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.FechaEmi)" Filterable="false" Frozen="true" Title="Emision" />
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.VencPago)" Title="Vencimiento" />
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.Balance)" Title="Balance" />
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.TotalFact)" Title="Total De Factura" />
-            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.CodEm)" Title="Empleado" />
-
-
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.NumFact)" Width="100px" Frozen="true" Title="Factura" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.FechaEmi)" Width="150px" Title="Emision" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.VencPago)" Width="150px" Title="Vencimiento" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.Balance)" Width="150px" Title="Balance" />
+            <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.TotalFact)" Width="150px" Title="Total De Factura" />
         </Columns>
     </RadzenDataGrid>
 </section>

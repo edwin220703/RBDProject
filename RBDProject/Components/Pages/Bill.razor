@@ -7,17 +7,28 @@
 @inject TooltipService _tooltipService
 @inject IJSRuntime _jSRuntime
 
+<PageTitle>Factura</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated == null)
+        {
+            _navigation.NavigateTo("/");
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
 <div class="sticky-bottom p-2 gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
             @onclick="@(() => _navigation.NavigateTo("/CrearFactura"))">
         <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
         Agregar
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
-    <button type="button" disabled="true" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button>
@@ -25,14 +36,14 @@
 
 <section style="height:81vh;">
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_listFacturas" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedFactura>
+                    Data="@_listFacturas" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedFactura>
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
                     <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
                     <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => _navigation.NavigateTo($"/CrearFactura/NumFac={Options.NumFac}"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=false ButtonStyle="ButtonStyle.Primary" Click="@(() => ImprimirFactura(Options))"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -63,3 +74,7 @@
         </Columns>
     </RadzenDataGrid>
 </section>
+
+<RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_listFacturas.Count) CountList="@(_selectedFactura.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
+
+<RBDProject.Components.Modals.ModalExportar CountGeneral=@(_listFacturas.Count) CountList="@(_selectedFactura.Count)" OpcionExport="@((a) => ExportarDocumento(a.Item1, a.Item2))"></RBDProject.Components.Modals.ModalExportar>

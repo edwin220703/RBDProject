@@ -17,6 +17,7 @@ public partial class RbdGrupo
     [Required(ErrorMessage = "La fecha de registro es obligatorio")]
     public DateTime? FecCreacion { get; set; } = DateTime.Now;
 
+    [Required(ErrorMessage = "El estado del grupo es necesario")]
     public int? CodEst { get; set; }
 
     public virtual RbdEstado? CodEstNavigation { get; set; }
