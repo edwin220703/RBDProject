@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 
 @inject IHttpClientFactory _http
-@inject IConfiguration _confi
+@inject IConfiguration _configure
 @inject IJSRuntime _jSRuntime
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
@@ -44,10 +44,12 @@
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=@(Options.CodCli == 1) Click="@(() => ImprimirReporteIndividual(Options))" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                    <RadzenButton Icon="error" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                    <AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Supervisor"))">
+                        <RadzenButton Icon="Edit" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                        <RadzenButton Icon="delete" Disabled=@(Options.CodCli == 1) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                        <RadzenButton Icon="Print" Disabled=@(Options.CodCli == 1) Click="@(() => ImprimirReporteIndividual(Options))" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                    </AuthorizeView>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="@nameof(RbdCliente.CodCli)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
@@ -67,8 +69,8 @@
                                              DeleteModel="Remove"
                                              AddModel="Add"
                                              SendTypeModal="@((m)=>SendTypeModal(m.Item1,m.Item2))"
-                                             _listCiudades="@_listCiudades" 
-                                             _listCalles="@_listCalle" 
+                                             _listCiudades="@_listCiudades"
+                                             _listCalles="@_listCalle"
                                              _listProvincia="@_listProvincia">
 </RBDProject.Components.Modals.Modal_Clientes>
 

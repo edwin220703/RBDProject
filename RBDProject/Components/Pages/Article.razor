@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 
 @inject IHttpClientFactory _http
-@inject IConfiguration _confi
+@inject IConfiguration _configure
 @inject IJSRuntime _jSRuntime
 
 @inject NotificationService _NotifyServices
@@ -14,65 +14,77 @@
 
 <PageTitle>Articulo</PageTitle>
 
-<AuthorizeView>
+<AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Empleado"))">
     <NotAuthorized>
         @if (context.User.Identity?.IsAuthenticated == null)
         {
             _navigate.NavigateTo("/");
         }
+        else
+        {
+            <p>No estas autorizado</p>
+        }
     </NotAuthorized>
+    <Authorized>
+        <section>
+            <div class="sticky-bottom p-2 gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                        @onclick="@(() => SendTypeModal(new RbdArticulo(), "add"))">
+                    <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
+                    Agregar
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
+                    <i class="bi bi-printer mr-2 text-gray-400"></i>
+                    Imprimir
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    Exportar
+                </button>
+            </div>
+
+            <section class="overflow-y-auto" style="height:81vh;">
+                <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                Data="@_lisarticles" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedArticle>
+                    <Columns>
+                        <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
+                            <Template Context="Options">
+
+                                <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+
+                                <AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Supervisor"))" Context="authsup">
+                                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                                </AuthorizeView>
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                        <RadzenDataGridColumn Property="@nameof(RbdArticulo.CodArt)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn Property="@nameof(RbdArticulo.IdArt)" Filterable="true" Frozen="true" Title="Codigo" Width="160px" />
+                        <RadzenDataGridColumn Property="@nameof(RbdArticulo.NomArt)" Title="Nombre" />
+                        <RadzenDataGridColumn Property="@nameof(RbdArticulo.DesArt)" Title="Descripcion" />
+                        <RadzenDataGridColumn Property="@nameof(RbdArticulo.FecArt)" Title="Creacion" />
+
+                        <RadzenDataGridColumn Title="Grupos">
+                            <Template Context="Data">
+                                @Data.CodGrupNavigation?.NomGrup
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                        <RadzenDataGridColumn Title="Estado">
+                            <Template Context="Data">
+                                @Data.CodEstNavigation?.NomEst
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                    </Columns>
+                </RadzenDataGrid>
+            </section>
+        </section>
+
+    </Authorized>
 </AuthorizeView>
-
-<div class="sticky-bottom p-2 gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-            @onclick="@(() => SendTypeModal(new RbdArticulo(), "add"))">
-        <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
-        Agregar
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
-        <i class="bi bi-printer mr-2 text-gray-400"></i>
-        Imprimir
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
-        <i class="bi bi-box-arrow-up-right"></i>
-        Exportar
-    </button>
-</div>
-
-<section class="overflow-y-auto" style="height:81vh;">
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_lisarticles" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedArticle>
-        <Columns>
-            <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
-                <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.CodArt)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.IdArt)" Filterable="true" Frozen="true" Title="Codigo" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.NomArt)" Title="Nombre"/>
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.DesArt)" Title="Descripcion" />
-            <RadzenDataGridColumn Property="@nameof(RbdArticulo.FecArt)" Title="Creacion" />
-
-            <RadzenDataGridColumn Title="Grupos">
-                <Template Context="Data">
-                    @Data.CodGrupNavigation?.NomGrup
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn Title="Estado">
-                <Template Context="Data">
-                    @Data.CodEstNavigation?.NomEst
-                </Template>
-            </RadzenDataGridColumn>
-
-        </Columns>
-    </RadzenDataGrid>
-</section>
 
 <RBDProject.Components.Modals.Modal_Articulos AddModel="@((args) => Add(args.Item1, args.Item2))" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" UpdateModel="@((args) => Update(args.Item1, args.Item2))"
                                               DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@_modalListPrecio"></RBDProject.Components.Modals.Modal_Articulos>

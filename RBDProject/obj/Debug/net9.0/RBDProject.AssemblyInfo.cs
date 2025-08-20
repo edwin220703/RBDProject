@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RBDProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1d01fa86d9911ed2efd8fd463d968966d763502")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55b220f155cf08eb993159c32d22d08938ccdc3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("RBDProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RBDProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

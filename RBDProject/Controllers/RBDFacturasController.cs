@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RBDProject.Models;
 using System.Text.Json;
@@ -144,7 +145,10 @@ namespace RBDProject.Controllers
                 if (content == null)
                     return BadRequest();
 
-                _context.RbdFacturas.Remove(content);
+                content.CodEst = 5;
+
+
+                _context.RbdFacturas.Entry(content).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return NoContent();

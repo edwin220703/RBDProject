@@ -1,4 +1,5 @@
 wwwroot\app.css
+wwwroot\favicon-32x32.png
 wwwroot\favicon.png
 wwwroot\lib\bootstrap\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\css\bootstrap-grid.css.map
@@ -46,6 +47,7 @@ wwwroot\lib\bootstrap\js\bootstrap.min.js
 wwwroot\lib\bootstrap\js\bootstrap.min.js.map
 wwwroot\lib\css\sb-admin-2.css
 wwwroot\lib\css\sb-admin-2.min.css
+wwwroot\lib\favicon_io.zip
 wwwroot\lib\img\undraw_posting_photo.svg
 wwwroot\lib\img\undraw_profile.svg
 wwwroot\lib\img\undraw_profile_1.svg
@@ -1877,8 +1879,6 @@ wwwroot\lib\vendor\jquery\jquery.min.map
 wwwroot\lib\vendor\jquery\jquery.slim.js
 wwwroot\lib\vendor\jquery\jquery.slim.min.js
 wwwroot\lib\vendor\jquery\jquery.slim.min.map
-wwwroot\lib\favicon_io.zip
-wwwroot\favicon-32x32.png
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\app.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js.map
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js

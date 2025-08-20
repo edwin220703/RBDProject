@@ -21,13 +21,13 @@
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                     Data="@_listCuentasPorCobrar" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectCuentaPorCobrar>
         <Columns>
-            <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
+@*             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
                     <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ></RadzenButton>
                     <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></RadzenButton>
                     <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
                 </Template>
-            </RadzenDataGridColumn>
+            </RadzenDataGridColumn> *@
 
             <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.NumFact)" Width="100px" Frozen="true" Title="Factura" />
             <RadzenDataGridColumn Property="@nameof(RbdCuentasPorCobrar.FechaEmi)" Width="150px" Title="Emision" />

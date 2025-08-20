@@ -5,55 +5,64 @@
 
 @inject IHttpClientFactory _http
 @inject IJSRuntime _jSRuntime
+@inject IConfiguration _configure
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
 @inject NavigationManager _navigate
 
 <PageTitle>Provincias</PageTitle>
 
-<AuthorizeView>
+<AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Administrador"))">
     <NotAuthorized>
         @if (context.User.Identity?.IsAuthenticated == null)
         {
             _navigate.NavigateTo("/");
         }
+        else
+        {
+            <p>No estas autorizado</p>
+        }
     </NotAuthorized>
+    <Authorized>
+        <section>
+            <div class="sticky-bottom p-2 gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                        @onclick="@(() => SendTypeModal(new RbdProvincium(), "add"))">
+                    <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
+                    Agregar
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
+                    <i class="bi bi-printer mr-2 text-gray-400"></i>
+                    Imprimir
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    Exportar
+                </button>
+            </div>
+
+            @* SECCION DE TABLA *@
+            <section>
+                <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                Data="@_listProvincias" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedProvincias>
+                    <Columns>
+                        <RadzenDataGridColumn Title="Opciones" Width="80px" Frozen=true Filterable="false" Sortable="false">
+                            <Template Context="Options">
+                                <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                                <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                                <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Property="@nameof(RbdProvincium.IdProvincia)" Filterable="false" Frozen="true" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn Property="@nameof(RbdProvincium.NomProvincia)" Title="Nombre" Width="160px" />
+                    </Columns>
+                </RadzenDataGrid>
+            </section>
+        </section>
+    </Authorized>
 </AuthorizeView>
 
-<div class="sticky-bottom p-2 gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-            @onclick="@(() => SendTypeModal(new RbdProvincium(), "add"))">
-        <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
-        Agregar
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
-        <i class="bi bi-printer mr-2 text-gray-400"></i>
-        Imprimir
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
-        <i class="bi bi-box-arrow-up-right"></i>
-        Exportar
-    </button>
-</div>
-
-@* SECCION DE TABLA *@
-<section>
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_listProvincias" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedProvincias>
-        <Columns>
-            <RadzenDataGridColumn Title="Opciones" Width="80px" Frozen=true Filterable="false" Sortable="false">
-                <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="@nameof(RbdProvincium.IdProvincia)" Filterable="false" Frozen="true" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdProvincium.NomProvincia)" Title="Nombre" Width="160px" />
-        </Columns>
-    </RadzenDataGrid>
-</section>
 
 
 @* COMPONENTE MODELO *@

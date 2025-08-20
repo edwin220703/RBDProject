@@ -5,65 +5,73 @@
 
 @inject IHttpClientFactory _http
 @inject IJSRuntime _jSRuntime
+@inject IConfiguration _configure
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
 @inject NavigationManager _navigate
 
 <PageTitle>Pagos</PageTitle>
 
-<AuthorizeView>
+<AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Empleado"))">
     <NotAuthorized>
         @if (context.User.Identity?.IsAuthenticated == null)
         {
             _navigate.NavigateTo("/");
         }
+        else
+        {
+            <p>No estas autorizado</p>
+        }
     </NotAuthorized>
+    <Authorized>
+        <section>
+            <div class="sticky-bottom p-2 gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                        @onclick="@(() => SendTypeModal(new RbdTipoPago(), "add"))">
+                    <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
+                    Agregar
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
+                    <i class="bi bi-printer mr-2 text-gray-400"></i>
+                    Imprimir
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    Exportar
+                </button>
+            </div>
+
+            <section style="height:81vh;">
+                <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                Data="@_listPagos" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedPagos>
+                    <Columns>
+                        <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
+                            <Template Context="Options">
+                                <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                                <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                                <RadzenButton Icon="delete" Disabled=@(Options.CodTipago <= 3) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                                <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary" MouseEnter="@((args) => ShowTooltip(args, "Imprimir"))"></RadzenButton>
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                        <RadzenDataGridColumn Property="@nameof(RbdTipoPago.CodTipago)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn Property="@nameof(RbdTipoPago.NomPago)" Title="Nombre" Width="160px" />
+                        <RadzenDataGridColumn Property="@nameof(RbdTipoPago.FecCreacion)" Title="Creacion" />
+
+                        <RadzenDataGridColumn Title="Estado">
+                            <Template Context="Data">
+                                @Data.CodEstNavigation?.NomEst
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                    </Columns>
+                </RadzenDataGrid>
+            </section>
+        </section>
+    </Authorized>
 </AuthorizeView>
 
-<div class="sticky-bottom p-2 gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-            @onclick="@(() => SendTypeModal(new RbdTipoPago(), "add"))">
-        <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
-        Agregar
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idReporte">
-        <i class="bi bi-printer mr-2 text-gray-400"></i>
-        Imprimir
-    </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#idExportar">
-        <i class="bi bi-box-arrow-up-right"></i>
-        Exportar
-    </button>
-</div>
-
-<section style="height:81vh;">
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_listPagos" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selectedPagos>
-        <Columns>
-            <RadzenDataGridColumn Title="Opciones"  Width="200px" Frozen=true Filterable="false" Sortable="false">
-                <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" Disabled=@(Options.CodTipago<=3) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary" MouseEnter="@((args) => ShowTooltip(args, "Imprimir"))"></RadzenButton>
-                </Template>
-            </RadzenDataGridColumn>
-
-            <RadzenDataGridColumn Property="@nameof(RbdTipoPago.CodTipago)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdTipoPago.NomPago)" Title="Nombre" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(RbdTipoPago.FecCreacion)" Title="Creacion" />
-
-            <RadzenDataGridColumn Title="Estado">
-                <Template Context="Data">
-                    @Data.CodEstNavigation?.NomEst
-                </Template>
-            </RadzenDataGridColumn>
-
-        </Columns>
-    </RadzenDataGrid>
-</section>
-
-<RBDProject.Components.Modals.Modal_TiposPagos AddModel="@Add" UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" listEstados="@_listEstados" SendTypeModal="@((m)=>SendTypeModal(m.Item1,m.Item2))"></RBDProject.Components.Modals.Modal_TiposPagos>
+<RBDProject.Components.Modals.Modal_TiposPagos AddModel="@Add" UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" listEstados="@_listEstados" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))"></RBDProject.Components.Modals.Modal_TiposPagos>
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_listPagos.Count) CountList="@(_selectedPagos.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
 

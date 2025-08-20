@@ -214,7 +214,7 @@ namespace RBDProject.Components.Pages
         {
             if (rbdArticulo.IdArt == null)
             {
-                string? pre = _confi.GetValue<string>("Configuracion:Codigo-Articulo");
+                string? pre = _configure.GetValue<string>("Configuracion:Codigo-Articulo");
                 string result;
 
                 if (_lisarticles.Count != 0)

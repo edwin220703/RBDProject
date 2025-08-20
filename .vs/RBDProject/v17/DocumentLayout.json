@@ -1,16 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\edwin\\source\\repos\\RBDProject\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|c:\\users\\edwin\\source\\repos\\rbdproject\\rbdproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3719B68-F2D1-4DB6-94D4-EAEEE9767F1A}|RBDProject\\RBDProject.csproj|solutionrelative:rbdproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -18,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,32 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
-              "RelativeDocumentMoniker": "RBDProject\\appsettings.json",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\appsettings.json",
-              "RelativeToolTip": "RBDProject\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-20T05:16:03.168Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Program.cs",
-              "RelativeDocumentMoniker": "RBDProject\\Program.cs",
-              "ToolTip": "C:\\Users\\edwin\\source\\repos\\RBDProject\\RBDProject\\Program.cs",
-              "RelativeToolTip": "RBDProject\\Program.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAACQAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T05:08:38.477Z",
-              "EditorCaption": ""
             }
           ]
         }

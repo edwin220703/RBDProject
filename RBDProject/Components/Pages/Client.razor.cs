@@ -60,7 +60,7 @@ namespace RBDProject.Components.Pages
             {
                 string? pre, result;
 
-                pre = _confi.GetValue<string>("Configuracion:Codigo-Cliente");
+                pre = _configure.GetValue<string>("Configuracion:Codigo-Cliente");
                 if (clientes.Count != 0)
                 {
                     result = pre + (clientes.Max(c => c.CodCli) + 1).ToString();

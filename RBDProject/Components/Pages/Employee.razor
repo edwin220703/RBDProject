@@ -44,10 +44,10 @@
         <Columns>
             <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen=true Filterable="false" Sortable="false">
                 <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" Disabled=@(Options.CodEm <= 2) ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" Disabled=@(Options.CodEm<= 2) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=@(Options.CodEm <= 2) ButtonStyle="ButtonStyle.Primary" Click="@(() => ImprimirReporteIndividual(Options))"></RadzenButton>
+                    <RadzenButton Icon="error" Disabled=@(Options.CodEm == 0) ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                    <RadzenButton Icon="Edit" Disabled=@(Options.CodEm == 0) ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                    <RadzenButton Icon="delete" Disabled=@(Options.CodEm== 0) ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                    <RadzenButton Icon="Print" Disabled=@(Options.CodEm == 0) ButtonStyle="ButtonStyle.Primary" Click="@(() => ImprimirReporteIndividual(Options))"></RadzenButton>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="@nameof(RbdEmpleado.CodEm)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />

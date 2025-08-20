@@ -1,0 +1,20 @@
+/* _content/RBDProject/Components/Pages/SignIn.razor.rz.scp.css */
+TML
+CSS
+.divider[b-m2mtr5uhop]:after,
+.divider[b-m2mtr5uhop]:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom[b-m2mtr5uhop] {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 450px) {
+    .h-custom[b-m2mtr5uhop] {
+        height: 100%;
+    }
+}

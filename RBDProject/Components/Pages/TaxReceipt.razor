@@ -5,28 +5,33 @@
 
 @inject IHttpClientFactory _http
 @inject IJSRuntime _jSRuntime
+@inject IConfiguration? _configure
 @inject NotificationService _notificationService
 @inject TooltipService _tooltipService
 @inject NavigationManager _navigate
 
 <PageTitle>Comprobantes</PageTitle>
 
-<AuthorizeView>
+<AuthorizeView Roles="@(_configure?.GetValue<string>("Permisos:Administrador"))">
     <NotAuthorized>
         @if (context.User.Identity?.IsAuthenticated == null)
         {
             _navigate.NavigateTo("/");
         }
+        else
+        {
+            <p>No estas autorizado</p>
+        }
     </NotAuthorized>
-</AuthorizeView>
-
-<div class="sticky-bottom p-2 gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-            @onclick="@(() => SendTypeModal(new RbdComprobanteFiscal(), "add"))">
-        <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
-        Agregar
-    </button>
-@*     <button type="button" disabled="true" class="btn btn-primary">
+    <Authorized>
+        <section>
+            <div class="sticky-bottom p-2 gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                        @onclick="@(() => SendTypeModal(new RbdComprobanteFiscal(), "add"))">
+                    <i class="bi bi-plus-circle bi-sm mr-2 text-gray-400"></i>
+                    Agregar
+                </button>
+                @*     <button type="button" disabled="true" class="btn btn-primary">
         <i class="bi bi-printer mr-2 text-gray-400"></i>
         Imprimir
     </button>
@@ -34,33 +39,37 @@
         <i class="bi bi-box-arrow-up-right"></i>
         Exportar
     </button> *@
-</div>
+            </div>
 
-@* TABLA PERO VERSION RADZEN *@
-<section style="height:81vh;">
-    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@_listComprobante" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectComprobante>
-        <Columns>
-            <RadzenDataGridColumn Title="Opciones" Width="200px"  Frozen="true" Filterable="false">
-                <Template Context="Options">
-                    <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
-                    <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
-                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
-                    <RadzenButton Icon="Print" Disabled=true ButtonStyle ="ButtonStyle.Primary"></RadzenButton>
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.CodNcf)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.SecCom)" Title="NCF" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.DocFec)" Title="Emision" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.FechaVec )" Title="Vencimiento" />
-            <RadzenDataGridColumn Title="Tipo" Width="160px">
-                <Template Context="Tipo">
-                    @Tipo.CodTipocomNavigation?.NomTipocom
-                </Template>
-            </RadzenDataGridColumn>
-        </Columns>
-    </RadzenDataGrid>
-</section>
+            @* TABLA PERO VERSION RADZEN *@
+            <section style="height:81vh;">
+                <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                Data="@_listComprobante" GridLines=DataGridGridLines.Both ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectComprobante>
+                    <Columns>
+                        <RadzenDataGridColumn Title="Opciones" Width="200px" Frozen="true" Filterable="false">
+                            <Template Context="Options">
+                                <RadzenButton Icon="error" ButtonStyle="ButtonStyle.Success" Click="@(() => SendTypeModal(Options, "info"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Informacion"))"></RadzenButton>
+                                <RadzenButton Icon="Edit" ButtonStyle="ButtonStyle.Primary" Click="@(() => SendTypeModal(Options, "update"))" data-bs-toggle="modal" data-bs-target="#staticBackdrop" MouseEnter="@((args) => ShowTooltip(args, "Editar"))"></RadzenButton>
+                                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => SendTypeModal(Options, "delete"))" data-bs-toggle="modal" data-bs-target="#exampleModal" MouseEnter="@((args) => ShowTooltip(args, "Eliminar"))"></RadzenButton>
+                                <RadzenButton Icon="Print" Disabled=true ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.CodNcf)" Filterable="false" Frozen="true" Title="ID" Width="80px" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.SecCom)" Title="NCF" Width="160px" />
+                        <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.DocFec)" Title="Emision" Width="160px" />
+                        <RadzenDataGridColumn Property="@nameof(RbdComprobanteFiscal.FechaVec)" Title="Vencimiento" />
+                        <RadzenDataGridColumn Title="Tipo" Width="160px">
+                            <Template Context="Tipo">
+                                @Tipo.CodTipocomNavigation?.NomTipocom
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </section>
+        </section>
+    </Authorized>
+</AuthorizeView>
+
 
 <RBDProject.Components.Modals.Modal_ComprobanteFiscal AddModel="Post" DeleteModel="Delete" UpdateModel="Put" listaTiposComprobantes="@_listTiposComprobantes" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" modelo="@model" utility="@utilitymodel"></RBDProject.Components.Modals.Modal_ComprobanteFiscal>
 

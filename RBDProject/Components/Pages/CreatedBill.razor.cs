@@ -123,7 +123,7 @@ namespace RBDProject.Components.Pages
 
         public void VolveraFactura()
         {
-            _navigation.NavigateTo("/Facturas");
+            _navigate.NavigateTo("/Facturas");
         }
 
         //NOTIFICACIONES

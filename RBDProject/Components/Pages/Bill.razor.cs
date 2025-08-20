@@ -53,7 +53,7 @@ namespace RBDProject.Components.Pages
                         if (result2 == null)
                             _listFacturas = new List<RbdFactura>();
                         else
-                            _listFacturas = result2;
+                            _listFacturas = result2.Where(x=>x.CodEst == 4).ToList();
 
                         StateHasChanged();
                     }
