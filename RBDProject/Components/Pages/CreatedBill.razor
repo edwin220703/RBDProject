@@ -10,24 +10,32 @@
 @page "/CrearFactura"
 @page "/CrearFactura/NumFac={NumFac:long}"
 
-
 <RadzenComponents @rendermode=@InteractiveServer></RadzenComponents>
 <RadzenNotification></RadzenNotification>
 
 <PageTitle>Crear Factura</PageTitle>
 
+<AuthorizeView>
+    <Authorized>
+        @if (context.User.Identity?.Name != null)
+        {
+            GetEmpleado(context.User.Identity.Name);
+        }
+    </Authorized>
+</AuthorizeView>
+
 <nav class="navbar" style="background-color:#000435">
     <button class="btn btn-outline-success me-2" type="button" @onclick=@VolveraFactura>Volver a Factura</button>
 </nav>
 
-<section class="d-flex flex-column flex-nowrap p-2 gap-2" style="background-color: #efefef">
+<section class="d-flex flex-column flex-nowrap gap-1" style="background-color: #efefef">
     <section>
         @* INFORMACION DE FACTURA *@
         @* EMPLEADOS *@
         @* CLIENTES *@
         @* FECHA *@
         <section class="d-flex flex-row gap-2">
-            <div>
+            <div class="d-flex flex-row nowrap">
                 @* CLIENTE *@
                 <RadzenFieldset Text="Clientes" Style="background-color:white;">
                     <RadzenStack Orientation=Orientation.Horizontal>
@@ -36,13 +44,17 @@
                                             Change=@(() => VerifiqueClientes(1))
                                             Data=@_listCliente
                                             TextProperty="@nameof(RbdCliente.IdCli)"
-                                            Style="width: 9rem"
+                                            Style="width: 9rem;height:33px; font-size:small; text-align:center"
                                             Disabled=@(NumFac != 0? true : false)
                                             Placeholder="ID"
                                             InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
 
-                        <RadzenDropDownDataGrid AllowClear="true" @bind-Value=_modeloCliente.NomCli Change=@(() => VerifiqueClientes(2)) AllowVirtualization="true"
-                                                AllowFiltering="true" Data=@_listCliente
+                        <RadzenDropDownDataGrid AllowClear="true"
+                                                @bind-Value=_modeloCliente.NomCli
+                                                Change=@(() => VerifiqueClientes(2)) AllowVirtualization="true"
+                                                AllowFiltering="true"
+                                                Data=@_listCliente
+                                                Style="width: 12rem;height:33px; font-size:small; text-align:center"
                                                 TextProperty="@nameof(RbdCliente.NomCli)"
                                                 ValueProperty="@nameof(RbdCliente.NomCli)"
                                                 Placeholder="Nombre"
@@ -52,44 +64,77 @@
 
                 @* COMPROBANTE *@
                 <RadzenFieldset Text="Comprobante" Style="background-color:white;">
-                    <RadzenLabel Text="Tipo De Comprobante" Component="DropDownBindValue" />
-                    <RadzenDropDown Disabled="@(NumFac != 0 ? true : false)" @bind-Value=@_modeloComprobante.CodTipocom Change=@(() => GetSecComprobante(_modeloComprobante.CodTipocom)) Data=@_tipoComprobante TextProperty="@nameof(RbdTipoComprobante.NomTipocom)" ValueProperty="@nameof(RbdTipoComprobante.CodTipocom)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
+                    <RadzenStack Orientation="Orientation.Vertical">
+                        <RadzenLabel Text="Tipo De Comprobante" Style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenDropDown Disabled="@(NumFac != 0 ? true : false)"
+                                        @bind-Value=@_modeloComprobante.CodTipocom
+                                        Change=@(() => GetSecComprobante(_modeloComprobante.CodTipocom))
+                                        Data=@_tipoComprobante
+                                        TextProperty="@nameof(RbdTipoComprobante.NomTipocom)"
+                                        ValueProperty="@nameof(RbdTipoComprobante.CodTipocom)"
+                                        Style="width: 12rem;height:33px; font-size:small; text-align:center"
+                                        Name="DropDownTextValueProperties" />
+                    </RadzenStack>
                 </RadzenFieldset>
             </div>
             <div>
                 <RadzenFieldset Text="Imp. y Des." Style="background-color:white;">
-                    @* IMPUESTO *@
-                    <RadzenStack>
-                        <RadzenLabel Text="Impuesto(%)" Component="DropDownBindValue" />
-                        <RadzenNumeric Min="0" Max="10" ReadOnly=true @bind-Value=@ImpuestoPorciento InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                    </RadzenStack>
-                    @* DESCUENTO *@
-                    <RadzenStack>
-                        <RadzenLabel Text="Descuento(%)" Component="DropDownBindValue" />
-                        <RadzenNumeric Min="0" Max="100" @bind-Value=@DescuentoPorciento @onchange=@(() => Contabilidad()) InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                    </RadzenStack>
+                    <div class="d-flex flex-column nowrap gap-2">
+                        @* IMPUESTO *@
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            <RadzenLabel Text="Impuesto(%)" Style="font-size:small" Component="DropDownBindValue" />
+                            <RadzenNumeric Min="0"
+                                           Max="10"
+                                           ReadOnly=true @bind-Value=@ImpuestoPorciento
+                                           Style="width: 9rem;height:33px; font-size:small; text-align:center"
+                                           InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                        </RadzenStack>
+                        @* DESCUENTO *@
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            <RadzenLabel Text="Descuento(%)" Style="font-size:small" Component="DropDownBindValue" />
+                            <RadzenNumeric Min="0"
+                                           Max="100"
+                                           Style="width: 9rem;height:33px; font-size:small; text-align:center"
+                                           @bind-Value=@DescuentoPorciento
+                                           @onchange=@(() => Contabilidad())
+                                           InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                        </RadzenStack>
+                    </div>
                 </RadzenFieldset>
             </div>
             <div>
                 <RadzenFieldset Text="Informaciones" Style="background-color:white;">
-                    @* FECHA *@
-                    <RadzenStack>
-                        <RadzenLabel Text="Fecha" Component="DropDownBindValue" />
-                        <RadzenDatePicker @bind-Value=@_modeloFactura.FechaReg ReadOnly=true ShowCalendarWeek />
-                    </RadzenStack>
-                    @* TIPO DE PAGO *@
-                    <RadzenStack Orientation="Orientation.Vertical">
-                        <RadzenLabel Text="Tipos De Pagos" Component="DropDownBindValue" />
+                    <div class="d-flex flex-column nowrap gap-2">
+                        @* FECHA *@
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            <RadzenLabel Text="Fecha" Style="font-size:small" Component="DropDownBindValue" />
+                            <RadzenDatePicker @bind-Value=@_modeloFactura.FechaReg
+                                              Style="width: 9rem;height:33px; font-size:small; text-align:center"
+                                              ReadOnly=true
+                                              ShowCalendarWeek />
+                        </RadzenStack>
+                        @* TIPO DE PAGO *@
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            <RadzenLabel Text=" Pagos" Style="font-size:small" Component="DropDownBindValue" />
 
-                        <RadzenDropDown @bind-Value=@_modeloPago.CodTipago Data=@_tipoDePago Disabled="@(NumFac != 0 ? true : false)" TextProperty="@nameof(RbdTipoPago.NomPago)" ValueProperty="@nameof(RbdTipoPago.CodTipago)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
+                            <RadzenDropDown @bind-Value=@_modeloPago.CodTipago
+                                            Data=@_tipoDePago
+                                            Disabled="@(NumFac != 0 ? true : false)"
+                                            TextProperty="@nameof(RbdTipoPago.NomPago)"
+                                            ValueProperty="@nameof(RbdTipoPago.CodTipago)"
+                                            Style="width: 9rem;height:33px; font-size:small; text-align:center;"
+                                            Name="DropDownTextValueProperties" />
 
-                    </RadzenStack>
+                        </RadzenStack>
+                    </div>
                 </RadzenFieldset>
             </div>
             <div>
                 @* MISCELANEOS *@
                 <RadzenFieldset Text="MISCELANEOS" Style="background-color:white;">
-                    <InputTextArea class="form-control" id="exampleFormControlTextarea1" rows="3" @bind-Value=@_modeloFactura.Miscelaneo></InputTextArea>
+                    <InputTextArea class="form-control"
+                                   id="exampleFormControlTextarea1" rows="2"
+                                   @bind-Value=@_modeloFactura.Miscelaneo></InputTextArea>
                 </RadzenFieldset>
             </div>
         </section>
@@ -97,21 +142,25 @@
 
     @* FORMULARIO ARTICULO *@
     <section>
-        <section>
-            <RadzenFieldset Text="Producto" Style="background-color:white;">
+        <section style="background-color:white;margin:2px;padding:2px;">
+            @* <RadzenFieldset Text="Producto" Style="background-color:white;font-size:small;"> *@
                 <RadzenStack Orientation=Orientation.Horizontal AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="2px">
                     <RadzenStack Orientation="Orientation.Horizontal">
                         @* ID *@
                         <RadzenStack Orientation="Orientation.Vertical">
-                            <RadzenLabel Text="ID" Component="DropDownBindValue" />
-                            <RadzenAutoComplete @bind-Value=@_modeloArticulo.IdArt Change=@(() => VerifiqueProduct(1)) Data=@_listArticulo TextProperty="@nameof(RbdArticulo.IdArt)"
-                                                Style="width: 9rem" Placeholder="ID" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
+                            <RadzenLabel Text="ID" Style="font-size:small" Component="DropDownBindValue" />
+                            <RadzenAutoComplete @bind-Value=@_modeloArticulo.IdArt
+                                                Change=@(() => VerifiqueProduct(1)) Data=@_listArticulo
+                                                TextProperty="@nameof(RbdArticulo.IdArt)"
+                                                Style="width: 9rem;height:33px; font-size:small; text-align:center"
+                                                Placeholder="ID" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Company Name" } })" />
                         </RadzenStack>
 
                         @* NOMBRE *@
                         <RadzenStack Orientation="Orientation.Vertical">
-                            <RadzenLabel Text="Productos" Component="DropDownBindValue" />
+                            <RadzenLabel Text="Productos" Style="font-size:small" Component="DropDownBindValue" />
                             <RadzenDropDownDataGrid AllowClear="true"
+                                                    Style="width: 12rem;height:33px; font-size:small; text-align:center"
                                                     @bind-Value=_modeloArticulo.NomArt
                                                     Change=@(() => VerifiqueProduct(2))
                                                     AllowVirtualization="true"
@@ -125,36 +174,49 @@
 
                     @* CANTIDAD *@
                     <RadzenStack>
-                        <RadzenLabel Text="Cantidad" Component="DropDownBindValue" />
-                        <RadzenNumeric Min=1 Max=@_modeloArticulo.ExistArt TValue="int" @bind-Value=@_modeloDetalle.Cantidad InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                        <RadzenLabel Text="Cantidad" Style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenNumeric Min=1
+                                       Max=@_modeloArticulo.ExistArt
+                                       TValue="int"
+                                       Style="width: 9rem;height:33px; font-size:small; text-align:center"
+                                       @bind-Value=@_modeloDetalle.Cantidad
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                     </RadzenStack>
 
                     @* PRECIOS *@
                     <RadzenStack>
-                        <RadzenLabel Text="Precios" Component="DropDownBindValue" />
-                        <RadzenDropDown @bind-Value=@_modeloDetalle.Precio Data=@_modeloArticulo.RbdListaDePrecios TextProperty="@nameof(RbdListaDePrecio.Precio)" ValueProperty="@nameof(RbdListaDePrecio.Precio)" Style="width: 100%; max-width: 400px;" Name="DropDownTextValueProperties" />
+                        <RadzenLabel Text="Precios" Style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenDropDown @bind-Value=@_modeloDetalle.Precio
+                                        Data=@_modeloArticulo.RbdListaDePrecios
+                                        TextProperty="@nameof(RbdListaDePrecio.Precio)"
+                                        ValueProperty="@nameof(RbdListaDePrecio.Precio)"
+                                        Style="width: 10rem;height:33px; font-size:small; text-align:center"
+                                        Name="DropDownTextValueProperties" />
                     </RadzenStack>
 
                     @* DESCUENTOS *@
                     <RadzenStack>
-                        <RadzenLabel Text="Descuento" Component="DropDownBindValue" />
-                        <RadzenNumeric Min="0" @bind-Value=@_modeloDetalle.DescuentoUnit InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                        <RadzenLabel Text="Descuento" Style="font-size:small" Component="DropDownBindValue" />
+                        <RadzenNumeric Min="0"
+                                       Style="width: 10rem;height:33px; font-size:small; text-align:center"
+                                       @bind-Value=@_modeloDetalle.DescuentoUnit
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                     </RadzenStack>
 
                     @* BOTTON AÑADIR *@
                     <RadzenStack>
-                        <RadzenLabel Text="Añadir" Component="DropDownBindValue" />
+                    <RadzenLabel Text="Añadir" Style="font-size:small" Component="DropDownBindValue" />
                         <RadzenButton Text="Añadir" Click=@AddProduct ButtonStyle="ButtonStyle.Primary" />
                     </RadzenStack>
                 </RadzenStack>
-            </RadzenFieldset>
+            @* </RadzenFieldset> *@
         </section>
     </section>
 
     @* SECCION DE REGISTRO DE ARTICULO *@
-    <section class="overflow-y-auto" style="height:60vh; background-color:white;">
+    <section class="overflow-y-auto" style="height:40vh; background-color:white;">
 
-        <table class="table table-light table-striped table-hover">
+        <table class="table table-light table-striped table-hover" style="font-size:small;">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -195,23 +257,35 @@
     @* CREAR Y IMPRIMIR *@
     @* TIPO DE COMPROBANTE *@
     <section class="d-flex flex-row nowrap gap-2 justify-content-center align-items-center">
-        <RadzenFieldset Text="Sub-Totales" Style="background-color:white;">
+        <RadzenFieldset Text="Sub-Totales" Style="background-color:white;font-size:small;">
             <div class="d-flex flex-row gap-2">
                 <RadzenStack>
-                    <RadzenLabel Text="Sub-Total" Component="DropDownBindValue" />
-                    <RadzenNumeric ReadOnly=true @bind-Value=@Sub_Total InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    <RadzenLabel Text="Sub-Total" Style="font-size:small" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true
+                                   Style="width: 12rem;height:33px; font-size:small; text-align:center"
+                                   @bind-Value=@Sub_Total
+                                   InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                 </RadzenStack>
                 <RadzenStack>
-                    <RadzenLabel Text="Descuentos" Component="DropDownBindValue" />
-                    <RadzenNumeric ReadOnly=true @bind-Value=@Descuento InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    <RadzenLabel Text="Descuentos" Style="font-size:small" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true
+                                   Style="width: 12rem;height:33px; font-size:small; text-align:center"
+                                   @bind-Value=@Descuento
+                                   InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                 </RadzenStack>
                 <RadzenStack>
-                    <RadzenLabel Text="Impuestos" Component="DropDownBindValue" />
-                    <RadzenNumeric ReadOnly=true @bind-Value=@Impuesto InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    <RadzenLabel Text="Impuestos" Style="font-size:small" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true
+                                   Style="width: 12rem;height:33px; font-size:small; text-align:center"
+                                   @bind-Value=@Impuesto
+                                   InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                 </RadzenStack>
                 <RadzenStack>
-                    <RadzenLabel Text="Total" Component="DropDownBindValue" />
-                    <RadzenNumeric ReadOnly=true @bind-Value=@Total InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    <RadzenLabel Text="Total" Style="font-size:small" Component="DropDownBindValue" />
+                    <RadzenNumeric ReadOnly=true
+                                   Style="width: 12rem;height:33px; font-size:small; text-align:center"
+                                   @bind-Value=@Total
+                                   InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
                 </RadzenStack>
             </div>
         </RadzenFieldset>

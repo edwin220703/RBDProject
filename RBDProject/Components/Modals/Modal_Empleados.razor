@@ -1,6 +1,8 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _largeModal=true _Title="@utility">
     @* FORMULARIO *@
@@ -17,21 +19,21 @@
 
                 @* NOMBRE *@
                 <div class="mb-3 row">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">Nombre (Obligatorio)</label>
                     <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomEm></InputText>
                     <ValidationMessage For="(() => modelo.NomEm)" />
                 </div>
 
                 @* DNI *@
                 <div class="mb-3 row">
-                    <label class="form-label">DNI (CEDULA)</label>
+                    <label class="form-label">DNI (CEDULA (Obligatorio)</label>
                     <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniEm></InputText>
                     <ValidationMessage For="(() => modelo.DniEm)" />
                 </div>
 
                 @* SUELDO *@
                 <div class="mb-3 row">
-                    <label class="form-label">SUELDO</label>
+                    <label class="form-label">SUELDO (Obligatorio)</label>
                     <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.Suedms></InputNumber>
                     <ValidationMessage For="(() => modelo.Suedms)" />
                 </div>
@@ -49,14 +51,14 @@
                 <section>
                     @* USUARIO *@
                     <div class="mb-3 row">
-                        <label class="form-label">USUARIO</label>
+                        <label class="form-label">USUARIO (Obligatorio)</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomUs></InputText>
                         <ValidationMessage For="(() => modelo.NomUs)" />
                     </div>
 
                     @* CLAVE *@
                     <div class="mb-3 row">
-                        <label class="form-label">CONTRASEÑA</label>
+                        <label class="form-label">CONTRASEÑA (Obligatorio)</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomClav></InputText>
                         <ValidationMessage For="(() => modelo.NomClav)" />
                     </div>
@@ -193,6 +195,9 @@
     [Parameter]
     public EventCallback<RbdEmpleado> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdEmpleado, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         if (modelo.CodEm != 0 && modelo.RbdTelefonoEmpleados.Count != 0)
@@ -216,6 +221,9 @@
                 ; break;
         }
 
+        if (utility == "Crear")
+            ConfiguracionInicial();
+
         StateHasChanged();
     }
 
@@ -223,6 +231,31 @@
     {
         modelo = new RbdEmpleado();
         StateHasChanged();
+    }
+
+    public void ConfiguracionInicial()
+    {
+        if(_listCiudad != null && _listCiudad.Count() > 0)
+        {
+            modelo.IdCiudad = _listCiudad.First().IdCiudad;
+        }
+
+        if(_listCalle != null && _listCalle.Count() > 0)
+        {
+            modelo.IdCalle = _listCalle.First().IdCalle;
+        }
+
+        if(_listCargo != null && _listCargo.Count() > 0)
+        {
+            modelo.CodCar = _listCargo.First().CodCar;
+        }
+
+        modelo.CodGen = 1;
+
+        if(_listEstado != null && _listEstado.Count() > 0)
+        {
+            modelo.CodEst = _listEstado.First().CodEst;
+        }
     }
 
     public async Task SendModel()
@@ -241,8 +274,19 @@
         {
 
 
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear": {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Empleados creados");
+                    ConfiguracionInicial();
+                    await SendTypeModal.InvokeAsync((new RbdEmpleado(), "add"));
+                    StateHasChanged();
+                }; break;
+            case "Actualizar": { 
+                await UpdateModel.InvokeAsync(modelo); 
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Empleados actualizados");
+                    StateHasChanged();
+            }; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

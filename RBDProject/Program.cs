@@ -41,7 +41,8 @@ builder.Services.AddHttpClient();
 //SERVIDOR LOCAL HOST
 builder.Services.AddHttpClient("Servidor", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:44359/");
+    //client.BaseAddress = new Uri("https://localhost:44359/");
+    client.BaseAddress = new Uri(builder.Configuration["Servidor:Host"]);
 });
 
 builder.Services.AddRadzenComponents();

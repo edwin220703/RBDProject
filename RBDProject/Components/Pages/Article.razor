@@ -74,8 +74,8 @@
     </RadzenDataGrid>
 </section>
 
-<RBDProject.Components.Modals.Modal_Articulos AddModel="@((args)=>Add(args.Item1,args.Item2))" UpdateModel="@((args)=>Update(args.Item1,args.Item2))" 
-DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@_modalListPrecio"></RBDProject.Components.Modals.Modal_Articulos>
+<RBDProject.Components.Modals.Modal_Articulos AddModel="@((args) => Add(args.Item1, args.Item2))" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" UpdateModel="@((args) => Update(args.Item1, args.Item2))"
+                                              DeleteModel="@Remove" modelo="@model" utility="@utilitymodal" _listEstados="@_listEstados" _listGrupos="@_listGrupos" _listPrecio="@_modalListPrecio"></RBDProject.Components.Modals.Modal_Articulos>
 
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_lisarticles.Count) CountList="@(_selectedArticle.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>

@@ -934,6 +934,22 @@
   },
   {
     "ContainingType": "RBDProject.Controllers.RBDEmpleadosController",
+    "Method": "Get",
+    "RelativePath": "api/RBDEmpleados/Name={name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RBDProject.Controllers.RBDEmpleadosController",
     "Method": "PostTelefono",
     "RelativePath": "api/RBDEmpleados/Telefono",
     "HttpMethod": "POST",

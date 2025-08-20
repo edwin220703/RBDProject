@@ -61,8 +61,16 @@
 
 
 @* COMPONENTE MODELO *@
-<RBDProject.Components.Modals.Modal_Clientes modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"
-                                             _listCiudades="@_listCiudades" _listCalles="@_listCalle" _listProvincia="@_listProvincia"></RBDProject.Components.Modals.Modal_Clientes>
+<RBDProject.Components.Modals.Modal_Clientes modelo="model"
+                                             utility="@utilitymodal"
+                                             UpdateModel="Update"
+                                             DeleteModel="Remove"
+                                             AddModel="Add"
+                                             SendTypeModal="@((m)=>SendTypeModal(m.Item1,m.Item2))"
+                                             _listCiudades="@_listCiudades" 
+                                             _listCalles="@_listCalle" 
+                                             _listProvincia="@_listProvincia">
+</RBDProject.Components.Modals.Modal_Clientes>
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(clientes.Count) CountList="@(_selectedCliente.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
 

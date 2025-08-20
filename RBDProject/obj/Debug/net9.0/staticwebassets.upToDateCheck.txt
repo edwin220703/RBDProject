@@ -1877,6 +1877,8 @@ wwwroot\lib\vendor\jquery\jquery.min.map
 wwwroot\lib\vendor\jquery\jquery.slim.js
 wwwroot\lib\vendor\jquery\jquery.slim.min.js
 wwwroot\lib\vendor\jquery\jquery.slim.min.map
+wwwroot\lib\favicon_io.zip
+wwwroot\favicon-32x32.png
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\app.css
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js.map
 C:\Users\edwin\source\repos\RBDProject\RBDProject\wwwroot\lib\bootstrap\js\bootstrap.min.js

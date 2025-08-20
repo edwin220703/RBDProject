@@ -1,6 +1,8 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _Title="@utility">
     @* FORMULARIO *@
@@ -8,7 +10,7 @@
         <DataAnnotationsValidator />
         <div class="modal-body container">
             <div class="mb-3 row">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombre (Obligatorio)</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCar></InputText>
                 <ValidationMessage For="(() => modelo.NomCar)"></ValidationMessage>
             </div>
@@ -77,6 +79,9 @@
     [Parameter]
     public EventCallback<RbdCargo> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdCargo, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -95,6 +100,9 @@
         ; break;
         }
 
+        if(utility == "Crear")
+            ConfiguracionInicial();
+
         StateHasChanged();
     }
 
@@ -104,12 +112,34 @@
         StateHasChanged();
     }
 
+    public void ConfiguracionInicial()
+    {
+        if(_listEstados != null && _listEstados.Count() > 0)
+        {
+            modelo.CodEst = _listEstados.First().CodEst;
+        }
+    }
+
     public async Task SendModel()
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear":
+                {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Posicion creada");
+                    ConfiguracionInicial();
+                    StateHasChanged();
+                }
+                    ; break;
+            case "Actualizar":
+                {
+                    await UpdateModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Posicion actualizada");
+                    StateHasChanged();
+                }
+                    ; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

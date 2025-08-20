@@ -58,7 +58,7 @@
 
 
 @* COMPONENTE MODELO *@
-<RBDProject.Components.Modals.Modal_Estado modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"></RBDProject.Components.Modals.Modal_Estado>
+<RBDProject.Components.Modals.Modal_Estado modelo="model" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"></RBDProject.Components.Modals.Modal_Estado>
 
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(estados.Count) CountList="@(_selectedEstados.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>

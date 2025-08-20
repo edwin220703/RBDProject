@@ -1,6 +1,8 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _Title="@utility">
     @* FORMULARIO *@
@@ -9,7 +11,7 @@
         <DataAnnotationsValidator />
         <div class="modal-body container">
             <div class="mb-3 row">
-                <label class="form-label">Nombre Del tipo de Comprobante</label>
+                <label class="form-label">Nombre Del tipo de Comprobante (Obligatorio)</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomTipocom></InputText>
                 <ValidationMessage For="(() => modelo.NomTipocom)" />
             </div>
@@ -55,6 +57,9 @@
     [Parameter]
     public EventCallback<RbdTipoComprobante> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdTipoComprobante, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -86,8 +91,21 @@
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear":
+                {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Tipos de comprobantes creados");
+                    StateHasChanged();
+                }
+                ; break;
+            case "Actualizar":
+                {
+                    await UpdateModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Tipos de comprobantes actualizados");
+                    StateHasChanged();
+                }
+                ; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

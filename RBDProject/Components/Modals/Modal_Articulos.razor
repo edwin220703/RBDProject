@@ -2,6 +2,8 @@
 @using RBDProject.Models;
 @rendermode InteractiveServer
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _largeModal="true" _Title="@utility">
     @* FORMULARIO *@
@@ -15,7 +17,7 @@
                     <ValidationMessage For="(() => modelo.IdArt)" />
                 </div>
                 <div class="mb-3 row">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">Nombre (Obligatorio)</label>
                     <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomArt></InputText>
                     <ValidationMessage For="(() => modelo.NomArt)" />
                 </div>
@@ -140,6 +142,9 @@
     [Parameter]
     public EventCallback<RbdArticulo> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdArticulo, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -157,6 +162,9 @@
                 }
                 ; break;
         }
+
+        if (utility == "Crear")
+            ConfiguracionInicial();
 
         StateHasChanged();
     }
@@ -185,13 +193,39 @@
         _listPrecio.Remove(p);
     }
 
+    public void ConfiguracionInicial()
+    {
+        if(_listEstados != null && _listEstados.Count() > 0)
+        {
+            modelo.CodEst = _listEstados.First().CodEst;
+        }
+
+        if(_listGrupos != null && _listGrupos.Count() > 0)
+        {
+            modelo.CodGrup = _listGrupos.First().CodGrup;
+        }
+    }
+
     public async Task SendModel()
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync((modelo, _listPrecio));break;
-            case "Actualizar": await UpdateModel.InvokeAsync((modelo, _listPrecio)); break;
-            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+            case "Crear":
+                {
+                    await AddModel.InvokeAsync((modelo, _listPrecio));
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Articulo creados");
+                    ConfiguracionInicial();
+                    await SendTypeModal.InvokeAsync((new RbdArticulo(), "add"));
+                    StateHasChanged();
+                } ; break;
+            case "Actualizar":{
+                    await UpdateModel.InvokeAsync((modelo, _listPrecio));
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Articulo actualizado");
+                    ConfiguracionInicial();
+                    StateHasChanged();
+            } ; break;
+        case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }
 }

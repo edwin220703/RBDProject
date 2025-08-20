@@ -1,5 +1,6 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
+@inject IJSRuntime _jSRuntime
 
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _Title="@utility">
@@ -8,7 +9,7 @@
         <DataAnnotationsValidator />
         <div class="modal-body">
             <div class="mb-3 row">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombre (Obligatorio)</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomProvincia></InputText>
                 <ValidationMessage For="(() => modelo.NomProvincia)" />
             </div>
@@ -50,6 +51,9 @@
     [Parameter]
     public EventCallback<RbdProvincium> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdProvincium, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -81,8 +85,21 @@
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear":
+                {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Provincia creada");
+                    StateHasChanged();
+                }
+                ; break;
+            case "Actualizar":
+                {
+                    await UpdateModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Provincia actualizada");
+                    StateHasChanged();
+                }
+                    ; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

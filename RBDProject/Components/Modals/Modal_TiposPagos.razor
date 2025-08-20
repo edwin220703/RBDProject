@@ -1,15 +1,17 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _Title="@utility">
     @* FORMULARIO *@
     @* FORMULARIO *@
     <EditForm Model="modelo" OnValidSubmit="SendModel">
-        <DataAnnotationsValidator/>
+        <DataAnnotationsValidator />
         <div class="modal-body container">
             <div class="mb-3 row">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombre (Obligatorio)</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomPago></InputText>
                 <ValidationMessage For="(() => modelo.NomPago)" />
             </div>
@@ -43,7 +45,10 @@
 
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-            <button type="submit" class="btn btn-primary">@utility</button>
+            @if (utility != "Actualizar")
+            {
+                <button type="submit" class="btn btn-primary">@utility</button>
+            }
         </div>
     </EditForm>
 </RBDProject.Components.Layout.Modal_Form>
@@ -72,6 +77,9 @@
     [Parameter]
     public EventCallback<RbdTipoPago> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdTipoPago, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -90,6 +98,9 @@
                 ; break;
         }
 
+        if (utility == "Crear")
+            ConfiguracionInicial();
+
         StateHasChanged();
     }
 
@@ -99,12 +110,31 @@
         StateHasChanged();
     }
 
+    public void ConfiguracionInicial()
+    {
+        if(listEstados!=null && listEstados.Count() > 0)
+        {
+            modelo.CodEst = listEstados.First().CodEst;
+        }
+    }
+
     public async Task SendModel()
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear": {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Tipos de pagos creados");
+                    ConfiguracionInicial();
+                    StateHasChanged();
+                }; break;
+            case "Actualizar":
+                {
+                    await UpdateModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Tipos de pagos actualizados");
+                    StateHasChanged();
+                }; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }

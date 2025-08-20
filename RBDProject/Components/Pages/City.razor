@@ -56,7 +56,7 @@
     </RadzenDataGrid>
 </section>
 
-<RBDProject.Components.Modals.Modal_Ciudad AddModel="@Add" listProvincia=@_listprovincia UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal"></RBDProject.Components.Modals.Modal_Ciudad>
+<RBDProject.Components.Modals.Modal_Ciudad AddModel="@Add" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" listProvincia=@_listprovincia UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal"></RBDProject.Components.Modals.Modal_Ciudad>
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_lisciudades.Count) CountList="@(_selectedCiudades.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
 

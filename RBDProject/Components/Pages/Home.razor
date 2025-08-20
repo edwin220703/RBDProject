@@ -4,6 +4,7 @@
 @using RBDProject.Models
 @using System.Text.Json
 @using System.Globalization
+@using System.Security.Claims
 
 @rendermode InteractiveServer
 
@@ -17,9 +18,13 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        @if(context.User.Identity?.IsAuthenticated == null)
+        @if(context.User.Identity?.IsAuthenticated == false)
         {
             _navigate.NavigateTo("/");
+        }
+        else
+        {
+            <p>No tienes permiso para ver esta pagina</p>
         }
     </NotAuthorized>
 </AuthorizeView>
@@ -188,19 +193,32 @@
 
 
 @code {
-    List<RbdCuentasPorCobrar> _listCXC_Venc { get; set; } = new List<RbdCuentasPorCobrar>();
-    RbdCuentasPorCobrar _model_CXC { get; set; } = new RbdCuentasPorCobrar();
-    List<RbdFactura> _listFact { get; set; } = new List<RbdFactura>();
+    private List<RbdCuentasPorCobrar> _listCXC_Venc { get; set; } = new List<RbdCuentasPorCobrar>();
+    private List<RbdFactura> _listFact { get; set; } = new List<RbdFactura>();
 
+    private RbdCuentasPorCobrar _model_CXC { get; set; } = new RbdCuentasPorCobrar();
     private Info _Information { get; set; } = new Info();
+
     private WeekSell[] Data = new WeekSell[] { new WeekSell() { Day = "1/1/1", Cant = 100 } };
     private MonthShell[] Data2 = new MonthShell[] { new MonthShell() { MONTH = "1/1/1", Cant = 100 } };
 
+    private string _httpServidor = "Servidor";
+    private string _httpInformation = "api/Information";
+    private string _httpCxC = "api/CuentasPorCobrar";
+
     protected override async Task OnInitializedAsync()
     {
-        using (var client = _http.CreateClient("Servidor"))
+        await GetInformation();
+        await GetCxC();
+
+        StateHasChanged();
+    }
+
+    public async Task GetInformation()
+    {
+        using (var client = _http.CreateClient(_httpServidor))
         {
-            using (var content = await client.GetAsync("api/Information"))
+            using (var content = await client.GetAsync(_httpInformation))
             {
                 if (content.IsSuccessStatusCode)
                 {
@@ -218,10 +236,13 @@
                 }
             }
         }
+    }
 
-        using (var client = _http.CreateClient("Servidor"))
+    public async Task GetCxC()
+    {
+        using (var client = _http.CreateClient(_httpServidor))
         {
-            using (var content = await client.GetAsync("api/CuentasPorCobrar"))
+            using (var content = await client.GetAsync(_httpCxC))
             {
                 if (content.IsSuccessStatusCode)
                 {
@@ -231,13 +252,11 @@
 
                     if (result2 is not null)
                     {
-                        _listCXC_Venc = result2.Where(x=>x.VencPago?.Date == DateTime.Now.Date).ToList();
+                        _listCXC_Venc = result2.Where(x => x.VencPago?.Date == DateTime.Now.Date).ToList();
                     }
                 }
             }
         }
-
-        StateHasChanged();
     }
 
 }

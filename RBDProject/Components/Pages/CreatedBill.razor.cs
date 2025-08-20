@@ -45,6 +45,7 @@ namespace RBDProject.Components.Pages
         private RbdTipoPago _modeloPago { get; set; } = new RbdTipoPago();
         private RbdComprobanteFiscal _modeloSecComprobante { get; set; } = new RbdComprobanteFiscal();
         private RbdTipoComprobante _modeloComprobante { get; set; } = new RbdTipoComprobante();
+        private RbdEmpleado _modeloEmpleado { get; set; } = new RbdEmpleado();
 
         //DATOS GENERALES
         private double Descuento { get; set; } = 0;
@@ -282,6 +283,26 @@ namespace RBDProject.Components.Pages
                             Contabilidad();
                         }
 
+                    }
+                }
+            }
+        }
+
+
+        private async Task GetEmpleado(string Name)
+        {
+            using (HttpClient client = _http.CreateClient(_httpServidor))
+            {
+                using (var content = await client.GetAsync($"api/RBDEmpleados/Name={Name}"))
+                {
+                    if (content.IsSuccessStatusCode)
+                    {
+                        var result = await content.Content.ReadAsStringAsync();
+
+                        var result2 = JsonSerializer.Deserialize<RbdEmpleado>(result);
+
+                        if (result2 != null)
+                            _modeloEmpleado = result2;
                     }
                 }
             }
@@ -630,7 +651,7 @@ namespace RBDProject.Components.Pages
                 RbdFactura factura = new RbdFactura()
                 {
                     CodCli = _modeloCliente.CodCli,
-                    CodEm = 0 /*Cambiar cuando haga login*/,
+                    CodEm = _modeloEmpleado.CodEm == 0 ? 0 : _modeloEmpleado.CodEm,
                     CodTipago = _modeloPago.CodTipago,
                     TotalBalance = Sub_Total,
                     TotalNeto = Total,

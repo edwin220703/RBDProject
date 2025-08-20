@@ -54,7 +54,7 @@
     </RadzenDataGrid>
 </section>
 
-<RBDProject.Components.Modals.Modal_Calle AddModel="@Add" UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal"></RBDProject.Components.Modals.Modal_Calle>
+<RBDProject.Components.Modals.Modal_Calle AddModel="@Add" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" UpdateModel="@Update" DeleteModel="@Remove" modelo="@model" utility="@utilitymodal"></RBDProject.Components.Modals.Modal_Calle>
 
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(_listCalle.Count) CountList="@(_selectedCalle.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>

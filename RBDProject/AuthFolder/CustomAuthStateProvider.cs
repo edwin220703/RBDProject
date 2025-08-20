@@ -31,7 +31,7 @@ namespace RBDProject.AuthFolder
                     var claims = new List<Claim>();
                     foreach (var claim in jsonToken!.Claims)
                     {
-                        claims.Add(new Claim(claim.Type, claim.Value)); 
+                        claims.Add(new Claim(claim.Type, claim.Value));
                     }
 
                     var claimsIdentity = new ClaimsIdentity(claims, "jwt");
@@ -58,7 +58,8 @@ namespace RBDProject.AuthFolder
                 var claimsIdentity = new ClaimsIdentity(
                     [
                         new Claim(ClaimTypes.Name, user.NomUs),
-                        new Claim(ClaimTypes.Role, rol)
+                        new Claim(ClaimTypes.Role, rol),
+                        new Claim(ClaimTypes.NameIdentifier,user.CodEm.ToString())
                     ]);
 
                 var token = new JwtSecurityToken(

@@ -10,7 +10,7 @@
 @inject TooltipService _tooltipService
 @inject NavigationManager _navigate
 
-<PageTitle>Usuarios</PageTitle>
+<PageTitle>Empleados</PageTitle>
 
 <AuthorizeView>
     <NotAuthorized>
@@ -65,7 +65,7 @@
 
 
 @* COMPONENTE MODELO *@
-<RBDProject.Components.Modals.Modal_Empleados modelo="model" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"
+<RBDProject.Components.Modals.Modal_Empleados modelo="model" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"
 _listCiudad="_listCiudades" _listCalle="_listCalle" _listCargo="_listCargo" _listEstado="_listEstado"></RBDProject.Components.Modals.Modal_Empleados>
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(empleados.Count) CountList="@(_selectedEmpleados.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>

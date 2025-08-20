@@ -1065,10 +1065,10 @@ namespace ConsoleApp1
                                 table.Cell().Element(CellStyle).Text($"{c.Balance}");
                                 table.Cell().Element(CellStyle).Text($"{c.TotalFact}");
 
-                                if (c.NumFactNavigation != null)
-                                    table.Cell().Element(CellStyle).Text($"{c.NumFactNavigation.CodEmNavigation.NomEm}");
-                                else
-                                    table.Cell().Element(CellStyle).Text($"");
+                                //if (c.NumFactNavigation != null)
+                                //    table.Cell().Element(CellStyle).Text($"{c.NumFactNavigation.CodEmNavigation.NomEm}");
+                                //else
+                                table.Cell().Element(CellStyle).Text($"");
 
                             }
 

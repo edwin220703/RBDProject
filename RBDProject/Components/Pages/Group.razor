@@ -64,7 +64,7 @@
 </section>
 
 @* COMPONENTE MODELO *@
-<RBDProject.Components.Modals.Modal_Grupo modelo="model" estados=@estados utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"></RBDProject.Components.Modals.Modal_Grupo>
+<RBDProject.Components.Modals.Modal_Grupo modelo="model" SendTypeModal="@((m) => SendTypeModal(m.Item1, m.Item2))" estados=@estados utility="@utilitymodal" UpdateModel="Update" DeleteModel="Remove" AddModel="Add"></RBDProject.Components.Modals.Modal_Grupo>
 
 <RBDProject.Components.Modals.ModalSelectReporte CountGeneral=@(grupos.Count) CountList="@(_selectedgrupo.Count)" OpcionReporte="ImprimirReporte"></RBDProject.Components.Modals.ModalSelectReporte>
 

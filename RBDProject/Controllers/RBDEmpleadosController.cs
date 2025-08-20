@@ -97,6 +97,30 @@ namespace RBDProject.Controllers
             }
         }
 
+        // GET api/<RbdEmpleadosController>/5
+        [HttpGet("Name={name}")]
+        public async Task<IActionResult> Get(string name)
+        {
+            try
+            {
+                var content = await _context.RbdEmpleados.
+                                Include(c => c.CodCarNavigation).
+                                Where(x => x.NomUs == name).FirstOrDefaultAsync();
+
+                if (content == null)
+                    return BadRequest();
+
+                var result = JsonSerializer.Serialize(content);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // POST api/<RbdEmpleadosController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] string value)

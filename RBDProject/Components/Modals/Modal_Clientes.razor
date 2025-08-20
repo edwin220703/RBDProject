@@ -1,6 +1,8 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
 
+@inject IJSRuntime _jSRuntime
+
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _largeModal=true _Title="@utility">
     @* FORMULARIO *@
@@ -18,14 +20,14 @@
 
                     @* NOMBRE *@
                     <div class="mb-3 row">
-                        <label class="form-label">Nombre</label>
+                        <label class="form-label">Nombre (Obligatorio)</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.NomCli></InputText>
                         <ValidationMessage For="(() => modelo.NomCli)" />
                     </div>
 
                     @* DNI *@
                     <div class="mb-3 row">
-                        <label class="form-label">DNI</label>
+                        <label class="form-label">DNI (Obligatorio)</label>
                         <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.DniCli></InputText>
                         <ValidationMessage For="(() => modelo.DniCli)" />
                     </div>
@@ -128,7 +130,10 @@
 
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-            <button type="submit" class="btn btn-primary">@utility</button>
+            @if (utility != "Actualizar")
+            {
+                <button type="submit" class="btn btn-primary">@utility</button>
+            }
         </div>
     </EditForm>
 </RBDProject.Components.Layout.Modal_Form>
@@ -164,6 +169,9 @@
     [Parameter]
     public EventCallback<RbdCliente> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdCliente, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         if (modelo.CodCli != 0 && modelo.RbdTelefonoClientes.Count != 0)
@@ -187,7 +195,13 @@
                 {
                     utility = "Informacion";
                     _disabled = true;
-                }; break;
+                }
+                ; break;
+        }
+
+        if (utility != "Actualizar")
+        {
+            ConfiguracionInicial();
         }
 
         StateHasChanged();
@@ -197,6 +211,27 @@
     {
         modelo = new RbdCliente();
         StateHasChanged();
+    }
+
+    public void ConfiguracionInicial()
+    {
+        if (_listCalles != null && _listCalles.Count > 0)
+        {
+            modelo.IdCalle = _listCalles.First().IdCalle;
+        }
+
+        if (_listCiudades != null && _listCiudades.Count > 0)
+        {
+            modelo.IdCiudad = _listCiudades.First().IdCiudad;
+        }
+
+        if (_listProvincia != null && _listProvincia.Count > 0)
+        {
+            modelo.IdProvincia = _listProvincia.First().IdProvincia;
+        }
+
+        // GENERO
+        modelo.CodGen = 1;
     }
 
     public async Task SendModel()
@@ -212,19 +247,32 @@
 
         switch (utility)
         {
-            case "Crear": 
+            case "Crear":
                 {
                     modelo.RbdTelefonoClientes.Add(telefonoCliente);
                     await AddModel.InvokeAsync(modelo);
-                }; break;
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Cliente agregado");
+                    Clean();
+                    ConfiguracionInicial();
+                    await SendTypeModal.InvokeAsync((new RbdCliente(), "add"));
+                    StateHasChanged();
+                }
+                ; break;
             case "Actualizar":
                 {
                     modelo.RbdTelefonoClientes.Clear();
                     modelo.RbdTelefonoClientes.Add(telefonoCliente);
 
                     await UpdateModel.InvokeAsync(modelo);
-                };break;
-            case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Cliente actualizado");
+                }
+                ; break;
+            case "Eliminar":
+                {
+                    await DeleteModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Usuario eliminado");
+                }
+                ; break;
         }
     }
 }

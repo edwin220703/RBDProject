@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using Radzen;
+using RBDProject.Components.Helpers;
 using RBDProject.Models;
 using System.Text.Json;
 
@@ -140,7 +141,7 @@ namespace RBDProject.Components.Modals.CuentasXCobrar
 
                         if (result2 is not null)
                         {
-                            _listaCXC = result2;
+                            _listaCXC = result2.Where(x => x.Balance != 0).ToList();
                             CountFact = _listaCXC.Count();
                             var pendienteverificar = _listaCXC.Sum(x => x.Balance);
                             Pendiente = pendienteverificar != null ? (double)pendienteverificar : 0;
@@ -215,46 +216,47 @@ namespace RBDProject.Components.Modals.CuentasXCobrar
                 return;
 
             double total = PagoTotal;
+            List<RbdCuentasPorCobrar> cxc = new List<RbdCuentasPorCobrar>();
 
             if (OpcionAbono == 1 && _selectCXC.Count == 0)
             {
                 foreach (var f in _listaCXC)
                 {
-                    total = (double)(f.Balance - total);
+                    PagoTotal = PagoTotal >= f.Balance ? (double)f.Balance : total;
 
                     await SendDetalle(f.CodCcobro);
 
-                    if (total >= 0)
-                    {
-                        return;
-                    }
-                    else
+                    total -= PagoTotal;
+
+                    if (total <= 0)
                     {
                         PagoTotal = total;
+                        return;
                     }
                 }
             }
             else if (OpcionAbono == 1 && _selectCXC.Count > 1)
             {
-                foreach (var f in _selectCXC)
+                //ORDENANDO DE MAS VIEJA A MAS NUEVA
+                var ordenado = _selectCXC.OrderBy(x => x.NumFact).ToList();
+
+                foreach (var f in ordenado)
                 {
-                    total = (double)(f.Balance - total);
+                    PagoTotal = PagoTotal >= f.Balance ? (double)f.Balance : total;
 
                     await SendDetalle(f.CodCcobro);
 
-                    if (total >= 0)
-                    {
-                        return;
-                    }
-                    else
+                    total -= PagoTotal;
+
+                    if (total <= 0)
                     {
                         PagoTotal = total;
+                        return;
                     }
                 }
             }
             else
             {
-
                 var f = _selectCXC.First();
 
                 if (total > f.Balance)
@@ -284,8 +286,11 @@ namespace RBDProject.Components.Modals.CuentasXCobrar
                     if (content.IsSuccessStatusCode)
                     {
                         Console.WriteLine("Cuenta Saldad");
+                        var a = _jSRuntime.InvokeVoidAsync("RecargarPagina");
+                        StateHasChanged();
                     }
                 }
+
             }
         }
 

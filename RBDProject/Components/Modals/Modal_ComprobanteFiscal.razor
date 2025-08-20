@@ -1,5 +1,6 @@
 ﻿@using RBDProject.Controllers
 @using RBDProject.Models;
+@inject IJSRuntime _jSRuntime
 
 <!-- Modal Nuevo y actualizar-->
 <RBDProject.Components.Layout.Modal_Form _Title="@utility">
@@ -9,7 +10,7 @@
         <div class="modal-body">
             <DataAnnotationsValidator />
             <div class="mb-3 row">
-                <label class="form-label">Secuencia</label>
+                <label class="form-label">Secuencia (Obligatorio)</label>
                 <InputText class="form-control" disabled="@_disabled" @bind-Value=modelo.SecCom></InputText>
                 <ValidationMessage For="(() => modelo.SecCom)" />
             </div>
@@ -19,12 +20,12 @@
                 <ValidationMessage For="(() => modelo.DesCom)" />
             </div>
             <div class="mb-3 row">
-                <label class="form-label">Impuestos</label>
+                <label class="form-label">Impuestos (Obligatorio)</label>
                 <InputNumber class="form-control" disabled="@_disabled" @bind-Value=modelo.ImpCom></InputNumber>
                 <ValidationMessage For="(() => modelo.ImpCom)" />
             </div>
             <div class="mb-3 row">
-                <label class="form-label">Emision</label>
+                <label class="form-label">Emision (Obligatorio)</label>
                 <InputDate class="form-control" disabled="true" @bind-Value=modelo.DocFec></InputDate>
                 <ValidationMessage For="(() => modelo.DocFec)" />
             </div>
@@ -34,7 +35,7 @@
                 <ValidationMessage For="(() => modelo.FechaVec)" />
             </div>
             <div class="mb-3 row">
-                <label for="exampleFormControlTextarea1" class="form-label">Tipos De Comprobantes</label>
+                <label for="exampleFormControlTextarea1" class="form-label">Tipos De Comprobantes (Obligatorio)</label>
                 <InputSelect class="form-select" disabled="@_disabled" aria-label="Default select example" @bind-Value="modelo.CodTipocom">
                     @foreach (var ci in listaTiposComprobantes)
                     {
@@ -84,6 +85,9 @@
     [Parameter]
     public EventCallback<RbdComprobanteFiscal> DeleteModel { get; set; }
 
+    [Parameter]
+    public EventCallback<(RbdComprobanteFiscal, string)> SendTypeModal { get; set; }
+
     protected override void OnParametersSet()
     {
         _disabled = false;
@@ -115,8 +119,17 @@
     {
         switch (utility)
         {
-            case "Crear": await AddModel.InvokeAsync(modelo); break;
-            case "Actualizar": await UpdateModel.InvokeAsync(modelo); break;
+            case "Crear": {
+                    await AddModel.InvokeAsync(modelo);
+                    Clean();
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Comprobante fiscal creados");
+                    StateHasChanged();
+                }; break;
+            case "Actualizar": {
+                    await UpdateModel.InvokeAsync(modelo);
+                    var a = _jSRuntime.InvokeVoidAsync("Notification", "Comprobante fiscal actualizado");
+                    StateHasChanged();
+                }; break;
             case "Eliminar": await DeleteModel.InvokeAsync(modelo); break;
         }
     }
